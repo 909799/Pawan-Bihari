@@ -691,7 +691,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        // ---- Password Lock (9097) - lightly obfuscated using base64 ----
+        // ---- (JANEMAN) - lightly obfuscated using base64 ----
         function decodePwd(encoded) {
             try {
                 return atob(encoded);
@@ -699,7 +699,7 @@
                 return '';
             }
         }
-        // "9097" => btoa('9097') = "OTA5Nw=="
+        // "JANEMAN" => btoa('JANEMAN') = "OTA5Nw=="
         const correctPwd = decodePwd('OTA5Nw==');
 
         const lockScreen = document.getElementById('lockScreen');
