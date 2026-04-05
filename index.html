@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pawan Multilayer Film Formulation - Dynamic Layers (Password)</title>
+    <title>Pawan Multilayer Film Formulation + CFL Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
@@ -11,104 +11,262 @@
             --accent: #dbeafe;
             --bg: #f8fafc;
             --border: #e2e8f0;
-            --text: #1e293b;
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --text: #0f172a;
+            --muted: #6b7280;
+            --shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.25);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 0;
-            font-family: Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1e3a8a 0, #020617 55%);
             color: var(--text);
         }
-        .shell { max-width: 1200px; margin: 0 auto; padding: 16px; }
-        .container {
+
+        .shell {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 16px 32px;
+        }
+
+        /* Floating draggable CFL Calculator box */
+        .sidebar {
+            position: fixed;
+            left: 40px;
+            bottom: 40px;
+            width: 340px;
+            background: #f9fafb;
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 18px 45px rgba(15,23,42,0.35);
+            z-index: 9000;
+        }
+        .sidebar.hidden { display: none; }
+        .sidebar.visible { display: block; }
+
+        .sidebar-header {
+            cursor: move;
+            padding: 8px 12px;
+            border-radius: 16px 16px 0 0;
+            background: linear-gradient(135deg, #0f766e, #2563eb);
+            color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .sidebar-header-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sidebar-header-title span.icon {
+            font-size: 14px;
+        }
+        .sidebar-header-title span.text {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .sidebar-close-btn {
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.45);
+            font-size: 12px;
+            border: 1px solid rgba(148,163,184,0.6);
+        }
+        .sidebar-close-btn:hover {
+            background: rgba(15,23,42,0.8);
+        }
+
+        .sidebar-compact {
+            background: #ffffff;
+            padding: 10px 12px 12px;
+            border-radius: 0 0 16px 16px;
+        }
+        .sidebar label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4b5563;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .sidebar select,
+        .sidebar input {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 12px;
+            font-family: inherit;
+            margin-bottom: 4px;
+        }
+        .sidebar button {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: none;
+            background: #0f766e;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 3px;
+        }
+        .sidebar button:hover {
+            background: #0d9488;
+        }
+        .option-sb { display: none; }
+        .option-sb.active { display: block; }
+        #result-sb {
+            margin-top: 6px;
+            font-weight: 600;
+            color: #065f46;
+            font-size: 11px;
+            padding: 6px;
+            background: #ecfdf5;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px dashed #bbf7d0;
+        }
+
+        /* Main Container */
+        .main-container {
             background: #ffffff;
             border-radius: 20px;
             box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
+        .container {
+            background: white;
+        }
         .header {
-            background: linear-gradient(135deg, #15803d, #22c55e);
-            color: #ffffff;
-            padding: 16px 20px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            padding: 18px 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 16px;
         }
         .header-logo {
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             border-radius: 999px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, #bbf7d0);
-            border: 2px solid rgba(255,255,255,0.7);
+            background: radial-gradient(circle at 30% 30%, #bbf7d0, #15803d);
+            border: 3px solid rgba(255,255,255,0.85);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
             flex-shrink: 0;
         }
-        .header-logo span { font-size: 26px; font-weight: 800; color: #166534; }
-        .header-text h1 { margin: 0; font-size: 24px; font-weight: 700; }
-        .header-text p { margin: 4px 0 0; font-size: 12px; opacity: 0.9; }
+        .header-logo span {
+            font-size: 26px;
+            font-weight: 900;
+            color: #f0fdf4;
+        }
+        .header-text h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+        }
+        .header-text p {
+            margin: 3px 0 0;
+            font-size: 12px;
+            opacity: 0.9;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
 
-        .content { padding: 18px 20px 20px; background: var(--bg); font-size: 16px; }
+        .content {
+            padding: 22px 24px 26px;
+            background: var(--bg);
+            font-size: 14px;
+        }
 
         .input-section {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 18px;
-            background: var(--accent);
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            font-size: 14px;
+            gap: 18px;
+            margin-bottom: 22px;
+            background: #e0f2fe;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 1px solid #bfdbfe;
         }
-        .input-section > div { flex: 1; min-width: 190px; }
+        .input-section > div {
+            flex: 1;
+            min-width: 210px;
+        }
         .input-section label {
             display: block;
             font-weight: 600;
-            margin-bottom: 4px;
-            color: #166534;
+            margin-bottom: 6px;
+            color: #0f172a;
             font-size: 13px;
         }
         .input-section input {
             width: 100%;
-            padding: 8px;
-            border-radius: 6px;
+            padding: 8px 10px;
+            border-radius: 9px;
             border: 1px solid #94a3b8;
-            font-size: 14px;
+            font-size: 13px;
         }
-        .wastage-container { display: flex; align-items: center; gap: 6px; }
-        .wastage-pct { font-size: 12px; font-weight: 600; color: #065f46; white-space: nowrap; }
+        .wastage-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .wastage-pct {
+            font-size: 12px;
+            font-weight: 600;
+            color: #065f46;
+            white-space: nowrap;
+        }
 
-        .calcboxes { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+        .calcboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
         .calcbox {
             flex: 1;
-            min-width: 230px;
-            padding: 12px 14px;
+            min-width: 240px;
+            padding: 14px 16px;
             background: #ecfdf5;
-            border: 1px solid #86efac;
-            border-radius: 10px;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 8px rgba(15,23,42,0.12);
         }
-        .calcbox label { font-weight: 600; color: #065f46; font-size: 13px; }
-        .calcbox span { display: block; margin-top: 6px; font-size: 20px; font-weight: 700; color: #064e3b; }
+        .calcbox label {
+            font-weight: 600;
+            color: #065f46;
+            font-size: 13px;
+        }
+        .calcbox span {
+            display: block;
+            margin-top: 4px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #064e3b;
+        }
 
         .calc-table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            font-size: 15px;
-            background: #ffffff;
-            border-radius: 12px;
+            font-size: 13px;
+            background: white;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(15,23,42,0.08);
         }
         .calc-table thead th,
         .calc-table tbody td,
@@ -119,456 +277,820 @@
             vertical-align: middle;
         }
         .calc-table thead th {
-            background: linear-gradient(135deg, #15803d, #22c55e);
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
+            background: linear-gradient(135deg, #15803d, #16a34a);
+            color: #f9fafb;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
         .calc-table tbody tr:nth-child(even) { background: #f9fafb; }
-        .calc-table tbody tr:hover { background: #dcfce7; cursor: pointer; }
-        .calc-table input[type="number"],
-        .calc-table input[type="text"] {
+        .calc-table tbody tr:hover {
+            background: #ecfeff;
+        }
+        .calc-table input[type=number],
+        .calc-table input[type=text] {
             width: 100%;
             padding: 5px 6px;
-            border-radius: 4px;
+            border-radius: 5px;
             border: 1px solid #cbd5e1;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
-            box-sizing: border-box;
         }
-        .calc-table tfoot td { background: #dcfce7; font-weight: 700; color: #166534; }
+        .calc-table tfoot td {
+            background: #ecfdf5;
+            font-weight: 700;
+            color: #166534;
+        }
 
+        /* Bottom bar: buttons + link */
+        .table-actions-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+        }
         .table-actions {
             display: flex;
-            justify-content: flex-end;
             gap: 8px;
-            margin-top: 8px;
         }
         .table-actions button {
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 7px 14px;
+            border-radius: 999px;
             border: none;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
-            color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            color: white;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.2);
         }
-        #addRowBtn { background: #2563eb; }      /* New Layer Add */
-        #delRowBtn { background: #b91c1c; }      /* Delete Last Layer */
+        #addRowBtn { background: #2563eb; }
+        #delRowBtn { background: #b91c1c; }
 
-        .buttons { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; font-size: 14px; }
+        /* Bottom-style professional link */
+        #toggleCflLink {
+            font-size: 12px;
+            color: var(--muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 0;
+        }
+        #toggleCflLink .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.2);
+        }
+        #toggleCflLink span.label {
+            border-bottom: 1px dashed rgba(148,163,184,0.8);
+        }
+        #toggleCflLink:hover span.label {
+            color: #0f172a;
+            border-bottom-style: solid;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
         .buttons button {
-            padding: 8px 18px;
-            border-radius: 8px;
+            padding: 10px 22px;
+            border-radius: 999px;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 6px 18px rgba(15,23,42,0.35);
             font-size: 13px;
         }
         #exportPdf { background: #0f766e; }
 
+        /* Lock Screen */
+        #lockScreen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        #lockScreen > div {
+            background: #020617;
+            padding: 28px 26px;
+            border-radius: 16px;
+            width: 280px;
+            color: #e5e7eb;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid #1f2937;
+        }
+        #lockScreen h2 {
+            margin: 0 0 12px;
+            font-size: 18px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+        #pwdInput {
+            width: 100%;
+            padding: 10px;
+            border-radius: 9px;
+            border: 1px solid #4b5563;
+            margin-bottom: 12px;
+            background: #020617;
+            color: #e5e7eb;
+            font-size: 13px;
+        }
+        #pwdBtn {
+            width: 100%;
+            padding: 9px 0;
+            border: none;
+            border-radius: 999px;
+            background: #22c55e;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        #pwdBtn:hover { background: #16a34a; }
+        #pwdMsg {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #fb923c;
+            min-height: 16px;
+        }
+
         @media (max-width: 900px) {
-            .shell { padding: 8px; }
+            .shell { padding: 16px 10px 24px; }
+            .content { padding: 18px 14px 22px; }
+            .sidebar {
+                width: 92vw;
+                left: 4vw;
+                bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
-<!-- Password screen with star/● input -->
-<div id="lockScreen" style="
-    position:fixed; inset:0; background:#0f172a;
-    display:flex; align-items:center; justify-content:center;
-    z-index:9999; font-family:Segoe UI, sans-serif;">
-  <div style="background:#111827; padding:24px 28px; border-radius:12px; width:260px; color:#e5e7eb; text-align:center;">
-    <h2 style="margin:0 0 10px; font-size:18px;">Enter Password</h2>
-    <input id="pwdInput" type="password" placeholder="Password"
-           style="width:100%; padding:8px; border-radius:6px; border:1px solid #4b5563; margin-bottom:10px; background:#020617; color:#e5e7eb;">
-    <button id="pwdBtn" style="width:100%; padding:8px; border:none; border-radius:6px; background:#22c55e; color:white; font-weight:600; cursor:pointer;">
-      Unlock
-    </button>
-    <div id="pwdMsg" style="margin-top:8px; font-size:12px; color:#f97373;"></div>
-  </div>
-</div>
+    <!-- Password Lock Screen (password: 9097, obfuscated) -->
+    <div id="lockScreen">
+        <div>
+            <h2>SECURE ACCESS</h2>
+            <input id="pwdInput" type="password" placeholder="Enter password">
+            <button id="pwdBtn">Unlock</button>
+            <div id="pwdMsg"></div>
+        </div>
+    </div>
 
-<div class="shell">
-    <div class="container">
-        <div class="header">
-            <div class="header-logo"><span>P</span></div>
-            <div class="header-text">
-                <h1>Pawan Multilayer Film Formulation</h1>
-                <p>7 Layer - Dynamic Extruder Rows</p>
+    <div class="shell">
+        <!-- Floating CFL Calculator (draggable) -->
+        <div class="sidebar hidden" id="cflSidebarBox">
+            <div class="sidebar-header" id="cflSidebarHeader">
+                <div class="sidebar-header-title">
+                    <span class="icon">📏</span>
+                    <span class="text">Cfl quick tools</span>
+                </div>
+                <button class="sidebar-close-btn" id="cflSidebarClose">✕</button>
+            </div>
+            <div class="sidebar-compact">
+                <label>Density (g/cm³) [default 0.91]</label>
+                <input type="number" id="density-sb" value="0.91" step="0.01" min="0.1">
+
+                <label style="margin-top: 2px;">Choose a calculation</label>
+                <select id="choice-sb" onchange="showOptionSB()">
+                    <option value="0">1. Roll Weight from L,W,T</option>
+                    <option value="1">2. Film Length from Wt,W,T</option>
+                    <option value="2">3. Film Thickness from Wt,L,W</option>
+                    <option value="3">4. Film Area from L,W</option>
+                    <option value="4">5. Roll Width from Area,L</option>
+                    <option value="5">6. Film Length from OD,Core,T</option>
+                    <option value="6">7. Roll OD from L,Core,T</option>
+                </select>
+
+                <!-- 0: Roll Weight -->
+                <div id="option0-sb" class="option-sb active">
+                    <input type="number" id="len0-sb" placeholder="Length (m)">
+                    <input type="number" id="wid0-sb" placeholder="Width (mm)">
+                    <input type="number" id="thi0-sb" placeholder="Thickness (µm)">
+                    <button onclick="calcSB(0)">Roll Weight</button>
+                </div>
+
+                <!-- 1: Length from Wt -->
+                <div id="option1-sb" class="option-sb">
+                    <input type="number" id="wei1-sb" placeholder="Weight (kg)">
+                    <input type="number" id="wid1-sb" placeholder="Width (mm)">
+                    <input type="number" id="thi1-sb" placeholder="Thickness (µm)">
+                    <button onclick="calcSB(1)">Film Length</button>
+                </div>
+
+                <!-- 2: Thickness -->
+                <div id="option2-sb" class="option-sb">
+                    <input type="number" id="wei2-sb" placeholder="Weight (kg)">
+                    <input type="number" id="len2-sb" placeholder="Length (m)">
+                    <input type="number" id="wid2-sb" placeholder="Width (mm)">
+                    <button onclick="calcSB(2)">Film Thickness</button>
+                </div>
+
+                <!-- 3: Area -->
+                <div id="option3-sb" class="option-sb">
+                    <input type="number" id="len3-sb" placeholder="Length (m)">
+                    <input type="number" id="wid3-sb" placeholder="Width (mm)">
+                    <button onclick="calcSB(3)">Film Area</button>
+                </div>
+
+                <!-- 4: Width from Area,Length -->
+                <div id="option4-sb" class="option-sb">
+                    <input type="number" id="are4-sb" placeholder="Area (m²)">
+                    <input type="number" id="len4-sb" placeholder="Length (m)">
+                    <button onclick="calcSB(4)">Roll Width</button>
+                </div>
+
+                <!-- 5: Length from OD,Core,T -->
+                <div id="option5-sb" class="option-sb">
+                    <input type="number" id="odi5-sb" placeholder="Outer Dia (mm)">
+                    <input type="number" id="cor5-sb" placeholder="Core Dia (mm) [76]">
+                    <input type="number" id="thi5-sb" placeholder="Thickness (µm)">
+                    <button onclick="calcSB(5)">Film Length</button>
+                </div>
+
+                <!-- 6: OD from Length,Core,T -->
+                <div id="option6-sb" class="option-sb">
+                    <input type="number" id="len6-sb" placeholder="Length (m)">
+                    <input type="number" id="cor6-sb" placeholder="Core Dia (mm) [76]">
+                    <input type="number" id="thi6-sb" placeholder="Thickness (µm)">
+                    <button onclick="calcSB(6)">Roll Diameter</button>
+                </div>
+
+                <div id="result-sb"></div>
             </div>
         </div>
-        <div class="content">
-            <div class="input-section">
-                <div>
-                    <label for="dieWidth">Die Width (mm)</label>
-                    <input id="dieWidth" type="number" value="1400" step="any" min="0">
+
+        <!-- Main Multilayer Calculator -->
+        <div class="main-container">
+            <div class="container">
+                <div class="header">
+                    <div class="header-logo"><span>P</span></div>
+                    <div class="header-text">
+                        <h1>Pawan Multilayer Film Formulation</h1>
+                        <p>7 Layer · Dynamic Extruder Matrix</p>
+                    </div>
                 </div>
-                <div>
-                    <label for="lineSpeed">Line Speed (m/min)</label>
-                    <input id="lineSpeed" type="number" value="10" step="any" min="0">
-                </div>
-                <div>
-                    <label for="hoursInput">Production Hours</label>
-                    <input id="hoursInput" type="number" value="1" min="0" step="any">
-                </div>
-                <div>
-                    <label for="wastageInput">Wastage (kg)</label>
-                    <div class="wastage-container">
-                        <input id="wastageInput" type="number" value="0" min="0" step="any">
-                        <span class="wastage-pct" id="wastagePct">0.00%</span>
+
+                <div class="content">
+                    <div class="input-section">
+                        <div>
+                            <label for="dieWidth">Die Width (mm)</label>
+                            <input id="dieWidth" type="number" value="1400" step="any" min="0">
+                        </div>
+                        <div>
+                            <label for="lineSpeed">Line Speed (m/min)</label>
+                            <input id="lineSpeed" type="number" value="10" step="any" min="0">
+                        </div>
+                        <div>
+                            <label for="hoursInput">Production Hours</label>
+                            <input id="hoursInput" type="number" value="1" min="0" step="any">
+                        </div>
+                        <div>
+                            <label for="wastageInput">Wastage (kg)</label>
+                            <div class="wastage-container">
+                                <input id="wastageInput" type="number" value="0" min="0" step="any">
+                                <span class="wastage-pct" id="wastagePct">0.00%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calcboxes">
+                        <div class="calcbox">
+                            <label>Total Weight (kg)</label>
+                            <span id="totalWeight">0.00</span>
+                        </div>
+                        <div class="calcbox">
+                            <label>Net Film Length (m)</label>
+                            <span id="totalLength">0.00</span>
+                        </div>
+                    </div>
+
+                    <table id="calcTable" class="calc-table">
+                        <thead>
+                            <tr>
+                                <th>Extruder</th>
+                                <th>Material</th>
+                                <th>Thk (μ)</th>
+                                <th>Density</th>
+                                <th>Layer %</th>
+                                <th>Throughput (kg/hr)</th>
+                                <th>M.P RPM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-extruder="55">
+                                <td><input class="ext" type="text" value="EXTRUDER 55 Outer"></td>
+                                <td><input class="mat" type="text" value="LDPE EC 7000"></td>
+                                <td><input class="mic" type="number" value="30" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="90">
+                                <td><input class="ext" type="text" value="EXTRUDER 90 M1"></td>
+                                <td><input class="mat" type="text" value="ULDPE 4607"></td>
+                                <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="90">
+                                <td><input class="ext" type="text" value="EXTRUDER 90 M2"></td>
+                                <td><input class="mat" type="text" value="ULDPE mid2"></td>
+                                <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="90">
+                                <td><input class="ext" type="text" value="EXTRUDER 90 M3"></td>
+                                <td><input class="mat" type="text" value="ULDPE bulk1"></td>
+                                <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="90">
+                                <td><input class="ext" type="text" value="EXTRUDER 90 M4"></td>
+                                <td><input class="mat" type="text" value="ULDPE bulk2"></td>
+                                <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="45A">
+                                <td><input class="ext" type="text" value="EXTRUDER 45A Inner"></td>
+                                <td><input class="mat" type="text" value="EVOH EV 3251"></td>
+                                <td><input class="mic" type="number" value="2.5" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="1.17" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                            <tr data-extruder="45B">
+                                <td><input class="ext" type="text" value="EXTRUDER 45B Inner"></td>
+                                <td><input class="mat" type="text" value="TIE Orevac 825"></td>
+                                <td><input class="mic" type="number" value="2.5" min="0" step="0.1"></td>
+                                <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
+                                <td class="pct-td"></td>
+                                <td class="thr-td"></td>
+                                <td class="rpm-td"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align:right;font-weight:700;">TOTAL</td>
+                                <td id="totalMic">0</td>
+                                <td id="avgDen">0</td>
+                                <td>100</td>
+                                <td id="sumThr">0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- New Layer + Delete + Bottom-style CFL link -->
+                    <div class="table-actions-wrap">
+                        <div class="table-actions">
+                            <button id="addRowBtn">➕ New Layer</button>
+                            <button id="delRowBtn">🗑️ Delete Last</button>
+                        </div>
+                        <a href="javascript:void(0)" id="toggleCflLink">
+                            <span class="dot"></span>
+                            <span class="label">Open CFL quick calculator</span>
+                        </a>
+                    </div>
+
+                    <div class="buttons">
+                        <button id="exportPdf">📄 Export PDF</button>
                     </div>
                 </div>
             </div>
-
-            <div class="calcboxes">
-                <div class="calcbox">
-                    <label>Total Weight (kg)</label>
-                    <span id="totalWeight">0.00</span>
-                </div>
-                <div class="calcbox">
-                    <label>Net Film Length (m)</label>
-                    <span id="totalLength">0.00</span>
-                </div>
-            </div>
-
-            <table id="calcTable" class="calc-table">
-                <thead>
-                <tr>
-                    <th>Extruder</th>
-                    <th>Material</th>
-                    <th>Thk (μ)</th>
-                    <th>Density</th>
-                    <th>Layer %</th>
-                    <th>Throughput (kg/hr)</th>
-                    <th>M.P RPM</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Initial default rows -->
-                <tr data-extruder="55">
-                    <td><input class="ext" type="text" value="EXTRUDER 55 (Outer)"></td>
-                    <td><input class="mat" type="text" value="LDPE EC 7000"></td>
-                    <td><input class="mic" type="number" value="30" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="90">
-                    <td><input class="ext" type="text" value="EXTRUDER 90 M1"></td>
-                    <td><input class="mat" type="text" value="ULDPE 4607"></td>
-                    <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="90">
-                    <td><input class="ext" type="text" value="EXTRUDER 90 M2"></td>
-                    <td><input class="mat" type="text" value="ULDPE mid2"></td>
-                    <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="90">
-                    <td><input class="ext" type="text" value="EXTRUDER 90 M3"></td>
-                    <td><input class="mat" type="text" value="ULDPE bulk1"></td>
-                    <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="90">
-                    <td><input class="ext" type="text" value="EXTRUDER 90 M4"></td>
-                    <td><input class="mat" type="text" value="ULDPE bulk2"></td>
-                    <td><input class="mic" type="number" value="55" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="45A">
-                    <td><input class="ext" type="text" value="EXTRUDER 45A (Inner)"></td>
-                    <td><input class="mat" type="text" value="EVOH EV 3251"></td>
-                    <td><input class="mic" type="number" value="25" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="1.17" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                <tr data-extruder="45B">
-                    <td><input class="ext" type="text" value="EXTRUDER 45B (Inner)"></td>
-                    <td><input class="mat" type="text" value="TIE Orevac 825"></td>
-                    <td><input class="mic" type="number" value="25" min="0" step="0.1"></td>
-                    <td><input class="den" type="number" value="0.91" min="0" step="0.01"></td>
-                    <td class="pct">-</td>
-                    <td class="thr">-</td>
-                    <td class="rpm">-</td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <td colspan="2" style="text-align:right">TOTAL</td>
-                    <td id="totalMic">0</td>
-                    <td id="avgDen">0</td>
-                    <td>100</td>
-                    <td id="sumThr">0</td>
-                    <td></td>
-                </tr>
-                </tfoot>
-            </table>
-
-            <!-- bottom buttons: New Layer Add + Delete Last Layer -->
-            <div class="table-actions">
-                <button id="addRowBtn">New Layer Add</button>
-                <button id="delRowBtn">Delete Last Layer</button>
-            </div>
-
-            <div class="buttons">
-                <button id="exportPdf">Export to PDF</button>
-            </div>
         </div>
     </div>
-</div>
 
-<!-- Password logic -->
-<script>
-  (function () {
-    var correct = "9097";
-    var box = document.getElementById("lockScreen");
-    var input = document.getElementById("pwdInput");
-    var btn = document.getElementById("pwdBtn");
-    var msg = document.getElementById("pwdMsg");
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    function check() {
-      if (input.value === correct) {
-        box.style.display = "none";
-      } else {
-        msg.textContent = "Wrong password";
-        input.value = "";
-        input.focus();
-      }
-    }
-    btn.addEventListener("click", check);
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") check();
-    });
-    input.focus();
-  })();
-</script>
+    <script>
+        // ---- Password Lock (9097) - lightly obfuscated using base64 ----
+        function decodePwd(encoded) {
+            try {
+                return atob(encoded);
+            } catch (e) {
+                return '';
+            }
+        }
+        // "9097" => btoa('9097') = "OTA5Nw=="
+        const correctPwd = decodePwd('OTA5Nw==');
 
-<!-- jsPDF CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-    const micronToM = 1e-6;
-    const mmToM = 1 / 1000;
-    const gcm3ToKgM3 = 1000;
-    let lastCalc = { layers: [], totalWeight: 0, totalThr: 0, wastage: 0 };
+        const lockScreen = document.getElementById('lockScreen');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdBtn = document.getElementById('pwdBtn');
+        const pwdMsg = document.getElementById('pwdMsg');
 
-    function recalc() {
-        const dieWidth = parseFloat(document.getElementById('dieWidth').value) || 0;
-        const lineSpeed = parseFloat(document.getElementById('lineSpeed').value) || 0;
-        const hours = parseFloat(document.getElementById('hoursInput').value) || 0;
-        const wastage = parseFloat(document.getElementById('wastageInput').value) || 0;
-
-        const widthm = mmToM * dieWidth;
-        const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
-        const layers = rows.map(r => ({
-            name: r.querySelector('.ext').value,
-            mat: r.querySelector('.mat').value,
-            mic: parseFloat(r.querySelector('.mic').value) || 0,
-            den: parseFloat(r.querySelector('.den').value) || 0,
-            extruder: r.getAttribute('data-extruder') || '',
-            row: r
-        }));
-
-        const totalMic = layers.reduce((s, l) => s + l.mic, 0);
-        const sumWeighted = layers.reduce((s, l) => s + l.den * l.mic, 0);
-        const avgDen = totalMic > 0 ? sumWeighted / totalMic : 0;
-
-        let totalThr = 0;
-        layers.forEach(L => {
-            const pct = totalMic > 0 ? (L.mic / totalMic * 100).toFixed(2) : '0.00';
-            L.row.querySelector('.pct').textContent = pct;
-
-            const thr = widthm * micronToM * L.mic * lineSpeed * 60 * gcm3ToKgM3 * L.den;
-            L.thr = thr;
-            L.row.querySelector('.thr').textContent = thr.toFixed(3);
-            totalThr += thr;
-
-            let rpm = 0;
-            if (L.extruder === '90') {
-                rpm = L.den > 0 ? thr / (6.9 * L.den) : 0;
+        function checkPwd() {
+            if (pwdInput.value === correctPwd) {
+                lockScreen.style.display = 'none';
             } else {
-                rpm = L.den > 0 ? thr / (2 * L.den) : 0;
+                pwdMsg.textContent = 'Incorrect password';
+                pwdInput.value = '';
             }
-            L.rpm = rpm;
-            L.row.querySelector('.rpm').textContent = rpm.toFixed(1);
-        });
-
-        document.getElementById('totalMic').textContent = totalMic.toFixed(2);
-        document.getElementById('avgDen').textContent = avgDen.toFixed(4);
-        document.getElementById('sumThr').textContent = totalThr.toFixed(3);
-
-        const totalWeight = totalThr * hours;
-        document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
-
-        const wastagePct = totalWeight > 0 ? (wastage / totalWeight * 100).toFixed(2) : '0.00';
-        document.getElementById('wastagePct').textContent = wastagePct + '%';
-
-        let length = 0;
-        if (widthm > 0 && totalMic > 0 && avgDen > 0) {
-            const thicknessm = micronToM * totalMic;
-            const density = gcm3ToKgM3 * avgDen;
-            const netWeight = totalWeight - wastage;
-            length = netWeight / (widthm * thicknessm * density);
         }
-        document.getElementById('totalLength').textContent = length.toFixed(2);
+        pwdBtn.addEventListener('click', checkPwd);
+        pwdInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkPwd(); });
+        pwdInput.focus();
 
-        layers.forEach(L => { L.consumeKg = L.thr * hours; });
-        const totalConsume = layers.reduce((s, l) => s + l.consumeKg, 0);
-        layers.forEach(L => {
-            L.scrapKg = totalConsume > 0 && wastage > 0 ? (L.consumeKg / totalConsume) * wastage : 0;
-            L.netKg = L.consumeKg - L.scrapKg;
-        });
+        // CFL sidebar toggle + drag
+        const cflSidebar = document.getElementById('cflSidebarBox');
+        const cflLink = document.getElementById('toggleCflLink');
+        const cflClose = document.getElementById('cflSidebarClose');
 
-        lastCalc = { layers, totalWeight, totalThr, wastage, hours, dieWidth, lineSpeed, length };
-    }
-
-    function attachRowInputs(row) {
-        row.querySelectorAll('input').forEach(inp => {
-            inp.addEventListener('input', recalc);
-        });
-    }
-
-    document.querySelectorAll('#calcTable tbody tr').forEach(attachRowInputs);
-    document.querySelectorAll('.input-section input').forEach(i => i.addEventListener('input', recalc));
-    window.addEventListener('load', recalc);
-
-    // New Layer Add
-    document.getElementById('addRowBtn').addEventListener('click', () => {
-        const tbody = document.querySelector('#calcTable tbody');
-        const rows = tbody.querySelectorAll('tr');
-        const last = rows[rows.length - 1];
-        const clone = last.cloneNode(true);
-        // default values for new row
-        clone.setAttribute('data-extruder', '');
-        clone.querySelector('.ext').value = 'EXTRUDER';
-        clone.querySelector('.mat').value = '';
-        clone.querySelector('.mic').value = '10';
-        clone.querySelector('.den').value = '0.91';
-        clone.querySelector('.pct').textContent = '-';
-        clone.querySelector('.thr').textContent = '-';
-        clone.querySelector('.rpm').textContent = '-';
-        tbody.appendChild(clone);
-        attachRowInputs(clone);
-        recalc();
-    });
-
-    // Delete Last Layer
-    document.getElementById('delRowBtn').addEventListener('click', () => {
-        const tbody = document.querySelector('#calcTable tbody');
-        const rows = tbody.querySelectorAll('tr');
-        if (rows.length <= 1) {
-            alert('At least one layer required');
-            return;
-        }
-        tbody.removeChild(rows[rows.length - 1]);
-        recalc();
-    });
-
-    document.getElementById('exportPdf').addEventListener('click', () => {
-        const { jsPDF } = window.jspdf;
-        if (!jsPDF) {
-            alert('jsPDF library not loaded');
-            return;
-        }
-        recalc();
-        const productName = prompt('Product Name');
-        if (!productName) return;
-        const operatorName = prompt('Operator Name') || '';
-
-        const pdf = new jsPDF('l', 'mm', 'a4');
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const centerX = pageWidth / 2;
-        let y = 18;
-
-        const now = new Date();
-        const dateStr = now.toLocaleDateString();
-        const timeStr = now.toLocaleTimeString();
-
-        pdf.setFontSize(24);
-        pdf.text('Pawan Multilayer Film Formulation', centerX, y, { align: 'center' });
-        y += 10;
-        pdf.setFontSize(16);
-        pdf.text('Multi-Layer Film Production Summary', centerX, y, { align: 'center' });
-        y += 10;
-
-        pdf.setFontSize(13);
-        pdf.text(`Date: ${dateStr}   Time: ${timeStr}`, centerX, y, { align: 'center' });
-        y += 7;
-        pdf.text(`Product: ${productName}`, centerX, y, { align: 'center' });
-        y += 6;
-        pdf.text(`Operator: ${operatorName}`, centerX, y, { align: 'center' });
-        y += 8;
-        pdf.text(`Die Width: ${lastCalc.dieWidth} mm   Line Speed: ${lastCalc.lineSpeed} m/min   Hours: ${lastCalc.hours}`, centerX, y, { align: 'center' });
-        y += 7;
-        pdf.text(`Total Weight: ${lastCalc.totalWeight.toFixed(2)} kg   Net Length: ${lastCalc.length.toFixed(2)} m   Scrap: ${lastCalc.wastage.toFixed(2)} kg`, centerX, y, { align: 'center' });
-        y += 12;
-
-        const marginSide = 12;
-        const tableWidth = pageWidth - marginSide * 2;
-        const tableLeft = marginSide;
-        const colExtr = tableWidth * 0.20;
-        const colMat  = tableWidth * 0.30;
-        const colThk  = tableWidth * 0.10;
-        const colDen  = tableWidth * 0.10;
-        const colKghr = tableWidth * 0.10;
-        const colTotKg = tableWidth * 0.10;
-        const colScrap = tableWidth * 0.10;
-
-        pdf.setFontSize(13);
-        let x = tableLeft;
-        pdf.text('Extruder', x + colExtr/2, y, { align: 'center' }); x += colExtr;
-        pdf.text('Material', x + colMat/2, y, { align: 'center' }); x += colMat;
-        pdf.text('Thk μ',   x + colThk/2, y, { align: 'center' }); x += colThk;
-        pdf.text('Density', x + colDen/2, y, { align: 'center' }); x += colDen;
-        pdf.text('kg/hr',   x + colKghr/2, y, { align: 'center' }); x += colKghr;
-        pdf.text('Total kg',x + colTotKg/2, y, { align: 'center' }); x += colTotKg;
-        pdf.text('Scrap kg',x + colScrap/2, y, { align: 'center' });
-        y += 3;
-        pdf.line(tableLeft, y, tableLeft + tableWidth, y);
-        y += 7;
-
-        pdf.setFontSize(12);
-        lastCalc.layers.forEach(L => {
-            if (y > pageHeight - 15) {
-                pdf.addPage();
-                y = 20;
+        function toggleCflSidebar() {
+            if (cflSidebar.classList.contains('hidden')) {
+                cflSidebar.classList.remove('hidden');
+                cflSidebar.classList.add('visible');
+            } else {
+                cflSidebar.classList.remove('visible');
+                cflSidebar.classList.add('hidden');
             }
-            let rowX = tableLeft;
-            const extShort = L.name.length > 20 ? L.name.substring(0, 20) : L.name;
-            const matShort = L.mat.length > 32 ? L.mat.substring(0, 32) : L.mat;
-            pdf.text(String(extShort), rowX + colExtr/2, y, { align: 'center' }); rowX += colExtr;
-            pdf.text(String(matShort), rowX + colMat/2, y, { align: 'center' }); rowX += colMat;
-            pdf.text(String(L.mic.toFixed(1)), rowX + colThk/2, y, { align: 'center' }); rowX += colThk;
-            pdf.text(String(L.den.toFixed(2)), rowX + colDen/2, y, { align: 'center' }); rowX += colDen;
-            pdf.text(String(L.thr.toFixed(1)), rowX + colKghr/2, y, { align: 'center' }); rowX += colKghr;
-            pdf.text(String(L.consumeKg.toFixed(1)), rowX + colTotKg/2, y, { align: 'center' }); rowX += colTotKg;
-            pdf.text(String(L.scrapKg.toFixed(1)), rowX + colScrap/2, y, { align: 'center' });
-            y += 8;
+        }
+        cflLink.addEventListener('click', toggleCflSidebar);
+        cflClose.addEventListener('click', toggleCflSidebar);
+
+        // Drag movement
+        (function makeDraggable() {
+            const box = document.getElementById('cflSidebarBox');
+            const header = document.getElementById('cflSidebarHeader');
+            let offsetX = 0, offsetY = 0, isDown = false;
+
+            header.addEventListener('mousedown', function(e) {
+                isDown = true;
+                const rect = box.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mouseup', function() {
+                isDown = false;
+                document.body.style.userSelect = '';
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDown) return;
+                let x = e.clientX - offsetX;
+                let y = e.clientY - offsetY;
+
+                const maxX = window.innerWidth - box.offsetWidth - 10;
+                const maxY = window.innerHeight - box.offsetHeight - 10;
+                if (x < 10) x = 10;
+                if (y < 10) y = 10;
+                if (x > maxX) x = maxX;
+                if (y > maxY) y = maxY;
+
+                box.style.left = x + 'px';
+                box.style.top = y + 'px';
+                box.style.bottom = 'auto';
+            });
+        })();
+
+        // CFL Sidebar 7-type calculator
+        const DEFAULT_CORE_SB = 76;
+        const DEFAULT_DENSITY_SB = 0.91;
+
+        function getDensitySB() {
+            return parseFloat(document.getElementById('density-sb').value) || DEFAULT_DENSITY_SB;
+        }
+
+        function showOptionSB() {
+            const choice = document.getElementById('choice-sb').value;
+            for (let i = 0; i <= 6; i++) {
+                const box = document.getElementById(`option${i}-sb`);
+                if (!box) continue;
+                box.classList.toggle('active', String(i) === String(choice));
+            }
+        }
+
+        function calcSB(choice) {
+            const density = getDensitySB();
+            let result = '';
+            try {
+                if (choice === 0) {
+                    const len = parseFloat(document.getElementById('len0-sb').value);
+                    const wid = parseFloat(document.getElementById('wid0-sb').value);
+                    const thi = parseFloat(document.getElementById('thi0-sb').value);
+                    const widM = wid / 1000;
+                    const area = len * widM;
+                    const gsm = density * thi;
+                    const weight = (gsm * area) / 1000;
+                    result = `Roll Weight: ${weight.toFixed(2)} kg`;
+                } else if (choice === 1) {
+                    const wei = parseFloat(document.getElementById('wei1-sb').value);
+                    const wid = parseFloat(document.getElementById('wid1-sb').value);
+                    const thi = parseFloat(document.getElementById('thi1-sb').value);
+                    const widM = wid / 1000;
+                    const gsm = density * thi;
+                    const yieldM2Kg = 1000 / gsm;
+                    const area = wei * yieldM2Kg;
+                    const len = area / widM;
+                    result = `Film Length: ${len.toFixed(2)} m`;
+                } else if (choice === 2) {
+                    const wei = parseFloat(document.getElementById('wei2-sb').value);
+                    const len = parseFloat(document.getElementById('len2-sb').value);
+                    const wid = parseFloat(document.getElementById('wid2-sb').value);
+                    const widM = wid / 1000;
+                    const area = len * widM;
+                    const massG = wei * 1000;
+                    const gsm = massG / area;
+                    const thi = gsm / density;
+                    result = `Film Thickness: ${thi.toFixed(2)} µm`;
+                } else if (choice === 3) {
+                    const len = parseFloat(document.getElementById('len3-sb').value);
+                    const wid = parseFloat(document.getElementById('wid3-sb').value);
+                    const widM = wid / 1000;
+                    const area = len * widM;
+                    result = `Film Area: ${area.toFixed(2)} m²`;
+                } else if (choice === 4) {
+                    const are = parseFloat(document.getElementById('are4-sb').value);
+                    const len = parseFloat(document.getElementById('len4-sb').value);
+                    const wid = (are / len) * 1000;
+                    result = `Roll Width: ${wid.toFixed(2)} mm`;
+                } else if (choice === 5) {
+                    const odi = parseFloat(document.getElementById('odi5-sb').value);
+                    let cor = parseFloat(document.getElementById('cor5-sb').value) || DEFAULT_CORE_SB;
+                    const thi = parseFloat(document.getElementById('thi5-sb').value);
+                    const thiMM = thi / 1000;
+                    const R = odi / 2;
+                    const r = cor / 2;
+                    const lenMM = Math.PI * (R * R - r * r) / thiMM;
+                    const len = lenMM / 1000;
+                    result = `Film Length: ${len.toFixed(2)} m`;
+                } else if (choice === 6) {
+                    const len = parseFloat(document.getElementById('len6-sb').value);
+                    let cor = parseFloat(document.getElementById('cor6-sb').value) || DEFAULT_CORE_SB;
+                    const thi = parseFloat(document.getElementById('thi6-sb').value);
+                    const thiMM = thi / 1000;
+                    const lenMM = len * 1000;
+                    const r = cor / 2;
+                    const R = Math.sqrt((lenMM * thiMM / Math.PI) + r * r);
+                    const odi = 2 * R;
+                    result = `Roll Diameter: ${odi.toFixed(2)} mm`;
+                }
+            } catch (e) {
+           
+
+        result = 'Error: Please enter valid numbers.';
+            }
+            document.getElementById('result-sb').innerHTML =
+                result + `<br><small>(Density ${density} g/cm³)</small>`;
+        }
+
+        // Main multilayer calculator
+        const micronToM = 1e-6;
+        const mmToM = 1 / 1000;
+        const gcm3ToKgM3 = 1000;
+        let lastCalc = { layers: [], totalWeight: 0, totalThr: 0, wastage: 0, hours: 0, dieWidth: 0, lineSpeed: 0, length: 0 };
+
+        function recalc() {
+            const dieWidth = parseFloat(document.getElementById('dieWidth').value) || 0;
+            const lineSpeed = parseFloat(document.getElementById('lineSpeed').value) || 0;
+            const hours = parseFloat(document.getElementById('hoursInput').value) || 0;
+            const wastage = parseFloat(document.getElementById('wastageInput').value) || 0;
+
+            const widthM = mmToM * dieWidth;
+            const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
+
+            const layers = rows.map(r => ({
+                name: r.querySelector('.ext').value,
+                mat: r.querySelector('.mat').value,
+                mic: parseFloat(r.querySelector('.mic').value) || 0,
+                den: parseFloat(r.querySelector('.den').value) || 0,
+                extruder: r.getAttribute('data-extruder'),
+                row: r
+            }));
+
+            const totalMic = layers.reduce((s, l) => s + l.mic, 0);
+            const sumWeighted = layers.reduce((s, l) => s + l.den * l.mic, 0);
+            const avgDen = totalMic > 0 ? sumWeighted / totalMic : 0;
+
+            let totalThr = 0;
+            layers.forEach(L => {
+                const pct = totalMic > 0 ? (L.mic / totalMic * 100).toFixed(2) : '0.00';
+                L.row.querySelector('.pct-td').textContent = pct;
+
+                const thr = widthM * (micronToM * L.mic) * lineSpeed * 60 * (gcm3ToKgM3 * L.den);
+                L.thr = thr;
+                L.row.querySelector('.thr-td').textContent = thr.toFixed(3);
+                totalThr += thr;
+
+                let rpm = 0;
+                if (L.extruder === '90') rpm = L.den > 0 ? thr / (6.9 * L.den) : 0;
+                else rpm = L.den > 0 ? thr / (2 * L.den) : 0;
+                L.rpm = rpm;
+                L.row.querySelector('.rpm-td').textContent = rpm.toFixed(1);
+            });
+
+            document.getElementById('totalMic').textContent = totalMic.toFixed(2);
+            document.getElementById('avgDen').textContent = avgDen.toFixed(4);
+            document.getElementById('sumThr').textContent = totalThr.toFixed(3);
+
+            const totalWeight = totalThr * hours;
+            document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
+
+            const wastagePct = totalWeight > 0 ? ((wastage / totalWeight) * 100).toFixed(2) : '0.00';
+            document.getElementById('wastagePct').textContent = wastagePct + '%';
+
+            let length = 0;
+            if (widthM > 0 && totalMic > 0 && avgDen > 0) {
+                const thicknessM = micronToM * totalMic;
+                const density = gcm3ToKgM3 * avgDen;
+                const netWeight = totalWeight - wastage;
+                length = netWeight / (widthM * thicknessM * density);
+            }
+            document.getElementById('totalLength').textContent = length.toFixed(2);
+
+            layers.forEach(L => {
+                L.consumeKg = L.thr * hours;
+            });
+            const totalConsume = layers.reduce((s, l) => s + l.consumeKg, 0);
+            layers.forEach(L => {
+                L.scrapKg = totalConsume > 0 && wastage > 0 ? (L.consumeKg / totalConsume) * wastage : 0;
+                L.netKg = L.consumeKg - L.scrapKg;
+            });
+
+            lastCalc = { layers, totalWeight, totalThr, wastage, hours, dieWidth, lineSpeed, length };
+        }
+
+        function attachRowInputs(row) {
+            row.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('input', recalc);
+            });
+        }
+
+        document.querySelectorAll('#calcTable tbody tr').forEach(attachRowInputs);
+        document.querySelectorAll('.input-section input').forEach(i => i.addEventListener('input', recalc));
+        window.addEventListener('load', recalc);
+
+        // Add/Delete rows
+        document.getElementById('addRowBtn').addEventListener('click', () => {
+            const tbody = document.querySelector('#calcTable tbody');
+            const rows = tbody.querySelectorAll('tr');
+            const last = rows[rows.length - 1];
+            const clone = last.cloneNode(true);
+            clone.setAttribute('data-extruder', '');
+            clone.querySelector('.ext').value = 'EXTRUDER';
+            clone.querySelector('.mat').value = '';
+            clone.querySelector('.mic').value = '10';
+            clone.querySelector('.den').value = '0.91';
+            clone.querySelector('.pct-td').textContent = '-';
+            clone.querySelector('.thr-td').textContent = '-';
+            clone.querySelector('.rpm-td').textContent = '-';
+            tbody.appendChild(clone);
+            attachRowInputs(clone);
+            recalc();
         });
 
-        pdf.save('filmformulation-summary.pdf');
-    });
-</script>
+        document.getElementById('delRowBtn').addEventListener('click', () => {
+            const tbody = document.querySelector('#calcTable tbody');
+            const rows = tbody.querySelectorAll('tr');
+            if (rows.length <= 1) {
+                alert('At least one layer required');
+                return;
+            }
+            tbody.removeChild(rows[rows.length - 1]);
+            recalc();
+        });
+
+        // PDF Export
+        document.getElementById('exportPdf').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                alert('jsPDF library not loaded');
+                return;
+            }
+            recalc();
+
+            const productName = prompt('Product Name:') || 'Unnamed';
+            const operatorName = prompt('Operator Name:') || 'Unnamed';
+
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const centerX = pageWidth / 2;
+            let y = 20;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString();
+
+            pdf.setFontSize(22);
+            pdf.text('Pawan Multilayer Film Formulation', centerX, y, { align: 'center' });
+            y += 10;
+            pdf.setFontSize(14);
+            pdf.text('Multi-Layer Film Production Summary', centerX, y, { align: 'center' });
+            y += 9;
+
+            pdf.setFontSize(11);
+            pdf.text(`Date: ${dateStr} | Time: ${timeStr}`, centerX, y, { align: 'center' });
+            y += 6;
+            pdf.text(`Product: ${productName}`, centerX, y, { align: 'center' });
+            y += 5;
+            pdf.text(`Operator: ${operatorName}`, centerX, y, { align: 'center' });
+            y += 9;
+
+            pdf.text(
+                `Die Width: ${lastCalc.dieWidth} mm | Line Speed: ${lastCalc.lineSpeed} m/min | Hours: ${lastCalc.hours}`,
+                centerX, y, { align: 'center' }
+            );
+            y += 6;
+            pdf.text(
+                `Total Weight: ${lastCalc.totalWeight.toFixed(2)} kg | Net Length: ${lastCalc.length.toFixed(2)} m | Scrap: ${lastCalc.wastage.toFixed(2)} kg`,
+                centerX, y, { align: 'center' }
+            );
+            y += 12;
+
+            const marginSide = 12;
+            const tableWidth = pageWidth - 2 * marginSide;
+            const tableLeft = marginSide;
+            const colExtr = tableWidth * 0.20;
+            const colMat  = tableWidth * 0.30;
+            const colThk  = tableWidth * 0.08;
+            const colDen  = tableWidth * 0.08;
+            const colKgHr = tableWidth * 0.12;
+            const colTot  = tableWidth * 0.12;
+            const colScr  = tableWidth * 0.10;
+
+            let x = tableLeft;
+            pdf.setFontSize(11);
+            pdf.text('Extruder', x + colExtr / 2, y, { align: 'center' });
+            x += colExtr;
+            pdf.text('Material', x + colMat / 2, y, { align: 'center' });
+            x += colMat;
+            pdf.text('Thk(µ)', x + colThk / 2, y, { align: 'center' });
+            x += colThk;
+            pdf.text('Density', x + colDen / 2, y, { align: 'center' });
+            x += colDen;
+            pdf.text('kg/hr', x + colKgHr / 2, y, { align: 'center' });
+            x += colKgHr;
+            pdf.text('Total kg', x + colTot / 2, y, { align: 'center' });
+            x += colTot;
+            pdf.text('Scrap kg', x + colScr / 2, y, { align: 'center' });
+
+            y += 3;
+            pdf.line(tableLeft, y, tableLeft + tableWidth, y);
+            y += 6;
+
+            pdf.setFontSize(10);
+            lastCalc.layers.forEach(L => {
+                if (y > pageHeight - 18) {
+                    pdf.addPage();
+                    y = 18;
+                }
+                let rowX = tableLeft;
+                const extShort = L.name.length > 20 ? L.name.substring(0, 20) + '…' : L.name;
+                const matShort = L.mat.length > 30 ? L.mat.substring(0, 30) + '…' : L.mat;
+
+                const totalKg = L.consumeKg || 0;
+                const scrapKg = L.scrapKg || 0;
+
+                pdf.text(String(extShort), rowX + colExtr / 2, y, { align: 'center' });
+                rowX += colExtr;
+                pdf.text(String(matShort), rowX + colMat / 2, y, { align: 'center' });
+                rowX += colMat;
+                pdf.text(L.mic.toFixed(1), rowX + colThk / 2, y, { align: 'center' });
+                rowX += colThk;
+                pdf.text(L.den.toFixed(2), rowX + colDen / 2, y, { align: 'center' });
+                rowX += colDen;
+                pdf.text(L.thr.toFixed(1), rowX + colKgHr / 2, y, { align: 'center' });
+                rowX += colKgHr;
+                pdf.text(totalKg.toFixed(1), rowX + colTot / 2, y, { align: 'center' });
+                rowX += colTot;
+                pdf.text(scrapKg.toFixed(1), rowX + colScr / 2, y, { align: 'center' });
+
+                y += 6;
+            });
+
+            pdf.save(`filmformulation-summary-${dateStr}.pdf`);
+        });
+    </script>
 </body>
 </html>
