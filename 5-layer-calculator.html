@@ -50,7 +50,7 @@
       width: 70px;
       height: 70px;
       border-radius: 8px;
-      background: #ffffff;
+      background: #FFEB3B;
       border: 2px solid rgba(255,255,255,0.3);
       display: flex;
       align-items: center;
@@ -59,7 +59,7 @@
       flex-shrink: 0;
       padding: 4px;
     }
-    .header-logo img {
+    .header-logo svg {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -341,10 +341,25 @@
   <div class="container">
     <div class="header">
       <div class="header-logo">
-        <img src="https://www.amipolymer.com/images/logo/amipolymer-logo.png" alt="Ami Polymer Logo" onerror="this.style.display='none'">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Yellow background -->
+          <rect width="200" height="200" fill="#FFEB3B"/>
+          
+          <!-- Red dot at top -->
+          <circle cx="160" cy="35" r="12" fill="#FF4444"/>
+          
+          <!-- Left side of AM: Triangle -->
+          <polygon points="45,70 65,130 85,130" fill="#FF4444" stroke="#000000" stroke-width="4"/>
+          
+          <!-- Triangle accent (pink) -->
+          <polygon points="55,85 70,110 80,85" fill="#FF69B4"/>
+          
+          <!-- Right side of AM: Mountain peak -->
+          <polyline points="100,130 125,60 150,120 180,60" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
       <div class="header-text">
-        <h1>Ami Polymer Film Formulation</h1>
+        <h1>Pawan Multilayer</h1>
         <p>Extrusion Throughput • Layer Balance • Production Summary</p>
       </div>
     </div>
@@ -467,10 +482,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /**
- * ═════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════
  * AMI POLYMER FILM FORMULATION CALCULATOR
  * Configuration, Constants, and Calculation Engine
- * ═════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════
  */
 
 // ─── CONFIGURATION & CONSTANTS ───────────────────────────────────────────────
@@ -512,7 +527,7 @@ const CONFIG = {
   STORAGE_KEY: 'filmFormulationData'
 };
 
-// ─── UI STATE ───────────────────────────────────────────────────────────────
+// ─── UI STATE ───────────────────────────────────────────────────────────
 let calculationState = {
   layers: [],
   totalWeight: 0,
@@ -775,7 +790,7 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
 
     // Title
     pdf.setFontSize(24);
-    pdf.text('Ami Polymer Multilayer Film Formulation', centerX, y, { align: 'center' });
+    pdf.text('Pawan Multilayer Film Formulation', centerX, y, { align: 'center' });
     y += 10;
     pdf.setFontSize(16);
     pdf.text('Multi-Layer Film Production Summary', centerX, y, { align: 'center' });
@@ -849,7 +864,7 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
   }
 });
 
-// ─── INIT ───────────────────────────────────────────────────────────────────
+// ─── INIT ───────────────────────────────────────────────────────────
 document.querySelectorAll('input').forEach(input => {
   input.addEventListener('input', recalculate);
   input.addEventListener('change', recalculate);
