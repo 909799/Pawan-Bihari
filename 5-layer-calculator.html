@@ -47,21 +47,22 @@
       flex-wrap: wrap;
     }
     .header-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #ffffff, #bbf7d0);
-      border: 2px solid rgba(255,255,255,0.7);
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 2px solid rgba(255,255,255,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.25);
       flex-shrink: 0;
+      padding: 4px;
     }
-    .header-logo span {
-      font-size: 30px;
-      font-weight: 800;
-      color: #166534;
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     .header-text h1 {
       margin: 0;
@@ -331,6 +332,7 @@
       .calc-table input { font-size: 11px; padding: 4px 2px; }
       .calcbox { min-width: 140px; }
       .input-section { gap: 10px; padding: 10px; }
+      .header-logo { width: 60px; height: 60px; }
     }
   </style>
 </head>
@@ -339,7 +341,7 @@
   <div class="container">
     <div class="header">
       <div class="header-logo">
-        <span>A</span>
+        <img src="https://www.amipolymer.com/images/logo/amipolymer-logo.png" alt="Ami Polymer Logo" onerror="this.style.display='none'">
       </div>
       <div class="header-text">
         <h1>Ami Polymer Film Formulation</h1>
@@ -465,10 +467,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /**
- * ═══════════════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════════
  * AMI POLYMER FILM FORMULATION CALCULATOR
  * Configuration, Constants, and Calculation Engine
- * ═══════════════════════════════════════════════════════════════════════════════
+ * ═════════════════════════════════════════════════════════════════════
  */
 
 // ─── CONFIGURATION & CONSTANTS ───────────────────────────────────────────────
@@ -510,7 +512,7 @@ const CONFIG = {
   STORAGE_KEY: 'filmFormulationData'
 };
 
-// ─── UI STATE ────────────────────────────────────────────────────────────────
+// ─── UI STATE ───────────────────────────────────────────────────────────────
 let calculationState = {
   layers: [],
   totalWeight: 0,
@@ -699,7 +701,7 @@ function recalculate() {
   }
 }
 
-// ─── EVENT HANDLERS ──────────────────────────────────────────────────────────
+// ─── EVENT HANDLERS ─────────────────────────────────────────────────────────
 
 document.getElementById('saveBtn').addEventListener('click', () => {
   const data = {
@@ -847,7 +849,7 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
   }
 });
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
+// ─── INIT ───────────────────────────────────────────────────────────────────
 document.querySelectorAll('input').forEach(input => {
   input.addEventListener('input', recalculate);
   input.addEventListener('change', recalculate);
