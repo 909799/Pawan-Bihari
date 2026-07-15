@@ -1,873 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Ami Polymer Film Formulation</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root {
-      --primary: #1e40af;
-      --secondary: #16a34a;
-      --accent: #dbeafe;
-      --bg: #f8fafc;
-      --border: #e2e8f0;
-      --text: #1e293b;
-      --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
-      --success: #10b981;
-      --info: #1e40af;
-      --warning: #f59e0b;
-      --error: #ef4444;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: var(--text);
-    }
-    .shell {
-      max-width: 1300px;
-      margin: 0 auto;
-    }
-    .container {
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-    }
-    .header {
-      background: linear-gradient(135deg, #15803d, #22c55e);
-      color: #ffffff;
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .header-logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 8px;
-      background: #FFEB3B;
-      border: 2px solid rgba(255,255,255,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      flex-shrink: 0;
-      padding: 4px;
-    }
-    .header-logo svg {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .header-text h1 {
-      margin: 0;
-      font-size: 26px;
-      font-weight: 700;
-    }
-    .header-text p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      opacity: 0.9;
-    }
-    .content {
-      padding: 24px;
-      background: var(--bg);
-      font-size: 16px;
-    }
-    .alert {
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-    .alert.show { display: flex; }
-    .alert.error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-    .alert.success {
-      background: #dcfce7;
-      color: #166534;
-      border: 1px solid #86efac;
-    }
-    .alert.warning {
-      background: #fef3c7;
-      color: #92400e;
-      border: 1px solid #fcd34d;
-    }
-    .input-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-      background: var(--accent);
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      font-size: 14px;
-    }
-    .input-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #166534;
-      font-size: 13px;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 9px 9px;
-      border-radius: 6px;
-      border: 1px solid #94a3b8;
-      font-size: 14px;
-    }
-    .input-group input:invalid {
-      border-color: var(--error);
-      background-color: #fee2e2;
-    }
-    .wastage-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .wastage-pct {
-      font-size: 12px;
-      font-weight: 600;
-      color: #065f46;
-      white-space: nowrap;
-      min-width: 60px;
-    }
-    .calcboxes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-    .calcbox {
-      padding: 14px;
-      background: #ecfdf5;
-      border: 1px solid #86efac;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .calcbox label {
-      font-weight: 600;
-      color: #065f46;
-      font-size: 13px;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .calcbox span {
-      display: block;
-      font-size: 20px;
-      font-weight: 700;
-      color: #064e3b;
-      word-break: break-word;
-    }
-    .calc-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      background: #ffffff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-      margin: 0 auto;
-    }
-    .calc-table thead th,
-    .calc-table tbody td,
-    .calc-table tfoot td {
-      border: 1px solid #cbd5e1;
-      padding: 8px 6px;
-      text-align: center;
-      vertical-align: middle;
-    }
-    .calc-table thead th {
-      background: linear-gradient(135deg, #15803d, #22c55e);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .calc-table tbody tr:nth-child(even) {
-      background: #f9fafb;
-    }
-    .calc-table tbody tr:hover {
-      background: #dcfce7;
-    }
-    .calc-table input[type="number"],
-    .calc-table input[type="text"] {
-      width: 100%;
-      padding: 6px 4px;
-      border-radius: 4px;
-      border: 1px solid #cbd5e1;
-      font-size: 13px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    .calc-table input:invalid {
-      border-color: var(--error);
-      background-color: #fee2e2;
-    }
-    .calc-table tfoot td {
-      background: #dcfce7;
-      font-weight: 700;
-      color: #166534;
-    }
-    .buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 18px;
-      flex-wrap: wrap;
-    }
-    .buttons button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      font-size: 14px;
-      transition: opacity 0.2s;
-    }
-    .buttons button:hover {
-      opacity: 0.9;
-    }
-    .buttons button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    #saveBtn { background: var(--success); }
-    #loadBtn { background: var(--info); }
-    #exportPdf { background: #0f766e; }
-    /* Password overlay */
-    #pwOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: linear-gradient(135deg, #15803d 0%, #1e40af 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: inherit;
-    }
-    #pwBox {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 40px 36px 32px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
-      text-align: center;
-      width: 320px;
-    }
-    #pwBox .lock-icon { font-size: 48px; margin-bottom: 12px; }
-    #pwBox h2 { margin: 0 0 4px; font-size: 20px; color: #15803d; }
-    #pwBox p  { margin: 0 0 20px; font-size: 13px; color: #64748b; }
-    #pwInput {
-      width: 100%;
-      padding: 11px 14px;
-      border: 2px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 18px;
-      letter-spacing: 6px;
-      text-align: center;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.2s;
-    }
-    #pwInput:focus { border-color: #15803d; }
-    #pwInput.error { border-color: var(--error); animation: shake 0.3s; }
-    @keyframes shake {
-      0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
-    }
-    #pwBtn {
-      margin-top: 14px;
-      width: 100%;
-      padding: 11px;
-      background: linear-gradient(135deg, #15803d, #22c55e);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 1px;
-    }
-    #pwBtn:hover:not(:disabled) { opacity: 0.92; }
-    #pwBtn:disabled { opacity: 0.6; cursor: not-allowed; }
-    #pwErr {
-      margin-top: 10px;
-      color: var(--error);
-      font-size: 13px;
-      min-height: 18px;
-    }
-    #pwLoading {
-      margin-top: 10px;
-      color: #15803d;
-      font-size: 13px;
-      min-height: 18px;
-      display: none;
-    }
-    .attempt-warning {
-      margin-top: 8px;
-      color: var(--warning);
-      font-size: 12px;
-      min-height: 16px;
-    }
-    @media (max-width: 768px) {
-      body { padding: 10px; }
-      .content { padding: 12px; }
-      .header { flex-direction: column; gap: 12px; }
-      .header-text h1 { font-size: 20px; }
-      .calc-table { font-size: 12px; }
-      .calc-table input { font-size: 11px; padding: 4px 2px; }
-      .calcbox { min-width: 140px; }
-      .input-section { gap: 10px; padding: 10px; }
-      .header-logo { width: 60px; height: 60px; }
-    }
-  </style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Ami Polymer Film Formulation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+--primary: #1e40af;
+--secondary: #16a34a;
+--accent: #dbeafe;
+--bg: #f8fafc;
+--border: #e2e8f0;
+--text: #1e293b;
+--shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+--success: #10b981;
+--info: #1e40af;
+--warning: #f59e0b;
+--error: #ef4444;
+}
+* { box-sizing: border-box; }
+body {
+margin: 0;
+padding: 20px;
+font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+color: var(--text);
+}
+.shell {
+max-width: 1300px;
+margin: 0 auto;
+}
+.container {
+background: #ffffff;
+border-radius: 20px;
+box-shadow: var(--shadow-lg);
+overflow: hidden;
+}
+.header {
+background: linear-gradient(135deg, #15803d, #22c55e);
+color: #ffffff;
+padding: 20px 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 16px;
+flex-wrap: wrap;
+}
+.header-logo {
+width: 70px;
+height: 70px;
+border-radius: 8px;
+background: #FFEB3B;
+border: 2px solid rgba(255,255,255,0.3);
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+flex-shrink: 0;
+padding: 4px;
+}
+.header-logo svg {
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+.header-text h1 {
+margin: 0;
+font-size: 26px;
+font-weight: 700;
+}
+.header-text p {
+margin: 4px 0 0;
+font-size: 13px;
+opacity: 0.9;
+}
+.content {
+padding: 24px;
+background: var(--bg);
+font-size: 16px;
+}
+.alert {
+padding: 12px 16px;
+border-radius: 8px;
+margin-bottom: 16px;
+font-size: 14px;
+display: none;
+align-items: center;
+gap: 8px;
+}
+.alert.show { display: flex; }
+.alert.error {
+background: #fee2e2;
+color: #991b1b;
+border: 1px solid #fecaca;
+}
+.alert.success {
+background: #dcfce7;
+color: #166534;
+border: 1px solid #86efac;
+}
+.alert.warning {
+background: #fef3c7;
+color: #92400e;
+border: 1px solid #fcd34d;
+}
+.input-section {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 16px;
+margin-bottom: 18px;
+background: var(--accent);
+padding: 14px;
+border-radius: 12px;
+border: 1px solid var(--border);
+font-size: 14px;
+}
+.input-group label {
+display: block;
+font-weight: 600;
+margin-bottom: 4px;
+color: #166534;
+font-size: 13px;
+}
+.input-group input {
+width: 100%;
+padding: 9px 9px;
+border-radius: 6px;
+border: 1px solid #94a3b8;
+font-size: 14px;
+}
+.input-group input:invalid {
+border-color: var(--error);
+background-color: #fee2e2;
+}
+.wastage-container {
+display: flex;
+align-items: center;
+gap: 6px;
+}
+.wastage-pct {
+font-size: 12px;
+font-weight: 600;
+color: #065f46;
+white-space: nowrap;
+min-width: 60px;
+}
+.calcboxes {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 14px;
+margin-bottom: 18px;
+}
+.calcbox {
+padding: 14px;
+background: #ecfdf5;
+border: 1px solid #86efac;
+border-radius: 10px;
+text-align: center;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.calcbox label {
+font-weight: 600;
+color: #065f46;
+font-size: 13px;
+display: block;
+margin-bottom: 6px;
+}
+.calcbox span {
+display: block;
+font-size: 20px;
+font-weight: 700;
+color: #064e3b;
+word-break: break-word;
+}
+.calc-table {
+width: 100%;
+border-collapse: collapse;
+font-size: 14px;
+background: #ffffff;
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+margin: 0 auto;
+}
+.calc-table thead th,
+.calc-table tbody td,
+.calc-table tfoot td {
+border: 1px solid #cbd5e1;
+padding: 8px 6px;
+text-align: center;
+vertical-align: middle;
+}
+.calc-table thead th {
+background: linear-gradient(135deg, #15803d, #22c55e);
+color: #ffffff;
+font-size: 13px;
+font-weight: 600;
+}
+.calc-table tbody tr:nth-child(even) {
+background: #f9fafb;
+}
+.calc-table tbody tr:hover {
+background: #dcfce7;
+}
+.calc-table input[type="number"],
+.calc-table input[type="text"] {
+width: 100%;
+padding: 6px 4px;
+border-radius: 4px;
+border: 1px solid #cbd5e1;
+font-size: 13px;
+text-align: center;
+box-sizing: border-box;
+}
+.calc-table input:invalid {
+border-color: var(--error);
+background-color: #fee2e2;
+}
+.calc-table tfoot td {
+background: #dcfce7;
+font-weight: 700;
+color: #166534;
+}
+.buttons {
+display: flex;
+gap: 12px;
+justify-content: center;
+margin-top: 18px;
+flex-wrap: wrap;
+}
+.buttons button {
+padding: 10px 20px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+font-weight: 600;
+color: #ffffff;
+box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+font-size: 14px;
+transition: opacity 0.2s;
+}
+.buttons button:hover {
+opacity: 0.9;
+}
+.buttons button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+#saveBtn { background: var(--success); }
+#loadBtn { background: var(--info); }
+#exportPdf { background: #0f766e; }
+/* Password overlay */
+#pwOverlay {
+position: fixed;
+inset: 0;
+z-index: 99999;
+background: linear-gradient(135deg, #15803d 0%, #1e40af 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: inherit;
+}
+#pwBox {
+background: #ffffff;
+border-radius: 20px;
+padding: 40px 36px 32px;
+box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+text-align: center;
+width: 320px;
+}
+#pwBox .lock-icon { font-size: 48px; margin-bottom: 12px; }
+#pwBox h2 { margin: 0 0 4px; font-size: 20px; color: #15803d; }
+#pwBox p { margin: 0 0 20px; font-size: 13px; color: #64748b; }
+#pwInput {
+width: 100%;
+padding: 11px 14px;
+border: 2px solid #cbd5e1;
+border-radius: 8px;
+font-size: 18px;
+letter-spacing: 6px;
+text-align: center;
+outline: none;
+box-sizing: border-box;
+transition: border-color 0.2s;
+}
+#pwInput:focus { border-color: #15803d; }
+#pwInput.error { border-color: var(--error); animation: shake 0.3s; }
+@keyframes shake {
+0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+}
+#pwBtn {
+margin-top: 14px;
+width: 100%;
+padding: 11px;
+background: linear-gradient(135deg, #15803d, #22c55e);
+color: #fff;
+border: none;
+border-radius: 8px;
+font-size: 15px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 1px;
+}
+#pwBtn:hover:not(:disabled) { opacity: 0.92; }
+#pwBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+#pwErr {
+margin-top: 10px;
+color: var(--error);
+font-size: 13px;
+min-height: 18px;
+}
+#pwLoading {
+margin-top: 10px;
+color: #15803d;
+font-size: 13px;
+min-height: 18px;
+display: none;
+}
+.attempt-warning {
+margin-top: 8px;
+color: var(--warning);
+font-size: 12px;
+min-height: 16px;
+}
+@media (max-width: 768px) {
+body { padding: 10px; }
+.content { padding: 12px; }
+.header { flex-direction: column; gap: 12px; }
+.header-text h1 { font-size: 20px; }
+.calc-table { font-size: 12px; }
+.calc-table input { font-size: 11px; padding: 4px 2px; }
+.calcbox { min-width: 140px; }
+.input-section { gap: 10px; padding: 10px; }
+.header-logo { width: 60px; height: 60px; }
+}
+</style>
 </head>
 <body>
 <div class="shell">
-  <div class="container">
-    <div class="header">
-      <div class="header-logo">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <!-- Yellow background -->
-          <rect width="200" height="200" fill="#FFEB3B"/>
-          
-          <!-- Red dot at top -->
-          <circle cx="160" cy="35" r="12" fill="#FF4444"/>
-          
-          <!-- Left side of AM: Triangle -->
-          <polygon points="45,70 65,130 85,130" fill="#FF4444" stroke="#000000" stroke-width="4"/>
-          
-          <!-- Triangle accent (pink) -->
-          <polygon points="55,85 70,110 80,85" fill="#FF69B4"/>
-          
-          <!-- Right side of AM: Mountain peak -->
-          <polyline points="100,130 125,60 150,120 180,60" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="header-text">
-        <h1>Pawan Multilayer</h1>
-        <p>Extrusion Throughput • Layer Balance • Production Summary</p>
-      </div>
-    </div>
-    <div class="content" id="captureArea">
-      <div id="alertBox" class="alert"></div>
+<div class="container">
+<div class="header">
+<div class="header-logo">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<!-- Yellow background -->
+<rect width="200" height="200" fill="#FFEB3B"/>
 
-      <div class="input-section">
-        <div class="input-group">
-          <label for="dieWidth">Die Width (mm)</label>
-          <input id="dieWidth" type="number" value="1400" min="10" max="5000" step="1">
-        </div>
-        <div class="input-group">
-          <label for="lineSpeed">Line Speed (m/min)</label>
-          <input id="lineSpeed" type="number" value="10" min="1" max="500" step="0.1">
-        </div>
-        <div class="input-group">
-          <label for="hoursInput">Production Hours</label>
-          <input id="hoursInput" type="number" value="1" min="0.1" max="168" step="0.1">
-        </div>
-        <div class="input-group">
-          <label for="wastageInput">Wastage (kg)</label>
-          <div class="wastage-container">
-            <input id="wastageInput" type="number" value="0" min="0" max="100000" step="0.1">
-            <span class="wastage-pct" id="wastagePct">0.00%</span>
-          </div>
-        </div>
-      </div>
+<!-- Red dot at top -->
+<circle cx="160" cy="35" r="12" fill="#FF4444"/>
 
-      <div class="calcboxes">
-        <div class="calcbox">
-          <label>Total Weight (kg)</label>
-          <span id="totalWeight">0.00</span>
-        </div>
-        <div class="calcbox">
-          <label>Net Film Length (m)</label>
-          <span id="totalLength">0.00</span>
-        </div>
-      </div>
+<!-- Left side of AM: Triangle -->
+<polygon points="45,70 65,130 85,130" fill="#FF4444" stroke="#000000" stroke-width="4"/>
 
-      <table id="calcTable" class="calc-table">
-        <thead>
-        <tr>
-          <th style="width:15%;">Extruder</th>
-          <th style="width:20%;">Material</th>
-          <th style="width:8%;">Thk (µ)</th>
-          <th style="width:9%;">Density</th>
-          <th style="width:8%;">Layer %</th>
-          <th style="width:15%;">kg/hr</th>
-          <th style="width:12%;">M.P RPM</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr data-extruder="90">
-          <td><input class="ext" type="text" value="EXTRUDER 90" maxlength="20"></td>
-          <td><input class="mat" type="text" value="ULDPE 4607" maxlength="30"></td>
-          <td><input class="mic" type="number" value="140" min="0" max="500" step="0.1"></td>
-          <td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
-          <td class="pct">0.00</td>
-          <td class="thr">0.000</td>
-          <td class="rpm">0.0</td>
-        </tr>
-        <tr data-extruder="55">
-          <td><input class="ext" type="text" value="EXTRUDER 55" maxlength="20"></td>
-          <td><input class="mat" type="text" value="LDPE EC 7000" maxlength="30"></td>
-          <td><input class="mic" type="number" value="50" min="0" max="500" step="0.1"></td>
-          <td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
-          <td class="pct">0.00</td>
-          <td class="thr">0.000</td>
-          <td class="rpm">0.0</td>
-        </tr>
-        <tr data-extruder="45">
-          <td><input class="ext" type="text" value="EXTRUDER 45A" maxlength="20"></td>
-          <td><input class="mat" type="text" value="EVOH EV 3251" maxlength="30"></td>
-          <td><input class="mic" type="number" value="30" min="0" max="500" step="0.1"></td>
-          <td><input class="den" type="number" value="1.17" min="0.5" max="2" step="0.01"></td>
-          <td class="pct">0.00</td>
-          <td class="thr">0.000</td>
-          <td class="rpm">0.0</td>
-        </tr>
-        <tr data-extruder="45">
-          <td><input class="ext" type="text" value="EXTRUDER 45B" maxlength="20"></td>
-          <td><input class="mat" type="text" value="TIE Orevac 825" maxlength="30"></td>
-          <td><input class="mic" type="number" value="15" min="0" max="500" step="0.1"></td>
-          <td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
-          <td class="pct">0.00</td>
-          <td class="thr">0.000</td>
-          <td class="rpm">0.0</td>
-        </tr>
-        <tr data-extruder="45">
-          <td><input class="ext" type="text" value="EXTRUDER 45C" maxlength="20"></td>
-          <td><input class="mat" type="text" value="TIE Orevac 825" maxlength="30"></td>
-          <td><input class="mic" type="number" value="15" min="0" max="500" step="0.1"></td>
-          <td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
-          <td class="pct">0.00</td>
-          <td class="thr">0.000</td>
-          <td class="rpm">0.0</td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-          <td colspan="2" style="text-align:right;">TOTAL</td>
-          <td id="totalMic">0.00</td>
-          <td id="avgDen">0.00</td>
-          <td>100</td>
-          <td id="sumThr">0.000</td>
-          <td></td>
-        </tr>
-        </tfoot>
-      </table>
+<!-- Triangle accent (pink) -->
+<polygon points="55,85 70,110 80,85" fill="#FF69B4"/>
 
-      <div class="buttons">
-        <button id="saveBtn">💾 Save Data</button>
-        <button id="loadBtn">📂 Load Data</button>
-        <button id="exportPdf">📄 Export PDF</button>
-      </div>
-    </div>
-  </div>
+<!-- Right side of AM: Mountain peak -->
+<polyline points="100,130 125,60 150,120 180,60" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<div class="header-text">
+<h1>Pawan Multilayer</h1>
+<p>Extrusion Throughput • Layer Balance • Production Summary</p>
+</div>
+</div>
+<div class="content" id="captureArea">
+<div id="alertBox" class="alert"></div>
+
+<div class="input-section">
+<div class="input-group">
+<label for="dieWidth">Die Width (mm)</label>
+<input id="dieWidth" type="number" value="1400" min="10" max="5000" step="1">
+</div>
+<div class="input-group">
+<label for="lineSpeed">Line Speed (m/min)</label>
+<input id="lineSpeed" type="number" value="10" min="1" max="500" step="0.1">
+</div>
+<div class="input-group">
+<label for="hoursInput">Production Hours</label>
+<input id="hoursInput" type="number" value="1" min="0.1" max="168" step="0.1">
+</div>
+<div class="input-group">
+<label for="wastageInput">Wastage (kg)</label>
+<div class="wastage-container">
+<input id="wastageInput" type="number" value="0" min="0" max="100000" step="0.1">
+<span class="wastage-pct" id="wastagePct">0.00%</span>
+</div>
+</div>
+</div>
+
+<div class="calcboxes">
+<div class="calcbox">
+<label>Total Weight (kg)</label>
+<span id="totalWeight">0.00</span>
+</div>
+<div class="calcbox">
+<label>Net Film Length (m)</label>
+<span id="totalLength">0.00</span>
+</div>
+</div>
+
+<table id="calcTable" class="calc-table">
+<thead>
+<tr>
+<th style="width:15%;">Extruder</th>
+<th style="width:20%;">Material</th>
+<th style="width:8%;">Thk (µ)</th>
+<th style="width:9%;">Density</th>
+<th style="width:8%;">Layer %</th>
+<th style="width:15%;">kg/hr</th>
+<th style="width:12%;">M.P RPM</th>
+</tr>
+</thead>
+<tbody>
+<tr data-extruder="90">
+<td><input class="ext" type="text" value="EXTRUDER 90" maxlength="20"></td>
+<td><input class="mat" type="text" value="ULDPE 4607" maxlength="30"></td>
+<td><input class="mic" type="number" value="140" min="0" max="500" step="0.1"></td>
+<td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
+<td class="pct">0.00</td>
+<td class="thr">0.000</td>
+<td class="rpm">0.0</td>
+</tr>
+<tr data-extruder="55">
+<td><input class="ext" type="text" value="EXTRUDER 55" maxlength="20"></td>
+<td><input class="mat" type="text" value="LDPE EC 7000" maxlength="30"></td>
+<td><input class="mic" type="number" value="50" min="0" max="500" step="0.1"></td>
+<td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
+<td class="pct">0.00</td>
+<td class="thr">0.000</td>
+<td class="rpm">0.0</td>
+</tr>
+<tr data-extruder="45">
+<td><input class="ext" type="text" value="EXTRUDER 45A" maxlength="20"></td>
+<td><input class="mat" type="text" value="EVOH EV 3251" maxlength="30"></td>
+<td><input class="mic" type="number" value="30" min="0" max="500" step="0.1"></td>
+<td><input class="den" type="number" value="1.17" min="0.5" max="2" step="0.01"></td>
+<td class="pct">0.00</td>
+<td class="thr">0.000</td>
+<td class="rpm">0.0</td>
+</tr>
+<tr data-extruder="45">
+<td><input class="ext" type="text" value="EXTRUDER 45B" maxlength="20"></td>
+<td><input class="mat" type="text" value="TIE Orevac 825" maxlength="30"></td>
+<td><input class="mic" type="number" value="15" min="0" max="500" step="0.1"></td>
+<td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
+<td class="pct">0.00</td>
+<td class="thr">0.000</td>
+<td class="rpm">0.0</td>
+</tr>
+<tr data-extruder="45">
+<td><input class="ext" type="text" value="EXTRUDER 45C" maxlength="20"></td>
+<td><input class="mat" type="text" value="TIE Orevac 825" maxlength="30"></td>
+<td><input class="mic" type="number" value="15" min="0" max="500" step="0.1"></td>
+<td><input class="den" type="number" value="0.91" min="0.5" max="2" step="0.01"></td>
+<td class="pct">0.00</td>
+<td class="thr">0.000</td>
+<td class="rpm">0.0</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td colspan="2" style="text-align:right;">TOTAL</td>
+<td id="totalMic">0.00</td>
+<td id="avgDen">0.00</td>
+<td>100</td>
+<td id="sumThr">0.000</td>
+<td></td>
+</tr>
+</tfoot>
+</table>
+
+<div class="buttons">
+<button id="saveBtn">💾 Save Data</button>
+<button id="loadBtn">📂 Load Data</button>
+<button id="exportPdf">📄 Export PDF</button>
+</div>
+</div>
+</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /**
- * ═════════════════════════════════════════════════════════════════
- * AMI POLYMER FILM FORMULATION CALCULATOR
- * Configuration, Constants, and Calculation Engine
- * ═════════════════════════════════════════════════════════════════
- */
+* ═════════════════════════════════════════════════════════════════
+* AMI POLYMER FILM FORMULATION CALCULATOR
+* Configuration, Constants, and Calculation Engine
+* ═════════════════════════════════════════════════════════════════
+*/
 
 // ─── CONFIGURATION & CONSTANTS ───────────────────────────────────────────────
 const CONFIG = {
-  // Unit conversion factors
-  MICRON_TO_METER: 1e-6,
-  MM_TO_METER: 1 / 1000,
-  G_CM3_TO_KG_M3: 1000,
+// Unit conversion factors
+MICRON_TO_METER: 1e-6,
+MM_TO_METER: 1 / 1000,
+G_CM3_TO_KG_M3: 1000,
 
-  // RPM calculation divisors per extruder type
-  RPM_DIVISORS: {
-    90: 6.9,      // Large extruder
-    55: 2,        // Medium extruder
-    45: 2         // Small extruder
-  },
+// RPM calculation divisors per extruder type
+RPM_DIVISORS: {
+90: 6.9, // Large extruder
+55: 2, // Medium extruder
+45: 2 // Small extruder
+},
 
-  // Input validation bounds
-  BOUNDS: {
-    dieWidth: { min: 10, max: 5000 },      // mm
-    lineSpeed: { min: 1, max: 500 },       // m/min
-    hours: { min: 0.1, max: 168 },         // hours per week max
-    wastage: { min: 0, max: 100000 },      // kg
-    thickness: { min: 0, max: 500 },       // microns
-    density: { min: 0.5, max: 2 }          // g/cm³
-  },
+// Input validation bounds
+BOUNDS: {
+dieWidth: { min: 10, max: 5000 }, // mm
+lineSpeed: { min: 1, max: 500 }, // m/min
+hours: { min: 0.1, max: 168 }, // hours per week max
+wastage: { min: 0, max: 100000 }, // kg
+thickness: { min: 0, max: 500 }, // microns
+density: { min: 0.5, max: 2 } // g/cm³
+},
 
-  // Display precision
-  DECIMAL_PLACES: {
-    percentage: 2,
-    thickness: 1,
-    throughput: 3,
-    rpm: 1,
-    weight: 2,
-    length: 2,
-    density: 4
-  },
+// Display precision
+DECIMAL_PLACES: {
+percentage: 2,
+thickness: 1,
+throughput: 3,
+rpm: 1,
+weight: 2,
+length: 2,
+density: 4
+},
 
-  // Storage key
-  STORAGE_KEY: 'filmFormulationData'
+// Storage key
+STORAGE_KEY: 'filmFormulationData'
 };
 
 // ─── UI STATE ───────────────────────────────────────────────────────────
 let calculationState = {
-  layers: [],
-  totalWeight: 0,
-  totalThr: 0,
-  wastage: 0,
-  isValid: true,
-  errors: []
+layers: [],
+totalWeight: 0,
+totalThr: 0,
+wastage: 0,
+isValid: true,
+errors: []
 };
 
 // ─── UTILITY FUNCTIONS ───────────────────────────────────────────────────────
 function showAlert(message, type = 'success') {
-  const alertBox = document.getElementById('alertBox');
-  alertBox.textContent = message;
-  alertBox.className = `alert show ${type}`;
-  setTimeout(() => alertBox.classList.remove('show'), 4000);
+const alertBox = document.getElementById('alertBox');
+alertBox.textContent = message;
+alertBox.className = `alert show ${type}`;
+setTimeout(() => alertBox.classList.remove('show'), 4000);
 }
 
 function validateInput(value, bounds) {
-  if (value < bounds.min || value > bounds.max) {
-    return false;
-  }
-  return !isNaN(value) && isFinite(value);
+if (value < bounds.min || value > bounds.max) {
+return false;
+}
+return !isNaN(value) && isFinite(value);
 }
 
 function safeParseFloat(value) {
-  const parsed = parseFloat(value) || 0;
-  return isFinite(parsed) ? parsed : 0;
+const parsed = parseFloat(value) || 0;
+return isFinite(parsed) ? parsed : 0;
 }
 
 // ─── CALCULATION FUNCTIONS ──────────────────────────────────────────────────
 
 /**
- * Calculate throughput (kg/hr) for a single layer
- * Formula: width(m) × thickness(m) × speed(m/min) × 60(min/hr) × density(kg/m³)
- */
+* Calculate throughput (kg/hr) for a single layer
+* Formula: width(m) × thickness(m) × speed(m/min) × 60(min/hr) × density(kg/m³)
+*/
 function calculateLayerThroughput(widthM, thicknessMicrons, speedMperMin, densityGcm3) {
-  const thicknessM = thicknessMicrons * CONFIG.MICRON_TO_METER;
-  const densityKgM3 = densityGcm3 * CONFIG.G_CM3_TO_KG_M3;
-  return widthM * thicknessM * speedMperMin * 60 * densityKgM3;
+const thicknessM = thicknessMicrons * CONFIG.MICRON_TO_METER;
+const densityKgM3 = densityGcm3 * CONFIG.G_CM3_TO_KG_M3;
+return widthM * thicknessM * speedMperMin * 60 * densityKgM3;
 }
 
 /**
- * Calculate RPM from throughput, density, and extruder type
- */
+* Calculate RPM from throughput, density, and extruder type
+*/
 function calculateRPM(throughput, density, extruderType) {
-  if (density <= 0) return 0;
-  const divisor = CONFIG.RPM_DIVISORS[extruderType] || 2;
-  return throughput / divisor / density;
+if (density <= 0) return 0;
+const divisor = CONFIG.RPM_DIVISORS[extruderType] || 2;
+return throughput / divisor / density;
 }
 
 /**
- * Calculate film length from total weight, die width, thickness, and density
- * length = netWeight / (width × thickness × density)
- */
+* Calculate film length from total weight, die width, thickness, and density
+* length = netWeight / (width × thickness × density)
+*/
 function calculateFilmLength(netWeight, widthM, totalThicknessMicrons, avgDensityGcm3) {
-  if (widthM <= 0 || totalThicknessMicrons <= 0 || avgDensityGcm3 <= 0 || netWeight <= 0) {
-    return 0;
-  }
-  const thicknessM = totalThicknessMicrons * CONFIG.MICRON_TO_METER;
-  const densityKgM3 = avgDensityGcm3 * CONFIG.G_CM3_TO_KG_M3;
-  return netWeight / (widthM * thicknessM * densityKgM3);
+if (widthM <= 0 || totalThicknessMicrons <= 0 || avgDensityGcm3 <= 0 || netWeight <= 0) {
+return 0;
+}
+const thicknessM = totalThicknessMicrons * CONFIG.MICRON_TO_METER;
+const densityKgM3 = avgDensityGcm3 * CONFIG.G_CM3_TO_KG_M3;
+return netWeight / (widthM * thicknessM * densityKgM3);
 }
 
 /**
- * Main recalculation engine
- */
+* Main recalculation engine
+*/
 function recalculate() {
-  calculationState.errors = [];
+calculationState.errors = [];
 
-  // ─ Read inputs
-  const dieWidth = safeParseFloat(document.getElementById('dieWidth').value);
-  const lineSpeed = safeParseFloat(document.getElementById('lineSpeed').value);
-  const hours = safeParseFloat(document.getElementById('hoursInput').value);
-  const wastage = safeParseFloat(document.getElementById('wastageInput').value);
+// ─ Read inputs
+const dieWidth = safeParseFloat(document.getElementById('dieWidth').value);
+const lineSpeed = safeParseFloat(document.getElementById('lineSpeed').value);
+const hours = safeParseFloat(document.getElementById('hoursInput').value);
+const wastage = safeParseFloat(document.getElementById('wastageInput').value);
 
-  // ─ Validate inputs
-  if (!validateInput(dieWidth, CONFIG.BOUNDS.dieWidth)) {
-    calculationState.errors.push(`Die Width must be between ${CONFIG.BOUNDS.dieWidth.min}-${CONFIG.BOUNDS.dieWidth.max} mm`);
-  }
-  if (!validateInput(lineSpeed, CONFIG.BOUNDS.lineSpeed)) {
-    calculationState.errors.push(`Line Speed must be between ${CONFIG.BOUNDS.lineSpeed.min}-${CONFIG.BOUNDS.lineSpeed.max} m/min`);
-  }
-  if (!validateInput(hours, CONFIG.BOUNDS.hours)) {
-    calculationState.errors.push(`Hours must be between ${CONFIG.BOUNDS.hours.min}-${CONFIG.BOUNDS.hours.max}`);
-  }
-  if (wastage < 0) {
-    calculationState.errors.push('Wastage cannot be negative');
-  }
+// ─ Validate inputs
+if (!validateInput(dieWidth, CONFIG.BOUNDS.dieWidth)) {
+calculationState.errors.push(`Die Width must be between ${CONFIG.BOUNDS.dieWidth.min}-${CONFIG.BOUNDS.dieWidth.max} mm`);
+}
+if (!validateInput(lineSpeed, CONFIG.BOUNDS.lineSpeed)) {
+calculationState.errors.push(`Line Speed must be between ${CONFIG.BOUNDS.lineSpeed.min}-${CONFIG.BOUNDS.lineSpeed.max} m/min`);
+}
+if (!validateInput(hours, CONFIG.BOUNDS.hours)) {
+calculationState.errors.push(`Hours must be between ${CONFIG.BOUNDS.hours.min}-${CONFIG.BOUNDS.hours.max}`);
+}
+if (wastage < 0) {
+calculationState.errors.push('Wastage cannot be negative');
+}
 
-  calculationState.isValid = calculationState.errors.length === 0;
+calculationState.isValid = calculationState.errors.length === 0;
 
-  // ─ Parse layer data
-  const widthM = dieWidth * CONFIG.MM_TO_METER;
-  const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
+// ─ Parse layer data
+const widthM = dieWidth * CONFIG.MM_TO_METER;
+const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
 
-  const layers = rows.map(r => {
-    const mic = safeParseFloat(r.querySelector('.mic').value);
-    const den = safeParseFloat(r.querySelector('.den').value);
+const layers = rows.map(r => {
+const mic = safeParseFloat(r.querySelector('.mic').value);
+const den = safeParseFloat(r.querySelector('.den').value);
 
-    // Validate layer inputs
-    if (!validateInput(mic, CONFIG.BOUNDS.thickness)) {
-      calculationState.errors.push(`Thickness must be 0-${CONFIG.BOUNDS.thickness.max} µ`);
-    }
-    if (!validateInput(den, CONFIG.BOUNDS.density)) {
-      calculationState.errors.push(`Density must be ${CONFIG.BOUNDS.density.min}-${CONFIG.BOUNDS.density.max} g/cm³`);
-    }
+// Validate layer inputs
+if (!validateInput(mic, CONFIG.BOUNDS.thickness)) {
+calculationState.errors.push(`Thickness must be 0-${CONFIG.BOUNDS.thickness.max} µ`);
+}
+if (!validateInput(den, CONFIG.BOUNDS.density)) {
+calculationState.errors.push(`Density must be ${CONFIG.BOUNDS.density.min}-${CONFIG.BOUNDS.density.max} g/cm³`);
+}
 
-    return {
-      name: r.querySelector('.ext').value,
-      material: r.querySelector('.mat').value,
-      microns: mic,
-      density: den,
-      extruder: r.getAttribute('data-extruder'),
-      row: r
-    };
-  });
+return {
+name: r.querySelector('.ext').value,
+material: r.querySelector('.mat').value,
+microns: mic,
+density: den,
+extruder: r.getAttribute('data-extruder'),
+row: r
+};
+});
 
-  // ─ Calculate aggregates
-  const totalMicrons = layers.reduce((sum, l) => sum + l.microns, 0);
-  const sumWeighted = layers.reduce((sum, l) => sum + l.density * l.microns, 0);
-  const avgDensity = totalMicrons > 0 ? sumWeighted / totalMicrons : 0;
+// ─ Calculate aggregates
+const totalMicrons = layers.reduce((sum, l) => sum + l.microns, 0);
+const sumWeighted = layers.reduce((sum, l) => sum + l.density * l.microns, 0);
+const avgDensity = totalMicrons > 0 ? sumWeighted / totalMicrons : 0;
 
-  // ─ Calculate per-layer metrics and totals
-  let totalThroughput = 0;
-  layers.forEach(layer => {
-    // Layer percentage
-    const percentage = totalMicrons > 0 ? (layer.microns / totalMicrons * 100) : 0;
-    layer.row.querySelector('.pct').textContent = percentage.toFixed(CONFIG.DECIMAL_PLACES.percentage);
+// ─ Calculate per-layer metrics and totals
+let totalThroughput = 0;
+layers.forEach(layer => {
+// Layer percentage
+const percentage = totalMicrons > 0 ? (layer.microns / totalMicrons * 100) : 0;
+layer.row.querySelector('.pct').textContent = percentage.toFixed(CONFIG.DECIMAL_PLACES.percentage);
 
-    // Throughput (kg/hr)
-    const thr = calculateLayerThroughput(widthM, layer.microns, lineSpeed, layer.density);
-    layer.throughput = thr;
-    layer.row.querySelector('.thr').textContent = thr.toFixed(CONFIG.DECIMAL_PLACES.throughput);
-    totalThroughput += thr;
+// Throughput (kg/hr)
+const thr = calculateLayerThroughput(widthM, layer.microns, lineSpeed, layer.density);
+layer.throughput = thr;
+layer.row.querySelector('.thr').textContent = thr.toFixed(CONFIG.DECIMAL_PLACES.throughput);
+totalThroughput += thr;
 
-    // RPM
-    const rpm = calculateRPM(thr, layer.density, layer.extruder);
-    layer.rpm = rpm;
-    layer.row.querySelector('.rpm').textContent = rpm.toFixed(CONFIG.DECIMAL_PLACES.rpm);
-  });
+// RPM
+const rpm = calculateRPM(thr, layer.density, layer.extruder);
+layer.rpm = rpm;
+layer.row.querySelector('.rpm').textContent = rpm.toFixed(CONFIG.DECIMAL_PLACES.rpm);
+});
 
-  // ─ Update totals row
-  document.getElementById('totalMic').textContent = totalMicrons.toFixed(CONFIG.DECIMAL_PLACES.thickness);
-  document.getElementById('avgDen').textContent = avgDensity.toFixed(CONFIG.DECIMAL_PLACES.density);
-  document.getElementById('sumThr').textContent = totalThroughput.toFixed(CONFIG.DECIMAL_PLACES.throughput);
+// ─ Update totals row
+document.getElementById('totalMic').textContent = totalMicrons.toFixed(CONFIG.DECIMAL_PLACES.thickness);
+document.getElementById('avgDen').textContent = avgDensity.toFixed(CONFIG.DECIMAL_PLACES.density);
+document.getElementById('sumThr').textContent = totalThroughput.toFixed(CONFIG.DECIMAL_PLACES.throughput);
 
-  // ─ Calculate total weight and length
-  const totalWeight = totalThroughput * hours;
-  document.getElementById('totalWeight').textContent = totalWeight.toFixed(CONFIG.DECIMAL_PLACES.weight);
+// ─ Calculate total weight and length
+const totalWeight = totalThroughput * hours;
+document.getElementById('totalWeight').textContent = totalWeight.toFixed(CONFIG.DECIMAL_PLACES.weight);
 
-  const wastagePct = totalWeight > 0 ? (wastage / totalWeight * 100) : 0;
-  document.getElementById('wastagePct').textContent = wastagePct.toFixed(CONFIG.DECIMAL_PLACES.percentage) + '%';
+const wastagePct = totalWeight > 0 ? (wastage / totalWeight * 100) : 0;
+document.getElementById('wastagePct').textContent = wastagePct.toFixed(CONFIG.DECIMAL_PLACES.percentage) + '%';
 
-  const netWeight = totalWeight - wastage;
-  const filmLength = calculateFilmLength(netWeight, widthM, totalMicrons, avgDensity);
-  document.getElementById('totalLength').textContent = filmLength.toFixed(CONFIG.DECIMAL_PLACES.length);
+const netWeight = totalWeight - wastage;
+const filmLength = calculateFilmLength(netWeight, widthM, totalMicrons, avgDensity);
+document.getElementById('totalLength').textContent = filmLength.toFixed(CONFIG.DECIMAL_PLACES.length);
 
-  // ─ Calculate per-layer consumption and waste
-  const totalConsume = layers.reduce((sum, l) => sum + l.throughput * hours, 0);
-  layers.forEach(layer => {
-    layer.consumeKg = layer.throughput * hours;
-    layer.scrapKg = (totalConsume > 0 && wastage > 0)
-      ? (layer.consumeKg / totalConsume) * wastage
-      : 0;
-    layer.netKg = layer.consumeKg - layer.scrapKg;
-  });
+// ─ Calculate per-layer consumption and waste
+const totalConsume = layers.reduce((sum, l) => sum + l.throughput * hours, 0);
+layers.forEach(layer => {
+layer.consumeKg = layer.throughput * hours;
+layer.scrapKg = (totalConsume > 0 && wastage > 0)
+? (layer.consumeKg / totalConsume) * wastage
+: 0;
+layer.netKg = layer.consumeKg - layer.scrapKg;
+});
 
-  // ─ Update state
-  calculationState = {
-    layers,
-    totalWeight,
-    totalThroughput,
-    wastage,
-    hours,
-    dieWidth,
-    lineSpeed,
-    filmLength,
-    totalMicrons,
-    avgDensity,
-    isValid: calculationState.errors.length === 0,
-    errors: calculationState.errors
-  };
+// ─ Update state
+calculationState = {
+layers,
+totalWeight,
+totalThroughput,
+wastage,
+hours,
+dieWidth,
+lineSpeed,
+filmLength,
+totalMicrons,
+avgDensity,
+isValid: calculationState.errors.length === 0,
+errors: calculationState.errors
+};
 
-  if (calculationState.errors.length > 0) {
-    showAlert('⚠️ ' + calculationState.errors[0], 'warning');
-  }
+if (calculationState.errors.length > 0) {
+showAlert('⚠️ ' + calculationState.errors[0], 'warning');
+}
 }
 
 // ─── EVENT HANDLERS ─────────────────────────────────────────────────────────
 
 document.getElementById('saveBtn').addEventListener('click', () => {
-  const data = {
-    timestamp: new Date().toISOString(),
-    dieWidth: document.getElementById('dieWidth').value,
-    lineSpeed: document.getElementById('lineSpeed').value,
-    hours: document.getElementById('hoursInput').value,
-    wastage: document.getElementById('wastageInput').value,
-    layers: Array.from(document.querySelectorAll('#calcTable tbody tr')).map(r => ({
-      ext: r.querySelector('.ext').value,
-      mat: r.querySelector('.mat').value,
-      mic: r.querySelector('.mic').value,
-      den: r.querySelector('.den').value
-    }))
-  };
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-  showAlert('✓ Data saved successfully', 'success');
+const data = {
+timestamp: new Date().toISOString(),
+dieWidth: document.getElementById('dieWidth').value,
+lineSpeed: document.getElementById('lineSpeed').value,
+hours: document.getElementById('hoursInput').value,
+wastage: document.getElementById('wastageInput').value,
+layers: Array.from(document.querySelectorAll('#calcTable tbody tr')).map(r => ({
+ext: r.querySelector('.ext').value,
+mat: r.querySelector('.mat').value,
+mic: r.querySelector('.mic').value,
+den: r.querySelector('.den').value
+}))
+};
+localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+showAlert('✓ Data saved successfully', 'success');
 });
 
 document.getElementById('loadBtn').addEventListener('click', () => {
-  const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
-  if (!saved) {
-    showAlert('No saved data found', 'warning');
-    return;
-  }
-  try {
-    const data = JSON.parse(saved);
-    document.getElementById('dieWidth').value = data.dieWidth;
-    document.getElementById('lineSpeed').value = data.lineSpeed;
-    document.getElementById('hoursInput').value = data.hours;
-    document.getElementById('wastageInput').value = data.wastage;
-    const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
-    data.layers.forEach((layer, i) => {
-      if (rows[i]) {
-        rows[i].querySelector('.ext').value = layer.ext;
-        rows[i].querySelector('.mat').value = layer.mat;
-        rows[i].querySelector('.mic').value = layer.mic;
-        rows[i].querySelector('.den').value = layer.den;
-      }
-    });
-    recalculate();
-    showAlert('✓ Data loaded successfully', 'success');
-  } catch (e) {
-    showAlert('Error loading data: ' + e.message, 'error');
-  }
+const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+if (!saved) {
+showAlert('No saved data found', 'warning');
+return;
+}
+try {
+const data = JSON.parse(saved);
+document.getElementById('dieWidth').value = data.dieWidth;
+document.getElementById('lineSpeed').value = data.lineSpeed;
+document.getElementById('hoursInput').value = data.hours;
+document.getElementById('wastageInput').value = data.wastage;
+const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
+data.layers.forEach((layer, i) => {
+if (rows[i]) {
+rows[i].querySelector('.ext').value = layer.ext;
+rows[i].querySelector('.mat').value = layer.mat;
+rows[i].querySelector('.mic').value = layer.mic;
+rows[i].querySelector('.den').value = layer.den;
+}
+});
+recalculate();
+showAlert('✓ Data loaded successfully', 'success');
+} catch (e) {
+showAlert('Error loading data: ' + e.message, 'error');
+}
 });
 
 document.getElementById('exportPdf').addEventListener('click', async () => {
-  recalculate();
-  if (!calculationState.isValid) {
-    showAlert('Cannot export: fix validation errors first', 'error');
-    return;
-  }
+recalculate();
+if (!calculationState.isValid) {
+showAlert('Cannot export: fix validation errors first', 'error');
+return;
+}
 
-  const productName = prompt('Product Name:');
-  if (!productName) return;
-  const operatorName = prompt('Operator Name:');
-  if (!operatorName) return;
+const productName = prompt('Product Name:');
+if (!productName) return;
+const operatorName = prompt('Operator Name:');
+if (!operatorName) return;
 
-  try {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('l', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const centerX = pageWidth / 2;
+try {
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF('l', 'mm', 'a4');
+const pageWidth = pdf.internal.pageSize.getWidth();
+const pageHeight = pdf.internal.pageSize.getHeight();
+const centerX = pageWidth / 2;
 
-    let y = 18;
-    const now = new Date();
-    const dateStr = now.toLocaleDateString();
-    const timeStr = now.toLocaleTimeString();
+let y = 18;
+const now = new Date();
+const dateStr = now.toLocaleDateString();
+const timeStr = now.toLocaleTimeString();
 
-    // Title
-    pdf.setFontSize(24);
-    pdf.text('Pawan Multilayer Film Formulation', centerX, y, { align: 'center' });
-    y += 10;
-    pdf.setFontSize(16);
-    pdf.text('Multi-Layer Film Production Summary', centerX, y, { align: 'center' });
-    y += 10;
+// Title
+pdf.setFontSize(24);
+pdf.text('Pawan Multilayer Film Formulation', centerX, y, { align: 'center' });
+y += 10;
+pdf.setFontSize(16);
+pdf.text('Multi-Layer Film Production Summary', centerX, y, { align: 'center' });
+y += 10;
 
-    // Info block
-    pdf.setFontSize(13);
-    pdf.text(`Date: ${dateStr}    Time: ${timeStr}`, centerX, y, { align: 'center' });
-    y += 7;
-    pdf.text(`Product: ${productName}`, centerX, y, { align: 'center' });
-    y += 6;
-    pdf.text(`Operator: ${operatorName}`, centerX, y, { align: 'center' });
-    y += 8;
+// Info block
+pdf.setFontSize(13);
+pdf.text(`Date: ${dateStr} Time: ${timeStr}`, centerX, y, { align: 'center' });
+y += 7;
+pdf.text(`Product: ${productName}`, centerX, y, { align: 'center' });
+y += 6;
+pdf.text(`Operator: ${operatorName}`, centerX, y, { align: 'center' });
+y += 8;
 
-    pdf.text(
-      `Die Width: ${calculationState.dieWidth} mm   •   Speed: ${calculationState.lineSpeed} m/min   •   Hours: ${calculationState.hours}`,
-      centerX, y, { align: 'center' }
-    );
-    y += 7;
-    pdf.text(
-      `Total: ${calculationState.totalWeight.toFixed(2)} kg   •   Length: ${calculationState.filmLength.toFixed(2)} m   •   Scrap: ${calculationState.wastage.toFixed(2)} kg`,
-      centerX, y, { align: 'center' }
-    );
-    y += 12;
+pdf.text(
+`Die Width: ${calculationState.dieWidth} mm • Speed: ${calculationState.lineSpeed} m/min • Hours: ${calculationState.hours}`,
+centerX, y, { align: 'center' }
+);
+y += 7;
+pdf.text(
+`Total: ${calculationState.totalWeight.toFixed(2)} kg • Length: ${calculationState.filmLength.toFixed(2)} m • Scrap: ${calculationState.wastage.toFixed(2)} kg`,
+centerX, y, { align: 'center' }
+);
+y += 12;
 
-    // Table
-    const margin = 12;
-    const tWidth = pageWidth - margin * 2;
-    const colW = { ext: tWidth * 0.22, mat: tWidth * 0.32, thk: tWidth * 0.10, den: tWidth * 0.10, kghr: tWidth * 0.09, tot: tWidth * 0.09, scrap: tWidth * 0.08 };
-    let x = margin;
+// Table
+const margin = 12;
+const tWidth = pageWidth - margin * 2;
+const colW = { ext: tWidth * 0.22, mat: tWidth * 0.32, thk: tWidth * 0.10, den: tWidth * 0.10, kghr: tWidth * 0.09, tot: tWidth * 0.09, scrap: tWidth * 0.08 };
+let x = margin;
 
-    pdf.setFontSize(13);
-    pdf.text('Extruder', x + colW.ext / 2, y, { align: 'center' }); x += colW.ext;
-    pdf.text('Material', x + colW.mat / 2, y, { align: 'center' }); x += colW.mat;
-    pdf.text('Thk (µ)', x + colW.thk / 2, y, { align: 'center' }); x += colW.thk;
-    pdf.text('Density', x + colW.den / 2, y, { align: 'center' }); x += colW.den;
-    pdf.text('kg/hr', x + colW.kghr / 2, y, { align: 'center' }); x += colW.kghr;
-    pdf.text('Total kg', x + colW.tot / 2, y, { align: 'center' }); x += colW.tot;
-    pdf.text('Scrap kg', x + colW.scrap / 2, y, { align: 'center' });
+pdf.setFontSize(13);
+pdf.text('Extruder', x + colW.ext / 2, y, { align: 'center' }); x += colW.ext;
+pdf.text('Material', x + colW.mat / 2, y, { align: 'center' }); x += colW.mat;
+pdf.text('Thk (µ)', x + colW.thk / 2, y, { align: 'center' }); x += colW.thk;
+pdf.text('Density', x + colW.den / 2, y, { align: 'center' }); x += colW.den;
+pdf.text('kg/hr', x + colW.kghr / 2, y, { align: 'center' }); x += colW.kghr;
+pdf.text('Total kg', x + colW.tot / 2, y, { align: 'center' }); x += colW.tot;
+pdf.text('Scrap kg', x + colW.scrap / 2, y, { align: 'center' });
 
-    y += 3;
-    pdf.line(margin, y, margin + tWidth, y);
-    y += 7;
+y += 3;
+pdf.line(margin, y, margin + tWidth, y);
+y += 7;
 
-    pdf.setFontSize(12);
-    calculationState.layers.forEach(L => {
-      if (y > pageHeight - 15) {
-        pdf.addPage();
-        y = 20;
-      }
+pdf.setFontSize(12);
+calculationState.layers.forEach(L => {
+if (y > pageHeight - 15) {
+pdf.addPage();
+y = 20;
+}
 
-      let rowX = margin;
-      const extShort = (L.name || '').substring(0, 20);
-      const matShort = (L.material || '').substring(0, 32);
+let rowX = margin;
+const extShort = (L.name || '').substring(0, 20);
+const matShort = (L.material || '').substring(0, 32);
 
-      pdf.text(extShort, rowX + colW.ext / 2, y, { align: 'center' }); rowX += colW.ext;
-      pdf.text(matShort, rowX + colW.mat / 2, y, { align: 'center' }); rowX += colW.mat;
-      pdf.text(L.microns.toFixed(1), rowX + colW.thk / 2, y, { align: 'center' }); rowX += colW.thk;
-      pdf.text(L.density.toFixed(2), rowX + colW.den / 2, y, { align: 'center' }); rowX += colW.den;
-      pdf.text(L.throughput.toFixed(1), rowX + colW.kghr / 2, y, { align: 'center' }); rowX += colW.kghr;
-      pdf.text(L.consumeKg.toFixed(1), rowX + colW.tot / 2, y, { align: 'center' }); rowX += colW.tot;
-      pdf.text(L.scrapKg.toFixed(1), rowX + colW.scrap / 2, y, { align: 'center' });
+pdf.text(extShort, rowX + colW.ext / 2, y, { align: 'center' }); rowX += colW.ext;
+pdf.text(matShort, rowX + colW.mat / 2, y, { align: 'center' }); rowX += colW.mat;
+pdf.text(L.microns.toFixed(1), rowX + colW.thk / 2, y, { align: 'center' }); rowX += colW.thk;
+pdf.text(L.density.toFixed(2), rowX + colW.den / 2, y, { align: 'center' }); rowX += colW.den;
+pdf.text(L.throughput.toFixed(1), rowX + colW.kghr / 2, y, { align: 'center' }); rowX += colW.kghr;
+pdf.text(L.consumeKg.toFixed(1), rowX + colW.tot / 2, y, { align: 'center' }); rowX += colW.tot;
+pdf.text(L.scrapKg.toFixed(1), rowX + colW.scrap / 2, y, { align: 'center' });
 
-      y += 8;
-    });
+y += 8;
+});
 
-    pdf.save('filmformulation-summary.pdf');
-    showAlert('✓ PDF exported successfully', 'success');
-  } catch (e) {
-    showAlert('Error exporting PDF: ' + e.message, 'error');
-  }
+pdf.save('filmformulation-summary.pdf');
+showAlert('✓ PDF exported successfully', 'success');
+} catch (e) {
+showAlert('Error exporting PDF: ' + e.message, 'error');
+}
 });
 
 // ─── INIT ───────────────────────────────────────────────────────────
 document.querySelectorAll('input').forEach(input => {
-  input.addEventListener('input', recalculate);
-  input.addEventListener('change', recalculate);
+input.addEventListener('input', recalculate);
+input.addEventListener('change', recalculate);
 });
 
 window.addEventListener('load', recalculate);
@@ -875,97 +875,97 @@ window.addEventListener('load', recalculate);
 
 <!-- PASSWORD LOCK OVERLAY — PBKDF2 Protected -->
 <div id="pwOverlay">
-  <div id="pwBox">
-    <div class="lock-icon">🔒</div>
-    <h2>Pawan Multilayer</h2>
-    <p>Enter password to access the formulation tool</p>
-    <input id="pwInput" type="password" maxlength="30" placeholder="••••••" autocomplete="off" />
-    <button id="pwBtn">UNLOCK</button>
-    <div id="pwLoading">🔐 Verifying...</div>
-    <div id="pwErr"></div>
-    <div class="attempt-warning" id="attemptWarn"></div>
-  </div>
+<div id="pwBox">
+<div class="lock-icon">🔒</div>
+<h2>Pawan Multilayer</h2>
+<p>Enter password to access the formulation tool</p>
+<input id="pwInput" type="password" maxlength="30" placeholder="••••••" autocomplete="off" />
+<button id="pwBtn">UNLOCK</button>
+<div id="pwLoading">🔐 Verifying...</div>
+<div id="pwErr"></div>
+<div class="attempt-warning" id="attemptWarn"></div>
+</div>
 </div>
 
 <script>
 (function(){
-  const SALT_HEX    = "8b63658f475aa21b584248c24584195cae74c092abf3050d371e5c31b12e2ace";
-  const ITERATIONS  = 310000;
-  const DERIVED_HEX = "404e7c16a39442c58a97c383971d0a9519b7526b0e1dad5fd0d919ef7d566ce7";
+const SALT_HEX = "8b63658f475aa21b584248c24584195cae74c092abf3050d371e5c31b12e2ace";
+const ITERATIONS = 310000;
+const DERIVED_HEX = "404e7c16a39442c58a97c383971d0a9519b7526b0e1dad5fd0d919ef7d566ce7";
 
-  let attempts = 0;
-  let lockedUntil = 0;
+let attempts = 0;
+let lockedUntil = 0;
 
-  function hexToUint8(hex) {
-    const a = new Uint8Array(hex.length / 2);
-    for (let i = 0; i < hex.length; i += 2)
-      a[i / 2] = parseInt(hex.slice(i, i + 2), 16);
-    return a;
-  }
+function hexToUint8(hex) {
+const a = new Uint8Array(hex.length / 2);
+for (let i = 0; i < hex.length; i += 2)
+a[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+return a;
+}
 
-  function uint8ToHex(buf) {
-    return Array.from(new Uint8Array(buf))
-      .map(b => b.toString(16).padStart(2, "0")).join("");
-  }
+function uint8ToHex(buf) {
+return Array.from(new Uint8Array(buf))
+.map(b => b.toString(16).padStart(2, "0")).join("");
+}
 
-  async function pbkdf2Verify(password) {
-    const enc = new TextEncoder();
-    const keyMat = await crypto.subtle.importKey(
-      "raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]
-    );
-    const bits = await crypto.subtle.deriveBits(
-      { name: "PBKDF2", salt: hexToUint8(SALT_HEX), iterations: ITERATIONS, hash: "SHA-256" },
-      keyMat, 256
-    );
-    return uint8ToHex(bits);
-  }
+async function pbkdf2Verify(password) {
+const enc = new TextEncoder();
+const keyMat = await crypto.subtle.importKey(
+"raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]
+);
+const bits = await crypto.subtle.deriveBits(
+{ name: "PBKDF2", salt: hexToUint8(SALT_HEX), iterations: ITERATIONS, hash: "SHA-256" },
+keyMat, 256
+);
+return uint8ToHex(bits);
+}
 
-  async function checkPw() {
-    const now = Date.now();
-    if (now < lockedUntil) {
-      const secs = Math.ceil((lockedUntil - now) / 1000);
-      document.getElementById("pwErr").textContent = `⏳ Too many attempts. Wait ${secs}s`;
-      return;
-    }
+async function checkPw() {
+const now = Date.now();
+if (now < lockedUntil) {
+const secs = Math.ceil((lockedUntil - now) / 1000);
+document.getElementById("pwErr").textContent = `⏳ Too many attempts. Wait ${secs}s`;
+return;
+}
 
-    const val = document.getElementById("pwInput").value;
-    if (!val) return;
+const val = document.getElementById("pwInput").value;
+if (!val) return;
 
-    document.getElementById("pwBtn").disabled = true;
-    document.getElementById("pwLoading").style.display = "block";
-    document.getElementById("pwErr").textContent = "";
+document.getElementById("pwBtn").disabled = true;
+document.getElementById("pwLoading").style.display = "block";
+document.getElementById("pwErr").textContent = "";
 
-    const derived = await pbkdf2Verify(val);
+const derived = await pbkdf2Verify(val);
 
-    document.getElementById("pwBtn").disabled = false;
-    document.getElementById("pwLoading").style.display = "none";
+document.getElementById("pwBtn").disabled = false;
+document.getElementById("pwLoading").style.display = "none";
 
-    if (derived === DERIVED_HEX) {
-      document.getElementById("pwOverlay").style.display = "none";
-      attempts = 0;
-    } else {
-      attempts++;
-      const inp = document.getElementById("pwInput");
-      inp.classList.add("error");
-      inp.value = "";
-      setTimeout(() => inp.classList.remove("error"), 400);
+if (derived === DERIVED_HEX) {
+document.getElementById("pwOverlay").style.display = "none";
+attempts = 0;
+} else {
+attempts++;
+const inp = document.getElementById("pwInput");
+inp.classList.add("error");
+inp.value = "";
+setTimeout(() => inp.classList.remove("error"), 400);
 
-      if (attempts % 3 === 0) {
-        const delay = attempts === 3 ? 5000 : attempts === 6 ? 30000 : 300000;
-        lockedUntil = Date.now() + delay;
-        document.getElementById("pwErr").textContent = `❌ Wrong password! ${Math.ceil(delay/1000)}s ke liye locked.`;
-        document.getElementById("attemptWarn").textContent = `⚠️ ${attempts} wrong attempts`;
-      } else {
-        document.getElementById("pwErr").textContent = "❌ Wrong password! Try again.";
-        document.getElementById("attemptWarn").textContent = attempts > 1 ? `⚠️ ${attempts} wrong attempts` : "";
-      }
-    }
-  }
+if (attempts % 3 === 0) {
+const delay = attempts === 3 ? 5000 : attempts === 6 ? 30000 : 300000;
+lockedUntil = Date.now() + delay;
+document.getElementById("pwErr").textContent = `❌ Wrong password! ${Math.ceil(delay/1000)}s ke liye locked.`;
+document.getElementById("attemptWarn").textContent = `⚠️ ${attempts} wrong attempts`;
+} else {
+document.getElementById("pwErr").textContent = "❌ Wrong password! Try again.";
+document.getElementById("attemptWarn").textContent = attempts > 1 ? `⚠️ ${attempts} wrong attempts` : "";
+}
+}
+}
 
-  document.getElementById("pwBtn").addEventListener("click", checkPw);
-  document.getElementById("pwInput").addEventListener("keydown", e => {
-    if (e.key === "Enter") checkPw();
-  });
+document.getElementById("pwBtn").addEventListener("click", checkPw);
+document.getElementById("pwInput").addEventListener("keydown", e => {
+if (e.key === "Enter") checkPw();
+});
 })();
 </script>
 </body>
