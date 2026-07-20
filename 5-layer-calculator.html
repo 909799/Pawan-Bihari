@@ -600,10 +600,163 @@
     @media (max-width: 640px) {
       #creatorCredit { font-size: 10px; padding: 5px 9px; bottom: 12px; left: 12px; }
     }
+
+    /* ═══════ Saved-Data History (hamburger menu, top-left) ═══════ */
+    #historyMenuBtn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 8500;
+      background: rgba(21,128,61,0.9);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    #historyMenuBtn:hover { opacity: 0.9; }
+
+    #historyDrawerOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90000;
+      background: rgba(15,23,42,0.5);
+      display: none;
+    }
+    #historyDrawerOverlay.show { display: block; }
+    #historyDrawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 320px;
+      max-width: 85vw;
+      background: #ffffff;
+      box-shadow: 6px 0 24px rgba(0,0,0,0.25);
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+    }
+    #historyDrawerOverlay.show #historyDrawer { transform: translateX(0); }
+    .history-drawer-header {
+      background: linear-gradient(135deg, #15803d, #22c55e);
+      color: #fff;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .history-drawer-header h2 { margin: 0; font-size: 16px; flex: 1; }
+    #historyCloseBtn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .history-drawer-body { padding: 14px 16px; }
+    .history-date-group {
+      font-weight: 800;
+      color: #166534;
+      font-size: 13px;
+      margin: 14px 0 6px;
+    }
+    .history-entry-card {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .history-entry-time { font-size: 11px; color: #64748b; }
+    .history-entry-summary { font-size: 12.5px; color: #166534; font-weight: 600; margin: 3px 0 8px; }
+    .history-entry-actions { display: flex; gap: 6px; }
+    .history-entry-actions button {
+      flex: 1;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+    }
+    .history-load-btn { background: #16a34a; }
+    .history-del-btn { background: #dc2626; }
+    .history-empty { text-align: center; color: #a8a29e; font-size: 13px; padding: 24px 10px; }
+
+    /* Main menu cards */
+    .menu-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .menu-card:hover { background: #f0fdf4; transform: translateX(2px); }
+    .menu-card .menu-card-icon { font-size: 24px; flex-shrink: 0; }
+    .menu-card .menu-card-text b { display: block; font-size: 14px; color: #14532d; }
+    .menu-card .menu-card-text span { display: block; font-size: 11.5px; color: #64748b; margin-top: 2px; }
+
+    /* CFL Calculator */
+    .cfl-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .cfl-tab {
+      flex: 1;
+      min-width: 120px;
+      padding: 9px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .cfl-tab.active { background: #15803d; color: #fff; border-color: #15803d; }
+    .cfl-form { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; }
+    .cfl-form label { display: block; font-size: 12px; font-weight: 600; color: #166534; margin: 8px 0 4px; }
+    .cfl-form input {
+      width: 100%; padding: 9px; border-radius: 6px; border: 1px solid #94a3b8; font-size: 14px; box-sizing: border-box;
+    }
+    .cfl-result {
+      margin-top: 14px;
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .cfl-result span { display: block; font-size: 22px; font-weight: 800; color: #064e3b; }
+    .cfl-result label { font-size: 12px; font-weight: 700; color: #065f46; margin: 0; }
   </style>
 </head>
 <body>
 <div id="creatorCredit">Created by Pawan Kumar</div>
+
+<button id="historyMenuBtn" title="Menu">☰</button>
+<div id="historyDrawerOverlay">
+  <div id="historyDrawer">
+    <div class="history-drawer-header">
+      <button id="drawerBackBtn" style="display:none; background:rgba(255,255,255,0.2); border:none; color:#fff; width:28px; height:28px; border-radius:6px; font-size:15px; cursor:pointer; margin-right:6px;">←</button>
+      <h2 id="drawerTitle">📁 Menu</h2>
+      <button id="historyCloseBtn">✕</button>
+    </div>
+    <div class="history-drawer-body" id="historyDrawerBody"></div>
+  </div>
+</div>
 <div class="shell">
   <div class="container">
     <div class="header">
@@ -724,7 +877,7 @@
 
       <div class="buttons">
         <button id="saveBtn">💾 Save Data</button>
-        <button id="loadBtn">📂 Load Data</button>
+        <button id="loadBtn">📂 Load Saved Data</button>
         <button id="exportPdf">📄 Export PDF</button>
       </div>
     </div>
@@ -1175,8 +1328,8 @@ const CONFIG = {
     density: 4
   },
 
-  // Storage key
-  STORAGE_KEY: 'filmFormulationData'
+  // Storage key (history of saved configurations, date-wise)
+  STORAGE_KEY: 'filmFormulationHistory'
 };
 
 // ─── UI STATE ───────────────────────────────────────────────────────────
@@ -1370,9 +1523,22 @@ function recalculate() {
 
 // ─── EVENT HANDLERS ─────────────────────────────────────────────────────────
 
+function getHistory() {
+  try {
+    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function setHistory(list) {
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(list));
+}
+
 document.getElementById('saveBtn').addEventListener('click', () => {
-  const data = {
-    timestamp: new Date().toISOString(),
+  const now = new Date();
+  const entry = {
+    id: Date.now(),
+    date: now.toISOString().slice(0, 10),
+    time: now.toLocaleTimeString(),
     dieWidth: document.getElementById('dieWidth').value,
     lineSpeed: document.getElementById('lineSpeed').value,
     hours: document.getElementById('hoursInput').value,
@@ -1384,37 +1550,257 @@ document.getElementById('saveBtn').addEventListener('click', () => {
       den: r.querySelector('.den').value
     }))
   };
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-  showAlert('✓ Data saved successfully', 'success');
+  const history = getHistory();
+  history.push(entry);
+  setHistory(history);
+  showAlert('✓ Data saved under ' + entry.date, 'success');
 });
 
 document.getElementById('loadBtn').addEventListener('click', () => {
-  const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
-  if (!saved) {
-    showAlert('No saved data found', 'warning');
-    return;
-  }
-  try {
-    const data = JSON.parse(saved);
-    document.getElementById('dieWidth').value = data.dieWidth;
-    document.getElementById('lineSpeed').value = data.lineSpeed;
-    document.getElementById('hoursInput').value = data.hours;
-    document.getElementById('wastageInput').value = data.wastage;
-    const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
-    data.layers.forEach((layer, i) => {
-      if (rows[i]) {
-        rows[i].querySelector('.ext').value = layer.ext;
-        rows[i].querySelector('.mat').value = layer.mat;
-        rows[i].querySelector('.mic').value = layer.mic;
-        rows[i].querySelector('.den').value = layer.den;
-      }
-    });
-    recalculate();
-    showAlert('✓ Data loaded successfully', 'success');
-  } catch (e) {
-    showAlert('Error loading data: ' + e.message, 'error');
+  openHistoryDrawer();
+});
+
+// ── Hamburger menu: main navigation (Saved Data / RM Reconciliation / CFL Calculator / Change Password) ──
+function openHistoryDrawer() {
+  showMenuView();
+  document.getElementById('historyDrawerOverlay').classList.add('show');
+}
+document.getElementById('historyMenuBtn').addEventListener('click', openHistoryDrawer);
+document.getElementById('historyCloseBtn').addEventListener('click', () => {
+  document.getElementById('historyDrawerOverlay').classList.remove('show');
+});
+document.getElementById('historyDrawerOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'historyDrawerOverlay') {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
   }
 });
+document.getElementById('drawerBackBtn').addEventListener('click', showMenuView);
+
+function setDrawerView(title, showBack) {
+  document.getElementById('drawerTitle').textContent = title;
+  document.getElementById('drawerBackBtn').style.display = showBack ? 'block' : 'none';
+}
+
+// ── View: Main Menu ──
+function showMenuView() {
+  setDrawerView('📁 Menu', false);
+  const body = document.getElementById('historyDrawerBody');
+  body.innerHTML = `
+    <div class="menu-card" id="menuSavedData">
+      <div class="menu-card-icon">📊</div>
+      <div class="menu-card-text"><b>Saved Data</b><span>Date-wise saved formulation setups</span></div>
+    </div>
+    <div class="menu-card" id="menuRmRecon">
+      <div class="menu-card-icon">🗂️</div>
+      <div class="menu-card-text"><b>RM Reconciliation</b><span>Password protected — daily RM usage &amp; scrap records</span></div>
+    </div>
+    <div class="menu-card" id="menuCfl">
+      <div class="menu-card-icon">🧮</div>
+      <div class="menu-card-text"><b>CFL Calculator</b><span>Weight ⇄ Length, Roll Diameter ⇄ Length</span></div>
+    </div>
+    <div class="menu-card" id="menuChangePw">
+      <div class="menu-card-icon">🔑</div>
+      <div class="menu-card-text"><b>Change Password</b><span>Update Main Page or RM Reconciliation password</span></div>
+    </div>
+  `;
+  document.getElementById('menuSavedData').addEventListener('click', showHistoryView);
+  document.getElementById('menuRmRecon').addEventListener('click', () => {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
+    document.getElementById('rmFolderBtn').click();
+  });
+  document.getElementById('menuCfl').addEventListener('click', showCflView);
+  document.getElementById('menuChangePw').addEventListener('click', showChangePwChoiceView);
+}
+
+// ── View: Change Password choice ──
+function showChangePwChoiceView() {
+  setDrawerView('🔑 Change Password', true);
+  const body = document.getElementById('historyDrawerBody');
+  body.innerHTML = `
+    <div class="menu-card" id="menuChangeMainPw">
+      <div class="menu-card-icon">🔒</div>
+      <div class="menu-card-text"><b>Main Page Password</b><span>Change the password used to open this page</span></div>
+    </div>
+    <div class="menu-card" id="menuChangeRmPw">
+      <div class="menu-card-icon">🗂️</div>
+      <div class="menu-card-text"><b>RM Reconciliation Password</b><span>Change the RM Reconciliation folder password</span></div>
+    </div>
+  `;
+  document.getElementById('menuChangeMainPw').addEventListener('click', () => {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
+    document.getElementById('changePwBtn').click();
+  });
+  document.getElementById('menuChangeRmPw').addEventListener('click', () => {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
+    document.getElementById('rmChangePwDirectBtn').click();
+  });
+}
+
+// ── View: Saved Data (history) ──
+function showHistoryView() {
+  setDrawerView('📊 Saved Data', true);
+  renderHistoryDrawer();
+}
+
+function loadHistoryEntry(entry) {
+  document.getElementById('dieWidth').value = entry.dieWidth;
+  document.getElementById('lineSpeed').value = entry.lineSpeed;
+  document.getElementById('hoursInput').value = entry.hours;
+  document.getElementById('wastageInput').value = entry.wastage;
+  const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
+  entry.layers.forEach((layer, i) => {
+    if (rows[i]) {
+      rows[i].querySelector('.ext').value = layer.ext;
+      rows[i].querySelector('.mat').value = layer.mat;
+      rows[i].querySelector('.mic').value = layer.mic;
+      rows[i].querySelector('.den').value = layer.den;
+    }
+  });
+  recalculate();
+  showAlert('✓ Data loaded (' + entry.date + ' ' + entry.time + ')', 'success');
+}
+
+function renderHistoryDrawer() {
+  const body = document.getElementById('historyDrawerBody');
+  const history = getHistory().slice().sort((a, b) => (b.date + b.id).localeCompare(a.date + a.id));
+  if (history.length === 0) {
+    body.innerHTML = '<div class="history-empty">No saved data yet. Click "Save Data" to store the current setup here, date-wise.</div>';
+    return;
+  }
+  let lastDate = null;
+  let html = '';
+  history.forEach(entry => {
+    if (entry.date !== lastDate) {
+      html += `<div class="history-date-group">📅 ${entry.date}</div>`;
+      lastDate = entry.date;
+    }
+    html += `
+      <div class="history-entry-card">
+        <div class="history-entry-time">${entry.time}</div>
+        <div class="history-entry-summary">Die Width: ${entry.dieWidth} mm &nbsp;|&nbsp; Speed: ${entry.lineSpeed} m/min &nbsp;|&nbsp; Hours: ${entry.hours}</div>
+        <div class="history-entry-actions">
+          <button class="history-load-btn" data-id="${entry.id}">Load</button>
+          <button class="history-del-btn" data-id="${entry.id}">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  body.innerHTML = html;
+
+  body.querySelectorAll('.history-load-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = Number(btn.getAttribute('data-id'));
+      const entry = getHistory().find(e => e.id === id);
+      if (entry) {
+        loadHistoryEntry(entry);
+        document.getElementById('historyDrawerOverlay').classList.remove('show');
+      }
+    });
+  });
+  body.querySelectorAll('.history-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = Number(btn.getAttribute('data-id'));
+      setHistory(getHistory().filter(e => e.id !== id));
+      renderHistoryDrawer();
+      showAlert('🗑️ Saved entry deleted', 'warning');
+    });
+  });
+}
+
+// ── View: CFL Calculator (Weight ⇄ Length, Roll Diameter ⇄ Length) ──
+let cflMode = 'w2l';
+function showCflView() {
+  setDrawerView('🧮 CFL Calculator', true);
+  renderCflView();
+}
+
+function renderCflView() {
+  const body = document.getElementById('historyDrawerBody');
+  const tabs = [
+    { id: 'w2l', label: 'Weight → Length' },
+    { id: 'l2w', label: 'Length → Weight' },
+    { id: 'd2l', label: 'Roll Dia → Length' },
+    { id: 'l2d', label: 'Length → Roll Dia' }
+  ];
+  let tabsHtml = tabs.map(t => `<button class="cfl-tab${cflMode === t.id ? ' active' : ''}" data-mode="${t.id}">${t.label}</button>`).join('');
+
+  let formHtml = '';
+  if (cflMode === 'w2l') {
+    formHtml = `
+      <label>Weight (kg)</label><input type="number" id="cflWeight" min="0" step="0.01" value="100">
+      <label>Film Width (mm)</label><input type="number" id="cflWidth" min="0" step="1" value="1400">
+      <label>Total Thickness (micron)</label><input type="number" id="cflThk" min="0" step="0.1" value="250">
+      <label>Density (g/cm³)</label><input type="number" id="cflDen" min="0" step="0.01" value="0.92">
+      <div class="cfl-result"><label>Film Length</label><span id="cflOut">0.00 m</span></div>
+    `;
+  } else if (cflMode === 'l2w') {
+    formHtml = `
+      <label>Film Length (m)</label><input type="number" id="cflLength" min="0" step="0.1" value="500">
+      <label>Film Width (mm)</label><input type="number" id="cflWidth" min="0" step="1" value="1400">
+      <label>Total Thickness (micron)</label><input type="number" id="cflThk" min="0" step="0.1" value="250">
+      <label>Density (g/cm³)</label><input type="number" id="cflDen" min="0" step="0.01" value="0.92">
+      <div class="cfl-result"><label>Weight</label><span id="cflOut">0.00 kg</span></div>
+    `;
+  } else if (cflMode === 'd2l') {
+    formHtml = `
+      <label>Roll Outer Diameter (mm)</label><input type="number" id="cflOD" min="0" step="1" value="400">
+      <label>Core Inner Diameter (mm)</label><input type="number" id="cflID" min="0" step="1" value="76">
+      <label>Total Thickness (micron)</label><input type="number" id="cflThk" min="0" step="0.1" value="250">
+      <div class="cfl-result"><label>Film Length</label><span id="cflOut">0.00 m</span></div>
+    `;
+  } else if (cflMode === 'l2d') {
+    formHtml = `
+      <label>Film Length (m)</label><input type="number" id="cflLength" min="0" step="0.1" value="500">
+      <label>Core Inner Diameter (mm)</label><input type="number" id="cflID" min="0" step="1" value="76">
+      <label>Total Thickness (micron)</label><input type="number" id="cflThk" min="0" step="0.1" value="250">
+      <div class="cfl-result"><label>Roll Outer Diameter</label><span id="cflOut">0.00 mm</span></div>
+    `;
+  }
+
+  body.innerHTML = `<div class="cfl-tabs">${tabsHtml}</div><div class="cfl-form">${formHtml}</div>`;
+
+  body.querySelectorAll('.cfl-tab').forEach(btn => {
+    btn.addEventListener('click', () => { cflMode = btn.getAttribute('data-mode'); renderCflView(); });
+  });
+  body.querySelectorAll('.cfl-form input').forEach(inp => {
+    inp.addEventListener('input', computeCfl);
+  });
+  computeCfl();
+}
+
+function computeCfl() {
+  const out = document.getElementById('cflOut');
+  if (!out) return;
+  const num = (id) => {
+    const el = document.getElementById(id);
+    return el ? (parseFloat(el.value) || 0) : 0;
+  };
+
+  if (cflMode === 'w2l') {
+    const weight = num('cflWeight'), widthMm = num('cflWidth'), thkMicron = num('cflThk'), denGcm3 = num('cflDen');
+    const widthM = widthMm / 1000, thkM = thkMicron * 1e-6, denKgM3 = denGcm3 * 1000;
+    const denom = widthM * thkM * denKgM3;
+    const length = denom > 0 ? weight / denom : 0;
+    out.textContent = length.toFixed(2) + ' m';
+  } else if (cflMode === 'l2w') {
+    const lengthM = num('cflLength'), widthMm = num('cflWidth'), thkMicron = num('cflThk'), denGcm3 = num('cflDen');
+    const widthM = widthMm / 1000, thkM = thkMicron * 1e-6, denKgM3 = denGcm3 * 1000;
+    const weight = lengthM * widthM * thkM * denKgM3;
+    out.textContent = weight.toFixed(2) + ' kg';
+  } else if (cflMode === 'd2l') {
+    const odMm = num('cflOD'), idMm = num('cflID'), thkMicron = num('cflThk');
+    const thkMm = thkMicron / 1000;
+    const lengthMm = thkMm > 0 ? (Math.PI / 4) * (odMm * odMm - idMm * idMm) / thkMm : 0;
+    out.textContent = (lengthMm / 1000).toFixed(2) + ' m';
+  } else if (cflMode === 'l2d') {
+    const lengthM = num('cflLength'), idMm = num('cflID'), thkMicron = num('cflThk');
+    const thkMm = thkMicron / 1000;
+    const lengthMm = lengthM * 1000;
+    const odSq = (lengthMm * thkMm * 4 / Math.PI) + (idMm * idMm);
+    const odMm = odSq > 0 ? Math.sqrt(odSq) : 0;
+    out.textContent = odMm.toFixed(2) + ' mm';
+  }
+}
 
 document.getElementById('exportPdf').addEventListener('click', async () => {
   recalculate();
@@ -1558,6 +1944,31 @@ window.addEventListener('load', recalculate);
     <div id="pwLoading">🔐 Verifying...</div>
     <div id="pwErr"></div>
     <div class="attempt-warning" id="attemptWarn"></div>
+    <div style="margin-top:10px;">
+      <a href="#" id="forgotPwLink" style="color:#15803d; text-decoration:underline; font-size:12.5px;">Forgot Password?</a>
+    </div>
+  </div>
+</div>
+
+<button id="changePwBtn" title="Change Password" style="display:none;">🔑 Change Password</button>
+
+<!-- Password reset / change modal (shared by "Change Password" and "Forgot Password") -->
+<div id="pwResetOverlay" style="position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.6); display:none; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:28px 26px; width:310px; box-shadow:0 25px 50px rgba(0,0,0,0.35); text-align:center;">
+    <div style="font-size:38px; margin-bottom:8px;">🔑</div>
+    <h2 id="pwResetTitle" style="margin:0 0 4px; font-size:17px; color:#15803d;">Change Password</h2>
+    <p id="pwResetSub" style="margin:0 0 14px; font-size:12px; color:#64748b;">Enter current password and choose a new one</p>
+    <input id="pwResetVerifyInput" type="password" placeholder="Current Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; margin-bottom:8px;">
+    <input id="pwResetNewInput" type="password" placeholder="New Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; margin-bottom:8px;">
+    <input id="pwResetConfirmInput" type="password" placeholder="Confirm New Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box;">
+    <div id="pwResetErr" style="margin-top:8px; color:#ef4444; font-size:12.5px; min-height:16px;"></div>
+    <div style="display:flex; gap:8px; margin-top:6px;">
+      <button id="pwResetSubmitBtn" style="flex:1; padding:10px; background:#15803d; color:#fff; border:none; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer;">Save New Password</button>
+      <button id="pwResetCancelBtn" style="flex:1; padding:10px; background:#64748b; color:#fff; border:none; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer;">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -1566,6 +1977,11 @@ window.addEventListener('load', recalculate);
   const SALT_HEX    = "8b63658f475aa21b584248c24584195cae74c092abf3050d371e5c31b12e2ace";
   const ITERATIONS  = 310000;
   const DERIVED_HEX = "404e7c16a39442c58a97c383971d0a9519b7526b0e1dad5fd0d919ef7d566ce7";
+
+  // Master recovery code (used only for "Forgot Password"). Code: pawan@9097
+  const MASTER_SALT_HEX    = "a511d0c5b14c13b547550116e349efd4";
+  const MASTER_DERIVED_HEX = "c860e749afaffabc3fcb1aaa885396fdabeed8b1138642028d8e53ad63d58ef9";
+  const OVERRIDE_KEY = "mainPwOverride";
 
   let attempts = 0;
   let lockedUntil = 0;
@@ -1576,22 +1992,40 @@ window.addEventListener('load', recalculate);
       a[i / 2] = parseInt(hex.slice(i, i + 2), 16);
     return a;
   }
-
   function uint8ToHex(buf) {
-    return Array.from(new Uint8Array(buf))
-      .map(b => b.toString(16).padStart(2, "0")).join("");
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
   }
-
-  async function pbkdf2Verify(password) {
+  async function pbkdf2Derive(password, saltHex, iterations) {
     const enc = new TextEncoder();
-    const keyMat = await crypto.subtle.importKey(
-      "raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]
-    );
+    const keyMat = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
     const bits = await crypto.subtle.deriveBits(
-      { name: "PBKDF2", salt: hexToUint8(SALT_HEX), iterations: ITERATIONS, hash: "SHA-256" },
-      keyMat, 256
+      { name: "PBKDF2", salt: hexToUint8(saltHex), iterations, hash: "SHA-256" }, keyMat, 256
     );
     return uint8ToHex(bits);
+  }
+
+  // Current active password hash: use a saved override (if the person changed it) or fall back to the default.
+  function getActiveHash() {
+    try {
+      const raw = localStorage.getItem(OVERRIDE_KEY);
+      if (raw) return JSON.parse(raw); // {salt, hash}
+    } catch (e) {}
+    return { salt: SALT_HEX, hash: DERIVED_HEX };
+  }
+  async function verifyMainPassword(password) {
+    const active = getActiveHash();
+    const derived = await pbkdf2Derive(password, active.salt, ITERATIONS);
+    return derived === active.hash;
+  }
+  async function verifyMasterCode(code) {
+    const derived = await pbkdf2Derive(code, MASTER_SALT_HEX, ITERATIONS);
+    return derived === MASTER_DERIVED_HEX;
+  }
+  async function setNewMainPassword(newPw) {
+    const newSaltBytes = crypto.getRandomValues(new Uint8Array(16));
+    const newSaltHex = uint8ToHex(newSaltBytes);
+    const newHash = await pbkdf2Derive(newPw, newSaltHex, ITERATIONS);
+    localStorage.setItem(OVERRIDE_KEY, JSON.stringify({ salt: newSaltHex, hash: newHash }));
   }
 
   async function checkPw() {
@@ -1609,12 +2043,12 @@ window.addEventListener('load', recalculate);
     document.getElementById("pwLoading").style.display = "block";
     document.getElementById("pwErr").textContent = "";
 
-    const derived = await pbkdf2Verify(val);
+    const ok = await verifyMainPassword(val);
 
     document.getElementById("pwBtn").disabled = false;
     document.getElementById("pwLoading").style.display = "none";
 
-    if (derived === DERIVED_HEX) {
+    if (ok) {
       document.getElementById("pwOverlay").style.display = "none";
       attempts = 0;
     } else {
@@ -1627,7 +2061,7 @@ window.addEventListener('load', recalculate);
       if (attempts % 3 === 0) {
         const delay = attempts === 3 ? 5000 : attempts === 6 ? 30000 : 300000;
         lockedUntil = Date.now() + delay;
-        document.getElementById("pwErr").textContent = `❌ Wrong password! ${Math.ceil(delay/1000)}s ke liye locked.`;
+        document.getElementById("pwErr").textContent = `❌ Wrong password! Locked for ${Math.ceil(delay/1000)}s.`;
         document.getElementById("attemptWarn").textContent = `⚠️ ${attempts} wrong attempts`;
       } else {
         document.getElementById("pwErr").textContent = "❌ Wrong password! Try again.";
@@ -1640,14 +2074,75 @@ window.addEventListener('load', recalculate);
   document.getElementById("pwInput").addEventListener("keydown", e => {
     if (e.key === "Enter") checkPw();
   });
+
+  // ── Change Password / Forgot Password (shared reset modal) ──
+  let pwResetMode = "change"; // "change" or "forgot"
+
+  function openPwReset(mode) {
+    pwResetMode = mode;
+    document.getElementById("pwResetVerifyInput").value = "";
+    document.getElementById("pwResetNewInput").value = "";
+    document.getElementById("pwResetConfirmInput").value = "";
+    document.getElementById("pwResetErr").textContent = "";
+    if (mode === "change") {
+      document.getElementById("pwResetTitle").textContent = "Change Password";
+      document.getElementById("pwResetSub").textContent = "Enter current password and choose a new one";
+      document.getElementById("pwResetVerifyInput").placeholder = "Current Password";
+    } else {
+      document.getElementById("pwResetTitle").textContent = "Forgot Password";
+      document.getElementById("pwResetSub").textContent = "Enter the Master Recovery Code to set a new password";
+      document.getElementById("pwResetVerifyInput").placeholder = "Master Recovery Code";
+    }
+    document.getElementById("pwResetOverlay").style.display = "flex";
+  }
+
+  document.getElementById("changePwBtn").addEventListener("click", () => openPwReset("change"));
+  document.getElementById("forgotPwLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    openPwReset("forgot");
+  });
+  document.getElementById("pwResetCancelBtn").addEventListener("click", () => {
+    document.getElementById("pwResetOverlay").style.display = "none";
+  });
+
+  async function submitPwReset() {
+    const verifyVal = document.getElementById("pwResetVerifyInput").value;
+    const newPw = document.getElementById("pwResetNewInput").value;
+    const confirmPw = document.getElementById("pwResetConfirmInput").value;
+    const errBox = document.getElementById("pwResetErr");
+    errBox.textContent = "";
+
+    if (!verifyVal) { errBox.textContent = pwResetMode === "change" ? "Enter current password." : "Enter the Master Recovery Code."; return; }
+    if (!newPw || newPw.length < 4) { errBox.textContent = "New password must be at least 4 characters."; return; }
+    if (newPw !== confirmPw) { errBox.textContent = "New password and confirmation do not match."; return; }
+
+    const btn = document.getElementById("pwResetSubmitBtn");
+    btn.disabled = true;
+    let allowed = false;
+    if (pwResetMode === "change") {
+      allowed = await verifyMainPassword(verifyVal);
+      if (!allowed) errBox.textContent = "❌ Current password is incorrect.";
+    } else {
+      allowed = await verifyMasterCode(verifyVal);
+      if (!allowed) errBox.textContent = "❌ Invalid Master Recovery Code.";
+    }
+    btn.disabled = false;
+    if (!allowed) return;
+
+    await setNewMainPassword(newPw);
+    document.getElementById("pwResetOverlay").style.display = "none";
+    showAlert("✓ Password updated successfully", "success");
+  }
+  document.getElementById("pwResetSubmitBtn").addEventListener("click", submitPwReset);
 })();
 </script>
 
 <!-- ═══════ RM RECONCILIATION FOLDER (corner, own password) ═══════ -->
-<button id="rmFolderBtn" title="RM Reconciliation">
+<button id="rmFolderBtn" title="RM Reconciliation" style="display:none;">
   <span class="ico">🗂️</span>
   <span>RM Reconciliation</span>
 </button>
+<button id="rmChangePwDirectBtn" style="display:none;">Change RM Password</button>
 
 <div id="rmPwOverlay">
   <div id="rmPwBox">
@@ -1658,6 +2153,9 @@ window.addEventListener('load', recalculate);
     <button id="rmPwBtn">UNLOCK</button>
     <div id="rmPwErr"></div>
     <button id="rmPwCloseX">Cancel</button>
+    <div style="margin-top:10px;">
+      <a href="#" id="rmForgotPwLink" style="color:#b45309; text-decoration:underline; font-size:12px;">Forgot Password?</a>
+    </div>
   </div>
 </div>
 
@@ -1665,7 +2163,10 @@ window.addEventListener('load', recalculate);
   <div id="rmPanel">
     <div class="rm-header">
       <h2>🗂️ RM Reconciliation</h2>
-      <button id="rmCloseBtn">✕ Close</button>
+      <div style="display:flex; gap:8px;">
+        <button id="rmChangePwBtn" style="background:rgba(255,255,255,0.2); border:none; color:#fff; padding:0 10px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">🔑 Change Password</button>
+        <button id="rmCloseBtn">✕ Close</button>
+      </div>
     </div>
     <div class="rm-body">
 
@@ -1719,7 +2220,7 @@ window.addEventListener('load', recalculate);
         </div>
 
         <h3 style="margin-top:16px;">🧪 Extra / Additional Material Used</h3>
-        <p style="font-size:12px; color:#78716c; margin:0 0 8px;">Kisi bhi extra material ka consumption jo upar ke extruder list me nahi hai, yahan add karein.</p>
+        <p style="font-size:12px; color:#78716c; margin:0 0 8px;">Add any extra material used that is not part of the extruder list above.</p>
         <table class="rm-table" id="rmExtraTable">
           <thead>
           <tr>
@@ -1761,7 +2262,7 @@ window.addEventListener('load', recalculate);
 
       <div class="rm-section">
         <h3>🖨️ Date-wise Print / PDF Export</h3>
-        <p style="font-size:12px; color:#78716c; margin:0 0 8px;">Koi bhi date chuno — us din ke saare entries ka combined material, scrap aur film production PDF me nikal jayega.</p>
+        <p style="font-size:12px; color:#78716c; margin:0 0 8px;">Pick any date — the combined material usage, scrap, and film production for that day will be exported as a PDF.</p>
         <div class="rm-grid">
           <div>
             <label>Select Date</label>
@@ -1800,6 +2301,26 @@ window.addEventListener('load', recalculate);
   </div>
 </div>
 
+<!-- RM password reset / change modal (shared by "Change Password" and "Forgot Password") -->
+<div id="rmPwResetOverlay" style="position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.6); display:none; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:28px 26px; width:310px; box-shadow:0 25px 50px rgba(0,0,0,0.35); text-align:center;">
+    <div style="font-size:38px; margin-bottom:8px;">🔑</div>
+    <h2 id="rmPwResetTitle" style="margin:0 0 4px; font-size:17px; color:#b45309;">Change Password</h2>
+    <p id="rmPwResetSub" style="margin:0 0 14px; font-size:12px; color:#64748b;">Enter current password and choose a new one</p>
+    <input id="rmPwResetVerifyInput" type="password" placeholder="Current Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; margin-bottom:8px;">
+    <input id="rmPwResetNewInput" type="password" placeholder="New Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; margin-bottom:8px;">
+    <input id="rmPwResetConfirmInput" type="password" placeholder="Confirm New Password" autocomplete="off"
+      style="width:100%; padding:9px 10px; border:2px solid #cbd5e1; border-radius:8px; font-size:14px; text-align:center; outline:none; box-sizing:border-box;">
+    <div id="rmPwResetErr" style="margin-top:8px; color:#ef4444; font-size:12.5px; min-height:16px;"></div>
+    <div style="display:flex; gap:8px; margin-top:6px;">
+      <button id="rmPwResetSubmitBtn" style="flex:1; padding:10px; background:#b45309; color:#fff; border:none; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer;">Save New Password</button>
+      <button id="rmPwResetCancelBtn" style="flex:1; padding:10px; background:#64748b; color:#fff; border:none; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   // ── RM folder password: PBKDF2 protected ──
@@ -1807,6 +2328,11 @@ window.addEventListener('load', recalculate);
   const RM_ITERATIONS = 310000;
   const RM_DERIVED_HEX = "08a4b6f5c401d009569b9c9ee6e7c41debc98d7040122b2a43bd103e2dd92f26";
   const RM_STORAGE_KEY = "rmReconciliationEntries";
+  const RM_OVERRIDE_KEY = "rmPwOverride";
+
+  // Master recovery code (used only for "Forgot Password"). Code: pawan@9097
+  const RM_MASTER_SALT_HEX    = "d194730b59dd778e9c97dad9103b0657";
+  const RM_MASTER_DERIVED_HEX = "0754d78f744c5f664dc6c2e2be4f1c207e933642503f70758661060132b5734c";
 
   let rmUnlocked = false;
 
@@ -1818,14 +2344,41 @@ window.addEventListener('load', recalculate);
   function uint8ToHex(buf) {
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
   }
-  async function rmPbkdf2Verify(password) {
+  async function rmPbkdf2Derive(password, saltHex, iterations) {
     const enc = new TextEncoder();
     const keyMat = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
     const bits = await crypto.subtle.deriveBits(
-      { name: "PBKDF2", salt: hexToUint8(RM_SALT_HEX), iterations: RM_ITERATIONS, hash: "SHA-256" },
+      { name: "PBKDF2", salt: hexToUint8(saltHex), iterations, hash: "SHA-256" },
       keyMat, 256
     );
     return uint8ToHex(bits);
+  }
+
+  function getActiveRmHash() {
+    try {
+      const raw = localStorage.getItem(RM_OVERRIDE_KEY);
+      if (raw) return JSON.parse(raw); // {salt, hash}
+    } catch (e) {}
+    return { salt: RM_SALT_HEX, hash: RM_DERIVED_HEX };
+  }
+  async function rmPbkdf2Verify(password) {
+    const active = getActiveRmHash();
+    return rmPbkdf2Derive(password, active.salt, RM_ITERATIONS);
+  }
+  async function verifyRmPassword(password) {
+    const active = getActiveRmHash();
+    const derived = await rmPbkdf2Derive(password, active.salt, RM_ITERATIONS);
+    return derived === active.hash;
+  }
+  async function verifyRmMasterCode(code) {
+    const derived = await rmPbkdf2Derive(code, RM_MASTER_SALT_HEX, RM_ITERATIONS);
+    return derived === RM_MASTER_DERIVED_HEX;
+  }
+  async function setNewRmPassword(newPw) {
+    const newSaltBytes = crypto.getRandomValues(new Uint8Array(16));
+    const newSaltHex = uint8ToHex(newSaltBytes);
+    const newHash = await rmPbkdf2Derive(newPw, newSaltHex, RM_ITERATIONS);
+    localStorage.setItem(RM_OVERRIDE_KEY, JSON.stringify({ salt: newSaltHex, hash: newHash }));
   }
 
   function getRmEntries() {
@@ -1859,9 +2412,9 @@ window.addEventListener('load', recalculate);
     if (!val) return;
     const btn = document.getElementById("rmPwBtn");
     btn.disabled = true;
-    const derived = await rmPbkdf2Verify(val);
+    const ok = await verifyRmPassword(val);
     btn.disabled = false;
-    if (derived === RM_DERIVED_HEX) {
+    if (ok) {
       rmUnlocked = true;
       document.getElementById("rmPwOverlay").classList.remove("show");
       openRmPanel();
@@ -2128,9 +2681,9 @@ window.addEventListener('load', recalculate);
     if (!pw) return;
     const btn = document.getElementById("rmDeleteConfirmBtn");
     btn.disabled = true;
-    const derived = await rmPbkdf2Verify(pw);
+    const ok = await verifyRmPassword(pw);
     btn.disabled = false;
-    if (derived !== RM_DERIVED_HEX) {
+    if (!ok) {
       document.getElementById("rmDeletePwErr").textContent = "❌ Wrong password!";
       document.getElementById("rmDeletePwInput").value = "";
       return;
@@ -2304,6 +2857,66 @@ window.addEventListener('load', recalculate);
       }
     }
   });
+
+  // ── Change Password / Forgot Password (RM lock) ──
+  let rmPwResetMode = "change";
+  function openRmPwReset(mode) {
+    rmPwResetMode = mode;
+    document.getElementById("rmPwResetVerifyInput").value = "";
+    document.getElementById("rmPwResetNewInput").value = "";
+    document.getElementById("rmPwResetConfirmInput").value = "";
+    document.getElementById("rmPwResetErr").textContent = "";
+    if (mode === "change") {
+      document.getElementById("rmPwResetTitle").textContent = "Change Password";
+      document.getElementById("rmPwResetSub").textContent = "Enter current password and choose a new one";
+      document.getElementById("rmPwResetVerifyInput").placeholder = "Current Password";
+    } else {
+      document.getElementById("rmPwResetTitle").textContent = "Forgot Password";
+      document.getElementById("rmPwResetSub").textContent = "Enter the Master Recovery Code to set a new password";
+      document.getElementById("rmPwResetVerifyInput").placeholder = "Master Recovery Code";
+    }
+    document.getElementById("rmPwResetOverlay").style.display = "flex";
+  }
+  document.getElementById("rmChangePwBtn").addEventListener("click", () => openRmPwReset("change"));
+  document.getElementById("rmChangePwDirectBtn").addEventListener("click", () => openRmPwReset("change"));
+  document.getElementById("rmForgotPwLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("rmPwOverlay").classList.remove("show");
+    openRmPwReset("forgot");
+  });
+  document.getElementById("rmPwResetCancelBtn").addEventListener("click", () => {
+    document.getElementById("rmPwResetOverlay").style.display = "none";
+  });
+
+  async function submitRmPwReset() {
+    const verifyVal = document.getElementById("rmPwResetVerifyInput").value;
+    const newPw = document.getElementById("rmPwResetNewInput").value;
+    const confirmPw = document.getElementById("rmPwResetConfirmInput").value;
+    const errBox = document.getElementById("rmPwResetErr");
+    errBox.textContent = "";
+
+    if (!verifyVal) { errBox.textContent = rmPwResetMode === "change" ? "Enter current password." : "Enter the Master Recovery Code."; return; }
+    if (!newPw || newPw.length < 4) { errBox.textContent = "New password must be at least 4 characters."; return; }
+    if (newPw !== confirmPw) { errBox.textContent = "New password and confirmation do not match."; return; }
+
+    const btn = document.getElementById("rmPwResetSubmitBtn");
+    btn.disabled = true;
+    let allowed = false;
+    if (rmPwResetMode === "change") {
+      allowed = await verifyRmPassword(verifyVal);
+      if (!allowed) errBox.textContent = "❌ Current password is incorrect.";
+    } else {
+      allowed = await verifyRmMasterCode(verifyVal);
+      if (!allowed) errBox.textContent = "❌ Invalid Master Recovery Code.";
+    }
+    btn.disabled = false;
+    if (!allowed) return;
+
+    await setNewRmPassword(newPw);
+    document.getElementById("rmPwResetOverlay").style.display = "none";
+    showAlert("✓ RM Reconciliation password updated successfully", "success");
+  }
+  document.getElementById("rmPwResetSubmitBtn").addEventListener("click", submitRmPwReset);
 })();
 </script>
 </body>
