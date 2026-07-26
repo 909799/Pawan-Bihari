@@ -119,12 +119,62 @@
       color: #166534;
       font-size: 13px;
     }
-    .input-group input {
+    .input-group input,
+    .input-group select {
       width: 100%;
       padding: 9px 9px;
       border-radius: 6px;
       border: 1px solid #94a3b8;
       font-size: 14px;
+      background: #fff;
+      font-family: inherit;
+    }
+    .lot-container { display: flex; align-items: center; gap: 6px; }
+    .cost-summary-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .cost-summary-boxes .calcbox { background: #eff6ff; border-color: #93c5fd; }
+    .cost-summary-boxes .calcbox label { color: #1e3a8a; }
+    .cost-summary-boxes .calcbox span { color: #1e3a8a; font-size: 17px; }
+    .report-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .report-stat-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .report-stat-box label { display:block; font-size: 11px; font-weight: 700; color: #166534; }
+    .report-stat-box span { display:block; font-size: 16px; font-weight: 800; color: #14532d; margin-top: 4px; }
+    #draftBanner {
+      display: none;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    #draftBanner.show { display: flex; }
+    #draftBanner button {
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
     }
     .input-group input:invalid {
       border-color: var(--error);
@@ -770,7 +820,24 @@
     </div>
     <div class="content" id="captureArea">
       <div id="alertBox" class="alert"></div>
+      <div id="draftBanner">
+        <span>📝 An unsaved draft from your last session was found. Load it?</span>
+        <span style="display:flex; gap:6px;">
+          <button id="draftLoadBtn" style="background:#15803d; color:#fff;">Load Draft</button>
+          <button id="draftDismissBtn" style="background:#94a3b8; color:#fff;">Ignore</button>
+        </span>
+      </div>
 
+      <div id="mainPageSection" style="display:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <button id="mainSectionBackBtn" style="padding:8px 14px; background:#64748b; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">← Back</button>
+          <h2 id="mainSectionTitle" style="margin:0; font-size:18px; color:#1e40af;"></h2>
+          <span style="width:70px;"></span>
+        </div>
+        <div id="mainSectionBody"></div>
+      </div>
+
+      <div id="calculatorMainWrap">
       <div class="input-section">
         <div class="input-group">
           <label for="dieWidth">Die Width (mm)</label>
@@ -789,6 +856,23 @@
           <div class="wastage-container">
             <input id="wastageInput" type="number" value="0" min="0" max="100000" step="0.1">
             <span class="wastage-pct" id="wastagePct">0.00%</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="filmType">Film Type</label>
+          <select id="filmType">
+            <option value="A01">A01 - One Side Antistatic</option>
+            <option value="A02">A02 - Both Side Antistatic</option>
+            <option value="B01">B01 - Barrier Film</option>
+            <option value="C01">C01 - Cryogenic Film</option>
+            <option value="L01">L01 - Liner Application Film</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="lotNo">Lot No. (auto)</label>
+          <div class="lot-container">
+            <input id="lotNo" type="text" readonly placeholder="Click Generate" style="background:#f1f5f9; font-weight:700; color:#166534;">
+            <button id="genLotBtn" type="button" style="padding:9px 10px; border:none; border-radius:6px; background:#15803d; color:#fff; font-weight:700; cursor:pointer; font-size:12px; white-space:nowrap;">🔄 Generate</button>
           </div>
         </div>
       </div>
@@ -879,6 +963,7 @@
         <button id="saveBtn">💾 Save Data</button>
         <button id="loadBtn">📂 Load Saved Data</button>
         <button id="exportPdf">📄 Export PDF</button>
+      </div>
       </div>
     </div>
   </div>
@@ -1543,6 +1628,8 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     lineSpeed: document.getElementById('lineSpeed').value,
     hours: document.getElementById('hoursInput').value,
     wastage: document.getElementById('wastageInput').value,
+    filmType: document.getElementById('filmType').value,
+    lotNo: document.getElementById('lotNo').value,
     layers: Array.from(document.querySelectorAll('#calcTable tbody tr')).map(r => ({
       ext: r.querySelector('.ext').value,
       mat: r.querySelector('.mat').value,
@@ -1581,6 +1668,19 @@ function setDrawerView(title, showBack) {
   document.getElementById('drawerBackBtn').style.display = showBack ? 'block' : 'none';
 }
 
+// ── Main-page sections (Cost Analysis / Production Reports open here, not in the menu drawer) ──
+function showMainPageSection(title) {
+  document.getElementById('mainSectionTitle').textContent = title;
+  document.getElementById('calculatorMainWrap').style.display = 'none';
+  document.getElementById('mainPageSection').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function hideMainPageSection() {
+  document.getElementById('mainPageSection').style.display = 'none';
+  document.getElementById('calculatorMainWrap').style.display = '';
+}
+document.getElementById('mainSectionBackBtn').addEventListener('click', hideMainPageSection);
+
 // ── View: Main Menu ──
 function showMenuView() {
   setDrawerView('📁 Menu', false);
@@ -1598,6 +1698,14 @@ function showMenuView() {
       <div class="menu-card-icon">🧮</div>
       <div class="menu-card-text"><b>CFL Calculator</b><span>Weight ⇄ Length, Roll Diameter ⇄ Length</span></div>
     </div>
+    <div class="menu-card" id="menuCost">
+      <div class="menu-card-icon">💰</div>
+      <div class="menu-card-text"><b>Cost Analysis</b><span>Password protected — ₹/kg, ₹/m, ₹/m² incl. power &amp; manpower</span></div>
+    </div>
+    <div class="menu-card" id="menuReports">
+      <div class="menu-card-icon">📊</div>
+      <div class="menu-card-text"><b>Production Reports</b><span>Totals, wastage % trend &amp; CSV export from saved data</span></div>
+    </div>
     <div class="menu-card" id="menuChangePw">
       <div class="menu-card-icon">🔑</div>
       <div class="menu-card-text"><b>Change Password</b><span>Update Main Page or RM Reconciliation password</span></div>
@@ -1609,6 +1717,11 @@ function showMenuView() {
     document.getElementById('rmFolderBtn').click();
   });
   document.getElementById('menuCfl').addEventListener('click', showCflView);
+  document.getElementById('menuCost').addEventListener('click', openCostSection);
+  document.getElementById('menuReports').addEventListener('click', () => {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
+    showReportsView();
+  });
   document.getElementById('menuChangePw').addEventListener('click', showChangePwChoiceView);
 }
 
@@ -1647,6 +1760,8 @@ function loadHistoryEntry(entry) {
   document.getElementById('lineSpeed').value = entry.lineSpeed;
   document.getElementById('hoursInput').value = entry.hours;
   document.getElementById('wastageInput').value = entry.wastage;
+  if (entry.filmType) document.getElementById('filmType').value = entry.filmType;
+  document.getElementById('lotNo').value = entry.lotNo || '';
   const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
   entry.layers.forEach((layer, i) => {
     if (rows[i]) {
@@ -1677,7 +1792,7 @@ function renderHistoryDrawer() {
     html += `
       <div class="history-entry-card">
         <div class="history-entry-time">${entry.time}</div>
-        <div class="history-entry-summary">Die Width: ${entry.dieWidth} mm &nbsp;|&nbsp; Speed: ${entry.lineSpeed} m/min &nbsp;|&nbsp; Hours: ${entry.hours}</div>
+        <div class="history-entry-summary">${entry.lotNo ? ('Lot: ' + entry.lotNo + ' &nbsp;|&nbsp; ') : ''}Die Width: ${entry.dieWidth} mm &nbsp;|&nbsp; Speed: ${entry.lineSpeed} m/min &nbsp;|&nbsp; Hours: ${entry.hours}</div>
         <div class="history-entry-actions">
           <button class="history-load-btn" data-id="${entry.id}">Load</button>
           <button class="history-del-btn" data-id="${entry.id}">Delete</button>
@@ -1802,6 +1917,214 @@ function computeCfl() {
   }
 }
 
+// ─── COST ANALYSIS VIEW (₹/kg, ₹/m, ₹/m² incl. power/manpower/other) ─
+const MATERIAL_RATES_KEY = 'filmMaterialRates';
+const COST_SETTINGS_KEY = 'filmCostSettings';
+
+function getMaterialRates() {
+  try { return JSON.parse(localStorage.getItem(MATERIAL_RATES_KEY)) || {}; } catch (e) { return {}; }
+}
+function setMaterialRates(obj) { localStorage.setItem(MATERIAL_RATES_KEY, JSON.stringify(obj)); }
+
+function getCostSettings() {
+  const def = { power: 0, manpower: 0, otherLabel: 'Other', otherValue: 0, otherPerHour: true };
+  try { return Object.assign(def, JSON.parse(localStorage.getItem(COST_SETTINGS_KEY)) || {}); }
+  catch (e) { return def; }
+}
+function setCostSettings(obj) { localStorage.setItem(COST_SETTINGS_KEY, JSON.stringify(obj)); }
+
+function showCostView() {
+  showMainPageSection('💰 Cost Analysis');
+  renderCostView();
+}
+
+function renderCostView() {
+  recalculate();
+  const body = document.getElementById('mainSectionBody');
+  const rates = getMaterialRates();
+  const settings = getCostSettings();
+
+  const matRowsHtml = calculationState.layers.map((l, i) => {
+    const key = (l.material || '').trim().toLowerCase() || ('layer' + i);
+    const rate = rates[key] !== undefined ? rates[key] : 0;
+    return `<tr>
+        <td style="text-align:left;">${l.material || l.name}</td>
+        <td>${l.consumeKg.toFixed(2)}</td>
+        <td><input type="number" class="cost-mat-rate" data-key="${key}" min="0" step="0.01" value="${rate}"></td>
+      </tr>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="rm-section" style="border:1px solid #bfdbfe;">
+      <h3 style="color:#1e40af;">🧵 Material Cost (₹/kg per layer)</h3>
+      <table class="rm-table">
+        <thead><tr><th>Material</th><th>Used (kg)</th><th>Rate ₹/kg</th></tr></thead>
+        <tbody>${matRowsHtml}</tbody>
+      </table>
+    </div>
+    <div class="rm-section" style="border:1px solid #bfdbfe;">
+      <h3 style="color:#1e40af;">⚡ Power, Manpower &amp; Other Cost</h3>
+      <div class="rm-grid">
+        <div><label>Power Cost (₹ / hr)</label><input type="number" id="costPower" min="0" step="0.01" value="${settings.power}"></div>
+        <div><label>Manpower Cost (₹ / hr)</label><input type="number" id="costManpower" min="0" step="0.01" value="${settings.manpower}"></div>
+        <div><label>Other Cost Label</label><input type="text" id="costOtherLabel" maxlength="24" value="${settings.otherLabel}"></div>
+        <div><label>Other Cost (₹)</label><input type="number" id="costOtherValue" min="0" step="0.01" value="${settings.otherValue}"></div>
+        <div>
+          <label>Other Cost Basis</label>
+          <select id="costOtherPerHour">
+            <option value="1" ${settings.otherPerHour ? 'selected' : ''}>Per Hour (× Production Hours)</option>
+            <option value="0" ${!settings.otherPerHour ? 'selected' : ''}>Fixed (one-time for this batch)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="cost-summary-boxes">
+      <div class="calcbox"><label>Total Cost (₹)</label><span id="costTotal">0.00</span></div>
+      <div class="calcbox"><label>₹ / kg</label><span id="costPerKg">0.00</span></div>
+      <div class="calcbox"><label>₹ / meter</label><span id="costPerM">0.00</span></div>
+      <div class="calcbox"><label>₹ / m²</label><span id="costPerM2">0.00</span></div>
+    </div>
+    <div style="font-size:11.5px; color:#64748b; margin-top:-6px;">Rates and power/manpower cost are auto-saved for next time. Material used (kg) &amp; Production Hours come live from the main sheet.</div>
+  `;
+
+  body.querySelectorAll('.cost-mat-rate, #costPower, #costManpower, #costOtherLabel, #costOtherValue, #costOtherPerHour')
+    .forEach(el => el.addEventListener('input', computeCost));
+
+  computeCost();
+}
+
+function computeCost() {
+  const out = document.getElementById('costTotal');
+  if (!out) return;
+  recalculate();
+
+  const rates = {};
+  document.querySelectorAll('.cost-mat-rate').forEach(el => {
+    rates[el.getAttribute('data-key')] = parseFloat(el.value) || 0;
+  });
+  setMaterialRates(Object.assign(getMaterialRates(), rates));
+
+  let materialCost = 0;
+  calculationState.layers.forEach((l, i) => {
+    const key = (l.material || '').trim().toLowerCase() || ('layer' + i);
+    materialCost += (rates[key] || 0) * l.consumeKg;
+  });
+
+  const power = parseFloat(document.getElementById('costPower').value) || 0;
+  const manpower = parseFloat(document.getElementById('costManpower').value) || 0;
+  const otherValue = parseFloat(document.getElementById('costOtherValue').value) || 0;
+  const otherLabel = document.getElementById('costOtherLabel').value || 'Other';
+  const otherPerHour = document.getElementById('costOtherPerHour').value === '1';
+  setCostSettings({ power, manpower, otherLabel, otherValue, otherPerHour });
+
+  const hours = calculationState.hours || 0;
+  const powerCost = power * hours;
+  const manpowerCost = manpower * hours;
+  const otherCost = otherPerHour ? otherValue * hours : otherValue;
+
+  const totalCost = materialCost + powerCost + manpowerCost + otherCost;
+  const netWeight = Math.max(0, calculationState.totalWeight - calculationState.wastage);
+  const lengthM = calculationState.filmLength || 0;
+  const widthM = (calculationState.dieWidth || 0) / 1000;
+  const areaM2 = lengthM * widthM;
+
+  document.getElementById('costTotal').textContent = totalCost.toFixed(2);
+  document.getElementById('costPerKg').textContent = netWeight > 0 ? (totalCost / netWeight).toFixed(2) : '0.00';
+  document.getElementById('costPerM').textContent = lengthM > 0 ? (totalCost / lengthM).toFixed(2) : '0.00';
+  document.getElementById('costPerM2').textContent = areaM2 > 0 ? (totalCost / areaM2).toFixed(2) : '0.00';
+}
+
+// ─── PRODUCTION REPORTS VIEW (totals, month-wise, CSV export) ────────
+function showReportsView() {
+  showMainPageSection('📊 Production Reports');
+  renderReportsView();
+}
+
+function computeEntryTotals(entry) {
+  const dieWidthM = (parseFloat(entry.dieWidth) || 0) / 1000;
+  const speed = parseFloat(entry.lineSpeed) || 0;
+  const hours = parseFloat(entry.hours) || 0;
+  const wastage = parseFloat(entry.wastage) || 0;
+  let totalThroughput = 0;
+  (entry.layers || []).forEach(l => {
+    totalThroughput += calculateLayerThroughput(dieWidthM, parseFloat(l.mic) || 0, speed, parseFloat(l.den) || 0);
+  });
+  const totalWeight = totalThroughput * hours;
+  return { totalWeight, wastage, netWeight: Math.max(0, totalWeight - wastage) };
+}
+
+function renderReportsView() {
+  const body = document.getElementById('mainSectionBody');
+  const history = getHistory();
+  if (history.length === 0) {
+    body.innerHTML = '<div class="history-empty">No saved data yet. Save some batches first using "Save Data", then the report will appear here.</div>';
+    return;
+  }
+
+  let totalKg = 0, totalWastageKg = 0;
+  const monthMap = {};
+  history.forEach(entry => {
+    const t = computeEntryTotals(entry);
+    totalKg += t.totalWeight;
+    totalWastageKg += t.wastage;
+    const month = (entry.date || '').slice(0, 7) || 'unknown';
+    if (!monthMap[month]) monthMap[month] = { kg: 0, wastage: 0, batches: 0 };
+    monthMap[month].kg += t.totalWeight;
+    monthMap[month].wastage += t.wastage;
+    monthMap[month].batches += 1;
+  });
+  const avgWastagePct = totalKg > 0 ? (totalWastageKg / totalKg * 100) : 0;
+
+  const monthRows = Object.keys(monthMap).sort().reverse().map(m => {
+    const d = monthMap[m];
+    const pct = d.kg > 0 ? (d.wastage / d.kg * 100) : 0;
+    return `<tr><td>${m}</td><td>${d.batches}</td><td>${d.kg.toFixed(1)}</td><td>${d.wastage.toFixed(1)}</td><td>${pct.toFixed(2)}%</td></tr>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="report-stat-grid">
+      <div class="report-stat-box"><label>Total Batches</label><span>${history.length}</span></div>
+      <div class="report-stat-box"><label>Total Production</label><span>${totalKg.toFixed(1)} kg</span></div>
+      <div class="report-stat-box"><label>Total Wastage</label><span>${totalWastageKg.toFixed(1)} kg</span></div>
+      <div class="report-stat-box"><label>Avg Wastage %</label><span>${avgWastagePct.toFixed(2)}%</span></div>
+    </div>
+    <div class="rm-section">
+      <h3>📅 Month-wise Summary</h3>
+      <table class="rm-table">
+        <thead><tr><th>Month</th><th>Batches</th><th>Production (kg)</th><th>Wastage (kg)</th><th>Wastage %</th></tr></thead>
+        <tbody>${monthRows}</tbody>
+      </table>
+    </div>
+    <div class="rm-roll-actions">
+      <button class="rm-btn add" id="reportsCsvBtn">⬇️ Export All Saved Batches (CSV)</button>
+    </div>
+  `;
+
+  document.getElementById('reportsCsvBtn').addEventListener('click', exportHistoryCsv);
+}
+
+function exportHistoryCsv() {
+  const history = getHistory();
+  const rows = [['Date', 'Time', 'Lot No', 'Film Type', 'Die Width (mm)', 'Line Speed (m/min)', 'Hours', 'Total Weight (kg)', 'Wastage (kg)', 'Wastage %']];
+  history.forEach(entry => {
+    const t = computeEntryTotals(entry);
+    const pct = t.totalWeight > 0 ? (t.wastage / t.totalWeight * 100) : 0;
+    rows.push([entry.date, entry.time, entry.lotNo || '', entry.filmType || '', entry.dieWidth, entry.lineSpeed, entry.hours,
+      t.totalWeight.toFixed(2), t.wastage.toFixed(2), pct.toFixed(2)]);
+  });
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'film-production-report.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showAlert('✓ CSV exported', 'success');
+}
+
 document.getElementById('exportPdf').addEventListener('click', async () => {
   recalculate();
   if (!calculationState.isValid) {
@@ -1841,6 +2164,10 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
     pdf.text(`Product: ${productName}`, centerX, y, { align: 'center' });
     y += 6;
     pdf.text(`Operator: ${operatorName}`, centerX, y, { align: 'center' });
+    y += 6;
+    const lotNoVal = document.getElementById('lotNo').value || '-';
+    const filmTypeVal = document.getElementById('filmType').selectedOptions[0].text;
+    pdf.text(`Lot No: ${lotNoVal}    Film Type: ${filmTypeVal}`, centerX, y, { align: 'center' });
     y += 8;
 
     pdf.text(
@@ -1924,13 +2251,114 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
   }
 });
 
-// ─── INIT ───────────────────────────────────────────────────────────
-document.querySelectorAll('input').forEach(input => {
-  input.addEventListener('input', recalculate);
-  input.addEventListener('change', recalculate);
+// ─── LOT / BATCH NO. AUTO-GENERATOR ──────────────────────────────────
+// Format: IF + <TypeCode> + <YYYY><MM> + <running no. for that month, 001,002,...>
+const LOT_PREFIX = 'IF';
+const LOT_COUNTER_KEY = 'filmLotCounterByMonth';
+
+function getLotCounters() {
+  try { return JSON.parse(localStorage.getItem(LOT_COUNTER_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function generateLotNo() {
+  const type = document.getElementById('filmType').value;
+  const now = new Date();
+  const yyyymm = '' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0');
+  const counters = getLotCounters();
+  const next = (counters[yyyymm] || 0) + 1;
+  counters[yyyymm] = next;
+  localStorage.setItem(LOT_COUNTER_KEY, JSON.stringify(counters));
+  const running = String(next).padStart(3, '0');
+  const lot = `${LOT_PREFIX}${type}${yyyymm}${running}`;
+  document.getElementById('lotNo').value = lot;
+  showAlert('✓ Lot No generated: ' + lot, 'success');
+  return lot;
+}
+document.getElementById('genLotBtn').addEventListener('click', generateLotNo);
+
+// ─── AUTOSAVE DRAFT (crash / accidental-close recovery) ──────────────
+const DRAFT_KEY = 'filmFormulationDraft';
+let draftSuppressed = false;
+
+function collectDraft() {
+  return {
+    savedAt: new Date().toISOString(),
+    dieWidth: document.getElementById('dieWidth').value,
+    lineSpeed: document.getElementById('lineSpeed').value,
+    hours: document.getElementById('hoursInput').value,
+    wastage: document.getElementById('wastageInput').value,
+    filmType: document.getElementById('filmType').value,
+    lotNo: document.getElementById('lotNo').value,
+    layers: Array.from(document.querySelectorAll('#calcTable tbody tr')).map(r => ({
+      ext: r.querySelector('.ext').value,
+      mat: r.querySelector('.mat').value,
+      mic: r.querySelector('.mic').value,
+      den: r.querySelector('.den').value
+    }))
+  };
+}
+
+let draftSaveTimer = null;
+function scheduleDraftSave() {
+  if (draftSuppressed) return;
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(() => {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collectDraft())); } catch (e) {}
+  }, 800);
+}
+
+function applyDraft(draft) {
+  document.getElementById('dieWidth').value = draft.dieWidth;
+  document.getElementById('lineSpeed').value = draft.lineSpeed;
+  document.getElementById('hoursInput').value = draft.hours;
+  document.getElementById('wastageInput').value = draft.wastage;
+  if (draft.filmType) document.getElementById('filmType').value = draft.filmType;
+  if (draft.lotNo) document.getElementById('lotNo').value = draft.lotNo;
+  const rows = Array.from(document.querySelectorAll('#calcTable tbody tr'));
+  (draft.layers || []).forEach((layer, i) => {
+    if (rows[i]) {
+      rows[i].querySelector('.ext').value = layer.ext;
+      rows[i].querySelector('.mat').value = layer.mat;
+      rows[i].querySelector('.mic').value = layer.mic;
+      rows[i].querySelector('.den').value = layer.den;
+    }
+  });
+  recalculate();
+}
+
+document.getElementById('draftLoadBtn').addEventListener('click', () => {
+  try {
+    const draft = JSON.parse(localStorage.getItem(DRAFT_KEY));
+    if (draft) { applyDraft(draft); showAlert('✓ Draft restored', 'success'); }
+  } catch (e) {}
+  document.getElementById('draftBanner').classList.remove('show');
+  draftSuppressed = false;
+});
+document.getElementById('draftDismissBtn').addEventListener('click', () => {
+  document.getElementById('draftBanner').classList.remove('show');
+  draftSuppressed = false;
 });
 
-window.addEventListener('load', recalculate);
+// ─── INIT ───────────────────────────────────────────────────────────
+document.querySelectorAll('input, select').forEach(input => {
+  input.addEventListener('input', recalculate);
+  input.addEventListener('change', recalculate);
+  input.addEventListener('input', scheduleDraftSave);
+  input.addEventListener('change', scheduleDraftSave);
+});
+
+window.addEventListener('load', () => {
+  recalculate();
+  // Show "restore draft?" banner if a leftover draft exists from an earlier
+  // unsaved session (helps recover work after an accidental tab close/crash).
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw) {
+      draftSuppressed = true; // don't overwrite the draft while the banner is showing
+      document.getElementById('draftBanner').classList.add('show');
+    }
+  } catch (e) {}
+});
 </script>
 
 <!-- PASSWORD LOCK OVERLAY — PBKDF2 Protected -->
@@ -2917,6 +3345,68 @@ window.addEventListener('load', recalculate);
     showAlert("✓ RM Reconciliation password updated successfully", "success");
   }
   document.getElementById("rmPwResetSubmitBtn").addEventListener("click", submitRmPwReset);
+})();
+</script>
+
+<!-- ═══════ COST ANALYSIS — password protected (₹/kg, ₹/m, ₹/m²) ═══════ -->
+<div id="costPwOverlay" style="position:fixed; inset:0; z-index:99999; background:rgba(15,23,42,0.6); display:none; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:28px 26px; width:300px; box-shadow:0 25px 50px rgba(0,0,0,0.35); text-align:center;">
+    <div style="font-size:38px; margin-bottom:8px;">🔒</div>
+    <h2 style="margin:0 0 4px; font-size:17px; color:#1e40af;">Cost Analysis</h2>
+    <p style="margin:0 0 14px; font-size:12px; color:#64748b;">Enter password to view cost data</p>
+    <input id="costPwInput" type="password" maxlength="20" autocomplete="off" placeholder="••••"
+      style="width:100%; padding:10px; border:2px solid #cbd5e1; border-radius:8px; font-size:18px; letter-spacing:6px; text-align:center; outline:none; box-sizing:border-box;">
+    <div id="costPwErr" style="margin-top:8px; color:#ef4444; font-size:12.5px; min-height:16px;"></div>
+    <div style="display:flex; gap:8px; margin-top:6px;">
+      <button id="costPwBtn" style="flex:1; padding:10px; background:#1e40af; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">UNLOCK</button>
+      <button id="costPwCancelBtn" style="flex:1; padding:10px; background:#64748b; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // SHA-256 hash of the Cost Analysis password. Kept as a hash (not plain
+  // text) even though this is a light, client-side lock for an internal tool.
+  const COST_PW_HASH = "5e8d4e77b7336ffdb5d29344035684ee683016243f7ec3053abde600dbc35263";
+  let costUnlocked = false;
+
+  async function sha256Hex(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  window.openCostSection = function () {
+    document.getElementById('historyDrawerOverlay').classList.remove('show');
+    if (costUnlocked) { showCostViewInDrawer(); return; }
+    document.getElementById('costPwInput').value = '';
+    document.getElementById('costPwErr').textContent = '';
+    document.getElementById('costPwOverlay').style.display = 'flex';
+    setTimeout(() => document.getElementById('costPwInput').focus(), 50);
+  };
+
+  async function checkCostPw() {
+    const val = document.getElementById('costPwInput').value;
+    if (!val) return;
+    const hash = await sha256Hex(val);
+    if (hash === COST_PW_HASH) {
+      costUnlocked = true;
+      document.getElementById('costPwOverlay').style.display = 'none';
+      showCostViewInDrawer();
+    } else {
+      document.getElementById('costPwErr').textContent = '❌ Wrong password!';
+      document.getElementById('costPwInput').value = '';
+    }
+  }
+  document.getElementById('costPwBtn').addEventListener('click', checkCostPw);
+  document.getElementById('costPwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkCostPw(); });
+  document.getElementById('costPwCancelBtn').addEventListener('click', () => {
+    document.getElementById('costPwOverlay').style.display = 'none';
+  });
+
+  function showCostViewInDrawer() {
+    showCostView();
+  }
 })();
 </script>
 </body>
