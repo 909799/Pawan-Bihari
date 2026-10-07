@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IV Bag Material Stock</title>
+<style>
+:root{--bg:#eef3f9;--card:#fff;--tx:#17212b;--mu:#667585;--bd:#dce4ee;--pr:#0b63c5;--ok:#168a4a;--bad:#d32f2f;--wn:#c77700;--hd1:#0b4f9c;--hd2:#12a4a0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f151c;--card:#1a222b;--tx:#e8eef4;--mu:#92a1b0;--bd:#2b3743;--pr:#4da3ff;--ok:#4cc58a;--bad:#ff7b72;--wn:#e3b341;--hd1:#0a3a73;--hd2:#0d7673}}
+:root[data-theme="dark"]{--bg:#0f151c;--card:#1a222b;--tx:#e8eef4;--mu:#92a1b0;--bd:#2b3743;--pr:#4da3ff;--ok:#4cc58a;--bad:#ff7b72;--wn:#e3b341;--hd1:#0a3a73;--hd2:#0d7673}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(120deg,var(--hd1),var(--hd2));color:#fff;padding:18px 14px 14px}
+header h1{margin:0;font-size:20px}header p{margin:2px 0 0;opacity:.85;font-size:13px}
+.w{max-width:980px;margin:0 auto;padding:12px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px}
+.tabs button{flex:none;padding:9px 14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;font-size:14px;cursor:pointer}
+.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr);font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+h2{font-size:16px;margin:0 0 10px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.k div{background:var(--card);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:12px;padding:12px}
+.k .n{font-size:12px;color:var(--mu)}.k .v{font-size:23px;font-weight:700;color:var(--c)}.k .s{font-size:12px;margin-top:2px}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:3px;font-weight:600}
+input,select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font-size:15px}
+input:focus,select:focus{outline:2px solid var(--pr);border-color:transparent}
+.btn{padding:11px 18px;border:0;border-radius:8px;background:var(--pr);color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px}
+.btn.o{background:var(--bad)}.btn.s{background:var(--bd);color:var(--tx);padding:6px 10px;font-size:13px;margin:0;font-weight:500}
+.t{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 7px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}th{color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;background:var(--c)}
+.b{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.bg-ok{background:rgba(22,138,74,.14);color:var(--ok)}.bg-bad{background:rgba(211,47,47,.14);color:var(--bad)}.bg-in{background:rgba(11,99,197,.14);color:var(--pr)}.bg-wn{background:rgba(199,119,0,.16);color:var(--wn)}
+.mu{color:var(--mu);font-size:13px}
+.pv{background:var(--bg);border:1px dashed var(--bd);border-radius:10px;padding:12px;margin-top:12px}
+.pv div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd)}.pv div:last-child{border:0}
+
+#lock{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--hd1),var(--hd2))}
+#lock .box{background:var(--card);border-radius:16px;padding:26px 22px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center}
+#lock .ic{font-size:42px}#lock h2{margin:6px 0 4px;font-size:19px}#lock input{margin-top:12px;text-align:center}
+#lock .btn{width:100%}#lock a{display:block;margin-top:14px;font-size:13px;color:var(--pr);cursor:pointer}#lock .err{color:var(--bad);font-size:13px;margin-top:8px;min-height:18px}
+.lk{float:right;background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer}
+.pill{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.22);margin-left:6px;white-space:nowrap}.pill.bad{background:#d32f2f}.pill.wn{background:#c77700}
+header{text-align:center}header h1{font-size:22px}
+.hb{display:flex;justify-content:center;gap:10px;flex-wrap:nowrap;margin-top:10px}.hb .lk{float:none;padding:8px 18px;font-weight:600;white-space:nowrap}
+.tabs{flex-wrap:nowrap}.tabs button:first-child{margin-left:auto}.tabs button:last-child{margin-right:auto}.tabs button{white-space:nowrap}
+.card h2{text-align:center}.card>.btn{display:block;margin-left:auto;margin-right:auto}.card>p.mu{text-align:center}
+.k div{text-align:center}
+.k{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:4px}.k>div{flex:1 0 118px;min-width:118px;padding:10px 6px}.k .v{font-size:19px}.k .n{white-space:nowrap}
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head><body>
+<div id="lock"></div>
+<div id="app" style="display:none">
+<header><div style="max-width:980px;margin:0 auto"><div style="font-size:12px;opacity:.95;letter-spacing:.05em;margin-bottom:4px">Created by <b>Pawan Kumar</b></div><h1>💉 IV Bag Machine – Material Stock</h1><p>Receive, consume and match system stock with physical stock <span id="sync" class="pill">…</span></p><div class="hb"><button class="lk" onclick="exportXlsx()">⬇ Excel</button><button class="lk" onclick="lockNow()">🔒 Lock</button></div></div></header>
+<div class="w"><div class="tabs" id="tabs"></div><div id="v"></div><div class="mu" style="text-align:center;padding:18px 0 10px">Created by <b>Pawan Kumar</b> · IV Bag Material Stock</div></div>
+</div>
+<script>
+const ITEMS=[
+{id:'rf',n:'Renolit Film',u:'m',cat:'film',c:'#1565c0'},{id:'rt',n:'Renolit Tube',u:'m',cat:'tube',c:'#5c6bc0'},
+{id:'pf',n:'Polycine Film',u:'m',cat:'film',c:'#00897b'},{id:'pt',n:'Polycine Tube',u:'m',cat:'tube',c:'#43a047'},
+{id:'sp',n:'Spike Port',u:'pcs',c:'#ef6c00',port:true},{id:'ip',n:'Injection Port',u:'pcs',c:'#8e24aa',port:true},{id:'tp',n:'Twist-off Port',u:'pcs',c:'#d81b60',port:true}];
+const SIZES=[100,200,250,500,1000];
+const DEF={filmW:{100:120,200:120,250:120,500:120,1000:120},filmLen:{100:150,200:200,250:230,500:310,1000:440},tubeLen:{100:120,200:120,250:120,500:120,1000:120},waste:2,min:{rf:0,rt:0,pf:0,pt:0,sp:0,ip:0,tp:0}};
+let S={ledger:[],physical:{},cfg:JSON.parse(JSON.stringify(DEF))};
+try{const x=localStorage.getItem('ivstock');if(x){S=JSON.parse(x);S.cfg.min=S.cfg.min||DEF.min;S.cfg.filmW=S.cfg.filmW||DEF.filmW}}catch(e){}
+S.custom=S.custom||[];S.custom.forEach(c=>ITEMS.push(c));
+S.fgp=S.fgp||[];S.fgl=S.fgl||[];S.fgphy=S.fgphy||{};
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fgStock=id=>S.fgl.filter(l=>l.pid==id).reduce((a,l)=>a+(l.type=='OUT'?-l.qty:l.qty),0);
+const fgName=id=>(S.fgp.find(p=>p.id==id)||{name:'(deleted)'}).name;
+function fgDiff(id){const s=fgStock(id),p=S.fgphy[id];if(p==null)return '<span class="b bg-wn">Not counted</span>';const d=p-s;return Math.abs(d)<.005?'<span class="b bg-ok">✔ Match</span>':`<span class="b bg-bad">${d>0?'+':''}${f(d)} pcs ${d>0?'extra':'short'}</span>`}
+const save=()=>{try{localStorage.setItem('ivstock',JSON.stringify(S))}catch(e){}pushSoon()};
+const $=id=>document.getElementById(id);
+const nm=id=>ITEMS.find(i=>i.id==id);
+const today=()=>new Date().toISOString().slice(0,10);
+const f=n=>(Math.round(n*100)/100).toLocaleString('en-IN');
+const stock=id=>S.ledger.filter(l=>l.item==id).reduce((a,l)=>a+(l.type=='OUT'?-l.qty:l.qty),0);
+const opts=a=>a.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
+const itemOpts=()=>opts(ITEMS.map(i=>[i.id,`${i.n} (${i.u})`]));
+const sel=(id,c,def,none)=>`<select id="${id}" onchange="prev()">${ITEMS.filter(i=>(i.cat||(i.port?'port':''))==c).map(i=>`<option value="${i.id}"${i.id==def?' selected':''}>${i.n}</option>`).join('')}${none?'<option value="none">None</option>':''}</select>`;
+const portSel=(id,d)=>sel(id,'port',d,true);
+const dot=i=>`<span class="dot" style="--c:${nm(i).c}"></span>`;
+let tab='dash';
+const TABS=[['dash','📊 Dashboard'],['in','📥 Stock In'],['out','🏭 Consume'],['phy','🧮 Physical Count'],['fg','📦 FG Products'],['log','📜 History'],['cfg','⚙️ Settings']];
+function nav(){$('tabs').innerHTML=TABS.map(t=>`<button class="${t[0]==tab?'on':''}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join('')}
+function add(item,type,qty,note,date){S.ledger.push({id:Date.now()+Math.random(),date:date||today(),item,type,qty:+qty,note:note||''})}
+function diffCell(id){const s=stock(id),p=S.physical[id];if(p==null)return '<span class="b bg-wn">Not counted</span>';const d=p-s;
+return Math.abs(d)<.005?'<span class="b bg-ok">✔ Match</span>':`<span class="b bg-bad">${d>0?'+':''}${f(d)} ${nm(id).u} ${d>0?'extra':'short'}</span>`}
+function render(){nav();$('v').innerHTML=V[tab]();if(P[tab])P[tab]()}
+const V={
+dash:()=>{const mis=ITEMS.filter(i=>S.physical[i.id]!=null&&Math.abs(S.physical[i.id]-stock(i.id))>=.005).length;
+return `<div class="k">${ITEMS.map(i=>{const s=stock(i.id),low=s<=(S.cfg.min[i.id]||0)&&(S.cfg.min[i.id]||0)>0;
+return `<div style="--c:${i.c}"><div class="n" style="border:0;padding:0">${i.n}</div><div class="v" style="border:0;padding:0">${f(s)} <small style="font-size:13px">${i.u}</small></div><div class="s ${low?'bad':'mu'}" style="border:0;padding:0">${low?'⚠ Low stock':'System stock'}</div></div>`}).join('')}</div>
+<div class="card"><h2>System vs Physical ${mis?`<span class="b bg-bad">${mis} mismatch</span>`:''}</h2><div class="t"><table><tr><th>Material</th><th>System</th><th>Physical</th><th>Status</th></tr>
+${ITEMS.map(i=>`<tr><td>${dot(i.id)}${i.n}</td><td>${f(stock(i.id))} ${i.u}</td><td>${S.physical[i.id]==null?'–':f(S.physical[i.id])+' '+i.u}</td><td>${diffCell(i.id)}</td></tr>`).join('')}</table></div></div>
+<div class="card"><h2>📦 Finished Goods (FG) Stock</h2>${S.fgp.length?`<div class="t"><table><tr><th>Product</th><th>Size</th><th>System</th><th>Physical</th><th>Status</th></tr>${S.fgp.map(q=>`<tr><td>${esc(q.name)}</td><td>${q.size?q.size+' ml':'–'}</td><td><b>${f(fgStock(q.id))} pcs</b></td><td>${S.fgphy[q.id]==null?'–':f(S.fgphy[q.id])+' pcs'}</td><td>${fgDiff(q.id)}</td></tr>`).join('')}</table></div>`:'<p class="mu">No FG products yet. Add them in the FG Products tab.</p>'}</div>`},
+in:()=>`<div class="card"><h2>📥 Receive Material (Stock In)</h2><div class="g">
+<div><label>Material</label><select id="i1">${itemOpts()}</select></div>
+<div><label>Quantity (m / pcs)</label><input id="i2" type="number" step="any" inputmode="decimal"></div>
+<div><label>Date</label><input id="i3" type="date" value="${today()}"></div>
+<div><label>Batch / Challan No.</label><input id="i4"></div></div>
+<button class="btn" onclick="doIn()">Save Stock In</button></div>
+<div class="card"><h2>➕ Add New Material (Film / Tube / Port)</h2><div class="g"><div><label>Category</label><select id="nc"><option value="film">Film (m)</option><option value="tube">Tube (m)</option><option value="port">Port (pcs)</option></select></div><div><label>Material Name</label><input id="np" placeholder="e.g. Amcor Film"></div></div>
+<button class="btn" onclick="addPort()">Add Material</button>
+<p class="mu">New films and tubes appear in the Consume Film / Tube lists, new ports in Port 1 / Port 2. All appear in Stock In, Physical Count and Excel.</p>
+${S.custom.length?`<div class="t"><table>${S.custom.map(c=>`<tr><td>${dot(c.id)}${c.n} <span class="mu">(${c.cat||'port'})</span></td><td><button class="btn s" onclick="delPort('${c.id}')">🗑 Delete</button></td></tr>`).join('')}</table></div>`:''}</div>`,
+out:()=>`<div class="card"><h2>🏭 Consume – Bag Production</h2><div class="g">
+<div><label>Bag Size</label><select id="o1" onchange="prev()">${opts(SIZES.map(s=>[s,s+' ml']))}</select></div>
+<div><label>Number of Bags</label><input id="o2" type="number" inputmode="numeric" oninput="prev()"></div>
+<div><label>Film</label>${sel('o3','film','rf')}</div>
+<div><label>Tube</label>${sel('o4','tube','rt')}</div>
+<div><label>Port 1</label>${portSel('o5','sp')}</div>
+<div><label>Port 2 (Nose)</label>${portSel('o6','ip')}</div>
+<div><label>Date</label><input id="o7" type="date" value="${today()}"></div></div>
+<div class="pv" id="pv"></div><button class="btn o" onclick="doOut()">Consume Material</button></div>
+<div class="card"><h2>Manual Consume (wastage / trial)</h2><div class="g">
+<div><label>Material</label><select id="m1">${itemOpts()}</select></div><div><label>Quantity</label><input id="m2" type="number" step="any"></div>
+<div><label>Note</label><input id="m3" placeholder="e.g. machine trial"></div></div><button class="btn o" onclick="manOut()">Consume</button></div>`,
+phy:()=>`<div class="card"><h2>🧮 Physical Stock Count</h2><p class="mu" style="margin-top:0">Type the counted quantity. It saves and compares automatically.</p><div class="t"><table><tr><th>Material</th><th>System</th><th>Physical</th><th>Status</th><th></th></tr>
+${ITEMS.map(i=>`<tr><td>${dot(i.id)}${i.n}</td><td>${f(stock(i.id))} ${i.u}</td><td><input style="width:110px" type="number" step="any" id="p_${i.id}" value="${S.physical[i.id]??''}" oninput="livePhy('${i.id}')"></td>
+<td id="d_${i.id}">${diffCell(i.id)}</td><td><button class="btn s" onclick="adj('${i.id}')">Set System = Physical</button></td></tr>`).join('')}</table></div></div>`,
+fg:()=>`<div class="card"><h2>📦 Add FG Product</h2><div class="g">
+<div style="grid-column:span 2"><label>Product Name</label><input id="f1" placeholder="e.g. Sodium Chloride 0.9% IV 500 ml"></div>
+<div><label>Bag Size (optional)</label><select id="f2"><option value="">–</option>${SIZES.map(z=>`<option value="${z}">${z} ml</option>`).join('')}</select></div></div>
+<button class="btn" onclick="addFg()">Add Product</button></div>
+${S.fgp.length?`<div class="card"><h2>FG Stock Entry</h2><div class="g">
+<div><label>Product</label><select id="e1">${S.fgp.map(q=>`<option value="${q.id}">${esc(q.name)}</option>`).join('')}</select></div>
+<div><label>Type</label><select id="e2"><option value="IN">Produced / Received (IN)</option><option value="OUT">Dispatched / Sold (OUT)</option></select></div>
+<div><label>Quantity (pcs)</label><input id="e3" type="number" inputmode="numeric"></div>
+<div><label>Date</label><input id="e4" type="date" value="${today()}"></div>
+<div><label>Batch / Invoice / Note</label><input id="e5"></div></div>
+<button class="btn" onclick="fgEntry()">Save Entry</button></div>
+<div class="card"><h2>FG Stock vs Physical</h2><p class="mu" style="margin-top:0">Type the counted quantity. It saves and compares automatically.</p><div class="t"><table><tr><th>Product</th><th>Size</th><th>System</th><th>Physical</th><th>Status</th><th></th></tr>
+${S.fgp.map(q=>`<tr><td>${esc(q.name)}</td><td>${q.size?q.size+' ml':'–'}</td><td><b>${f(fgStock(q.id))} pcs</b></td><td><input style="width:100px" type="number" id="fp_${q.id}" value="${S.fgphy[q.id]??''}" oninput="liveFg('${q.id}')"></td><td id="fd_${q.id}">${fgDiff(q.id)}</td>
+<td><button class="btn s" onclick="fgAdj('${q.id}')">Set System = Physical</button> <button class="btn s" onclick="delFg('${q.id}')">🗑</button></td></tr>`).join('')}</table></div></div>
+<div class="card"><h2>FG History</h2><div class="t"><table><tr><th>Date</th><th>Type</th><th>Product</th><th>Qty</th><th>Note</th><th></th></tr>
+${S.fgl.slice().reverse().slice(0,200).map(l=>`<tr><td>${l.date}</td><td><span class="b ${l.type=='OUT'?'bg-bad':l.type=='IN'?'bg-ok':'bg-in'}">${l.type}</span></td><td>${esc(fgName(l.pid))}</td><td>${f(l.qty)} pcs</td><td>${esc(l.note)}</td><td><button class="btn s" onclick="delFgL(${l.id})">✕</button></td></tr>`).join('')||'<tr><td colspan=6 class="mu">No entries yet</td></tr>'}</table></div></div>`:''}`,
+
+log:()=>`<div class="card"><h2>📜 History</h2><div class="t"><table><tr><th>Date</th><th>Type</th><th>Material</th><th>Qty</th><th>Note</th><th></th></tr>
+${S.ledger.slice().reverse().slice(0,200).map(l=>`<tr><td>${l.date}</td><td><span class="b ${l.type=='OUT'?'bg-bad':l.type=='IN'?'bg-ok':'bg-in'}">${l.type}</span></td><td>${dot(l.item)}${nm(l.item).n}</td><td>${f(l.qty)} ${nm(l.item).u}</td><td>${l.note}</td><td><button class="btn s" onclick="del(${l.id})">✕</button></td></tr>`).join('')||'<tr><td colspan=6 class="mu">No entries yet</td></tr>'}</table></div>
+<button class="btn" onclick="exportXlsx()">⬇ Download Excel</button></div>`,
+cfg:()=>`<div class="card"><h2>⚙️ Material per Bag</h2><div class="t"><table><tr><th>Bag Size</th><th>Bag Width (mm)</th><th>Film Length (mm)</th><th>Tube Length (mm)</th></tr>
+${SIZES.map(s=>`<tr><td><b>${s} ml</b></td><td><input style="width:100px" type="number" id="c_w${s}" value="${S.cfg.filmW[s]}"></td><td><input style="width:100px" type="number" id="c_f${s}" value="${S.cfg.filmLen[s]}"></td><td><input style="width:100px" type="number" id="c_t${s}" value="${S.cfg.tubeLen[s]}"></td></tr>`).join('')}</table></div>
+<div class="g" style="margin-top:12px"><div><label>Wastage %</label><input id="c_w" type="number" step="any" value="${S.cfg.waste}"></div></div>
+<h2 style="margin-top:16px">Low Stock Alert Level</h2><div class="g">${ITEMS.map(i=>`<div><label>${i.n} (${i.u})</label><input type="number" id="c_m${i.id}" value="${S.cfg.min[i.id]||0}"></div>`).join('')}</div>
+<button class="btn" onclick="saveCfg()">Save Settings</button>
+<p class="mu">All sizes are in mm. Bag width is the fixed film width; film length per bag is what gets consumed. Default values are samples – enter your machine's actual values.</p>
+<button class="btn s" style="margin-top:14px" onclick="resetAll()">Reset all data</button></div>`};
+const P={out:()=>prev()};
+function calc(){const s=+$('o1').value,q=+$('o2').value||0,w=1+S.cfg.waste/100;
+const r=[[$('o3').value,q*S.cfg.filmLen[s]/1000*w],[$('o4').value,q*S.cfg.tubeLen[s]/1000*w]];
+if($('o5').value!='none')r.push([$('o5').value,q]);if($('o6').value!='none')r.push([$('o6').value,q]);
+const m={};r.forEach(x=>m[x[0]]=(m[x[0]]||0)+x[1]);return m}
+function prev(){const m=calc();const z=+$('o1').value;$('pv').innerHTML=`<b>Bag ${z} ml: width ${S.cfg.filmW[z]} mm × film length ${S.cfg.filmLen[z]} mm, tube ${S.cfg.tubeLen[z]} mm</b><br><b>Auto calculation – will be consumed:</b>`+Object.entries(m).map(([k,v])=>`<div><span>${dot(k)}${nm(k).n}</span><span><b>${f(v)} ${nm(k).u}</b> <span class="mu">(in stock ${f(stock(k))})</span></span></div>`).join('')}
+function doIn(){const q=+$('i2').value;if(!(q>0))return alert('Enter quantity');add($('i1').value,'IN',q,$('i4').value,$('i3').value);save();tab='dash';render()}
+function doOut(){const q=+$('o2').value;if(!(q>0))return alert('Enter number of bags');const m=calc();
+const low=Object.entries(m).filter(([k,v])=>stock(k)<v);
+if(low.length&&!confirm('Not enough stock: '+low.map(x=>nm(x[0]).n).join(', ')+'. Consume anyway?'))return;
+const note=`${q} bags x ${$('o1').value}ml`;Object.entries(m).forEach(([k,v])=>add(k,'OUT',v,note,$('o7').value));save();tab='dash';render()}
+function manOut(){const q=+$('m2').value;if(!(q>0))return alert('Enter quantity');add($('m1').value,'OUT',q,$('m3').value||'manual');save();tab='dash';render()}
+function livePhy(id){const v=$('p_'+id).value;if(v==='')delete S.physical[id];else S.physical[id]=+v;save();$('d_'+id).innerHTML=diffCell(id)}
+function adj(id){const v=$('p_'+id).value;if(v==='')return alert('Enter physical quantity');S.physical[id]=+v;const d=+v-stock(id);
+if(Math.abs(d)>=.005)add(id,'ADJ',d,'Physical adjustment');save();render()}
+function del(id){if(confirm('Delete this entry?')){S.ledger=S.ledger.filter(l=>l.id!=id);save();render()}}
+function saveCfg(){SIZES.forEach(s=>{S.cfg.filmW[s]=+$('c_w'+s).value;S.cfg.filmLen[s]=+$('c_f'+s).value;S.cfg.tubeLen[s]=+$('c_t'+s).value});S.cfg.waste=+$('c_w').value||0;ITEMS.forEach(i=>S.cfg.min[i.id]=+$('c_m'+i.id).value||0);save();alert('Saved')}
+async function resetAll(){const k=prompt('Enter master key to reset all data');if(!k||await hx(k.trim())!==MK)return alert('Wrong master key');if(confirm('All data will be deleted from this device and online. Sure?')){ITEMS.length=7;S={pw:S.pw,custom:[],ledger:[],physical:{},cfg:JSON.parse(JSON.stringify(DEF)),fgp:[],fgl:[],fgphy:{}};save();render()}}
+function addPort(){const n=$('np').value.replace(/[<>&"']/g,'').trim();if(!n)return alert('Enter port name');if(ITEMS.some(i=>i.n.toLowerCase()==n.toLowerCase()))return alert('This name already exists');
+const cl=['#00838f','#6d4c41','#546e7a','#9e9d24','#f4511e','#3949ab'];const ct=$('nc').value;const c={id:'c'+Date.now(),n,u:ct=='port'?'pcs':'m',cat:ct,c:cl[S.custom.length%cl.length],port:ct=='port'};S.custom.push(c);ITEMS.push(c);S.cfg.min[c.id]=0;save();render()}
+function delPort(id){if(!confirm('Delete this port and all its stock entries?'))return;S.custom=S.custom.filter(c=>c.id!=id);const k=ITEMS.findIndex(i=>i.id==id);if(k>6)ITEMS.splice(k,1);S.ledger=S.ledger.filter(l=>l.item!=id);delete S.physical[id];save();render()}
+function addFg(){const n=$('f1').value.trim();if(!n)return alert('Enter product name');S.fgp.push({id:'p'+Date.now(),name:n,size:$('f2').value});save();render()}
+function fgEntry(){const q=+$('e3').value;if(!(q>0))return alert('Enter quantity');const id=$('e1').value,t=$('e2').value;
+if(t=='OUT'&&fgStock(id)<q&&!confirm('Stock is only '+f(fgStock(id))+' pcs. Dispatch anyway?'))return;
+S.fgl.push({id:Date.now()+Math.random(),date:$('e4').value||today(),pid:id,type:t,qty:q,note:$('e5').value});save();render()}
+function liveFg(id){const v=$('fp_'+id).value;if(v==='')delete S.fgphy[id];else S.fgphy[id]=+v;save();$('fd_'+id).innerHTML=fgDiff(id)}
+function fgAdj(id){const v=$('fp_'+id).value;if(v==='')return alert('Enter physical quantity');S.fgphy[id]=+v;const d=+v-fgStock(id);
+if(Math.abs(d)>=.005)S.fgl.push({id:Date.now()+Math.random(),date:today(),pid:id,type:'ADJ',qty:d,note:'Physical adjustment'});save();render()}
+function delFgL(id){if(confirm('Delete this entry?')){S.fgl=S.fgl.filter(l=>l.id!=id);save();render()}}
+function delFg(id){if(confirm('Delete this product and all its entries?')){S.fgp=S.fgp.filter(q=>q.id!=id);S.fgl=S.fgl.filter(l=>l.pid!=id);delete S.fgphy[id];save();render()}}
+async function exportXlsx(){
+if(typeof XLSX=='undefined')return alert('Excel library could not load. Check internet connection.');
+const d=window.claude?await window.claude.use('downloads'):null;if(!d)return alert('Download is not available in this view. Please open the published page link.');
+const st=(s,p,u)=>p==null?'Not counted':Math.abs(p-s)<.005?'Match':(p>s?'Extra ':'Short ')+f(Math.abs(p-s))+' '+u;
+const W=XLSX.utils.book_new(),sh=(n,rows,w)=>{const x=XLSX.utils.aoa_to_sheet(rows);x['!cols']=w.map(c=>({wch:c}));XLSX.utils.book_append_sheet(W,x,n)};
+sh('Material Stock',[['Material','Unit','System Stock','Physical Stock','Difference','Status']].concat(ITEMS.map(i=>{const s=stock(i.id),p=S.physical[i.id];return [i.n,i.u,+s.toFixed(2),p==null?'':p,p==null?'':+(p-s).toFixed(2),st(s,p,i.u)]})),[22,8,14,14,12,22]);
+sh('FG Stock',[['Product','Bag Size (ml)','System Stock (pcs)','Physical (pcs)','Difference','Status']].concat(S.fgp.map(q=>{const s=fgStock(q.id),p=S.fgphy[q.id];return [q.name,q.size||'',s,p==null?'':p,p==null?'':p-s,st(s,p,'pcs')]})),[34,14,18,14,12,22]);
+sh('Bag Settings',[['Bag Size (ml)','Bag Width (mm)','Film Length (mm)','Tube Length (mm)','Wastage %']].concat(SIZES.map(z=>[z,S.cfg.filmW[z],S.cfg.filmLen[z],S.cfg.tubeLen[z],S.cfg.waste])),[14,16,18,18,10]);
+sh('Material History',[['Date','Type','Material','Qty','Unit','Note']].concat(S.ledger.map(l=>[l.date,l.type,nm(l.item).n,+(+l.qty).toFixed(2),nm(l.item).u,l.note])),[12,8,22,12,8,34]);
+sh('FG History',[['Date','Type','Product','Qty (pcs)','Note']].concat(S.fgl.map(l=>[l.date,l.type,fgName(l.pid),l.qty,l.note])),[12,8,34,12,34]);
+try{const a=XLSX.write(W,{bookType:'xlsx',type:'array'});await d.save({filename:'iv_stock_'+today()+'.xlsx',data:new Blob([a],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})})}catch(e){if(!e||e.code!='declined')alert('Could not save file: '+(e&&e.message||e))}}
+const PW0='0418aadcae96ba13e44420f06a4ecd340261871e0675e27da0cea8b40c8ae920',MK='5e8d4e77b7336ffdb5d29344035684ee683016243f7ec3053abde600dbc35263';
+async function hx(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+const curPw=()=>{if(S.pw)return S.pw;try{return localStorage.getItem('ivpw')||PW0}catch(e){return PW0}};
+let LM='login';
+function lockView(err){const T={login:['🔒','Enter Password','Unlock','doLogin()'],key:['🔑','Master Key','Verify','doKey()'],neu:['🆕','Set New Password','Save & Unlock','doNew()']}[LM];
+$('lock').innerHTML=`<div class="box"><div class="ic">${T[0]}</div><h2>${T[1]}</h2><div class="mu">IV Bag Material Stock<br>Created by <b>Pawan Kumar</b></div>
+${LM=='neu'?'<input id="lp" type="password" placeholder="New password"><input id="lp2" type="password" placeholder="Confirm password">':`<input id="lp" type="${LM=='key'?'text':'password'}" placeholder="${LM=='key'?'Master key':'Password'}" autocomplete="off">`}
+<div class="err" id="le">${err||''}</div><button class="btn" onclick="${T[3]}">${T[2]}</button>
+${LM=='login'?'<a onclick="LM=\'key\';lockView()">Forgot password? Reset</a>':'<a onclick="LM=\'login\';lockView()">← Back to login</a>'}</div>`;
+const i=$('lp');i.focus();i.onkeydown=e=>{if(e.key=='Enter'&&LM!='neu')eval(T[3])};}
+function openApp(){try{sessionStorage.setItem('ivok','1')}catch(e){}$('lock').style.display='none';$('app').style.display='block';render()}
+async function doLogin(){if(await hx($('lp').value)===curPw())openApp();else lockView('Wrong password')}
+async function doKey(){if(await hx($('lp').value.trim())===MK){LM='neu';lockView()}else lockView('Wrong master key')}
+async function doNew(){const a=$('lp').value,b=$('lp2').value;if(a.length<4)return lockView('Minimum 4 characters');if(a!==b)return lockView('Passwords do not match');
+const hh=await hx(a);S.pw=hh;try{localStorage.setItem('ivpw',hh)}catch(e){}save();LM='login';openApp()}
+function lockNow(){try{sessionStorage.removeItem('ivok')}catch(e){}$('app').style.display='none';$('lock').style.display='flex';LM='login';lockView()}
+let DB=null,lastTs=0,timer=null;const CS=100000,cid=Math.random().toString(36).slice(2);
+const setSync=(t,c)=>{const e=$('sync');if(e){e.textContent=t;e.className='pill '+(c||'')}};
+function norm(){S.cfg=S.cfg||JSON.parse(JSON.stringify(DEF));S.cfg.min=S.cfg.min||{};S.cfg.filmW=S.cfg.filmW||DEF.filmW;S.ledger=S.ledger||[];S.physical=S.physical||{};S.custom=S.custom||[];S.fgp=S.fgp||[];S.fgl=S.fgl||[];S.fgphy=S.fgphy||{};ITEMS.length=7;S.custom.forEach(c=>ITEMS.push(c))}
+function pushSoon(){if(!DB)return;clearTimeout(timer);setSync('☁ Saving…','wn');timer=setTimeout(pushNow,700)}
+async function pushNow(){try{const j=JSON.stringify(S),n=Math.ceil(j.length/CS)||1,ts=Date.now();
+for(let i=0;i<n;i++)await DB.doc('state/p'+i).set({d:j.slice(i*CS,(i+1)*CS)});
+lastTs=ts;await DB.doc('state/meta').set({n,ts,by:cid});setSync('☁ Saved online')}catch(e){setSync('☁ Save failed','bad')}}
+async function pullRemote(m){const parts=[];for(let i=0;i<m.n;i++){const d=await DB.doc('state/p'+i).get();parts.push(d.exists?d.data().d:'')}
+S=JSON.parse(parts.join(''));norm();try{localStorage.setItem('ivstock',JSON.stringify(S))}catch(e){}
+if($('app').style.display!='none'){const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render()}}
+async function initDb(){try{for(let i=0;i<10&&!window.claude;i++)await new Promise(r=>setTimeout(r,300));DB=window.claude?await window.claude.use('db'):null}catch(e){DB=null}
+if(!DB){setSync('💾 This device only');return}
+try{const m=await DB.doc('state/meta').get();
+if(m.exists){await pullRemote(m.data());lastTs=m.data().ts}else if(S.ledger.length||S.fgp.length||S.custom.length)await pushNow();
+setSync('☁ Synced online');
+DB.doc('state/meta').onSnapshot(async x=>{if(!x.exists)return;const d=x.data();if(d.ts===lastTs||d.by===cid)return;lastTs=d.ts;try{await pullRemote(d);setSync('☁ Synced online')}catch(e){}})}catch(e){setSync('💾 This device only')}}
+initDb();
+let ok=false;try{ok=sessionStorage.getItem('ivok')=='1'}catch(e){}
+if(ok)openApp();else lockView();
+</script></body></html>
