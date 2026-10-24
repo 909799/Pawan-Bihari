@@ -2252,22 +2252,44 @@ document.getElementById('exportPdf').addEventListener('click', async () => {
 });
 
 // ─── LOT / BATCH NO. AUTO-GENERATOR ──────────────────────────────────
-// Format: IF + <TypeCode> + <YYYY><MM> + <running no. for that month, 001,002,...>
+// Format: IF + <TypeCode> + <YYYY><MM> + <running no.>
 const LOT_PREFIX = 'IF';
-const LOT_COUNTER_KEY = 'filmLotCounterByMonth';
+const LOT_COUNTER_KEY = 'filmLotCounterByTypeMonth';
 
 function getLotCounters() {
   try { return JSON.parse(localStorage.getItem(LOT_COUNTER_KEY)) || {}; }
   catch (e) { return {}; }
 }
+
+function getMaxLotFromHistory(type, yyyymm) {
+  let max = 0;
+  try {
+    const history = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
+    history.forEach(e => {
+      const m = /^IF([A-Z]\d{2})(\d{6})(\d{3})$/.exec(e.lotNo || '');
+      if (m && m[1] === type && m[2] === yyyymm) {
+        const n = parseInt(m[3], 10);
+        if (n > max) max = n;
+      }
+    });
+  } catch (err) {}
+  return max;
+}
+
 function generateLotNo() {
   const type = document.getElementById('filmType').value;
   const now = new Date();
   const yyyymm = '' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0');
+  const counterKey = type + '_' + yyyymm;
+
   const counters = getLotCounters();
-  const next = (counters[yyyymm] || 0) + 1;
-  counters[yyyymm] = next;
+  const fromCounter = counters[counterKey] || 0;
+  const fromHistory = getMaxLotFromHistory(type, yyyymm);
+  const next = Math.max(fromCounter, fromHistory) + 1;
+
+  counters[counterKey] = next;
   localStorage.setItem(LOT_COUNTER_KEY, JSON.stringify(counters));
+
   const running = String(next).padStart(3, '0');
   const lot = `${LOT_PREFIX}${type}${yyyymm}${running}`;
   document.getElementById('lotNo').value = lot;
