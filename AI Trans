@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live AI Translator</title>
+<style>
+  :root{--bg:#f4f5f9;--card:#fff;--text:#1b1d2a;--muted:#6b7084;--line:#e3e5ee;--a:#4f46e5;--b:#0d9488;--rec:#e11d48}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1117;--card:#181b25;--text:#eceef6;--muted:#9096ad;--line:#2a2e3d}}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  .wrap{max-width:900px;margin:0 auto;padding:16px}
+  h1{font-size:1.4rem;margin:8px 0 2px}
+  .sub{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .card h2{margin:0 0 4px;font-size:1.05rem}
+  .card p{margin:0 0 10px;color:var(--muted);font-size:.85rem}
+  select{width:100%;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);margin-bottom:10px;font-size:.95rem}
+  .mic{width:100%;padding:14px;border:0;border-radius:12px;font-size:1.05rem;font-weight:600;color:#fff;cursor:pointer;transition:.15s}
+  #micIn{background:var(--a)} #micOut{background:var(--b)}
+  .mic.on{background:var(--rec);animation:pulse 1.2s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(225,29,72,.22)}}
+  .live{min-height:44px;margin-top:10px;padding:10px;border-radius:10px;background:var(--bg);font-size:.95rem;color:var(--muted)}
+  .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0}
+  .row label{font-size:.9rem;display:flex;gap:6px;align-items:center}
+  .row select{width:auto;margin:0}
+  #status{font-size:.85rem;color:var(--muted);margin-left:auto}
+  #log{display:flex;flex-direction:column;gap:10px}
+  .msg{padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);max-width:92%}
+  .msg.in{align-self:flex-start;border-left:4px solid var(--a)}
+  .msg.out{align-self:flex-end;border-right:4px solid var(--b)}
+  .tag{font-size:.72rem;color:var(--muted);margin-bottom:3px}
+  .orig{font-size:.85rem;color:var(--muted)}
+  .tr{font-size:1.1rem;font-weight:600;margin-top:2px}
+  .typed{display:flex;gap:8px;margin-top:14px}
+  .typed input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+  .typed button{padding:10px 14px;border-radius:10px;border:0;background:var(--a);color:#fff;cursor:pointer}
+  .warn{background:#fff3cd;color:#664d03;padding:10px;border-radius:10px;margin-bottom:12px;display:none;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎙️ Live AI Translator</h1>
+  <div class="sub">When the other person speaks English (or another language), you hear it in Hindi in real time. When you speak Hindi, it is translated to English instantly.</div>
+  <div class="warn" id="warn">Your browser does not support speech recognition. Please use Google Chrome or Microsoft Edge.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>👂 Other person is speaking</h2>
+      <p>Language is auto-detected → spoken in Hindi, live</p>
+      <select id="srcLang" title="Language the other person speaks (needed for the microphone)">
+        <option value="en-US">English (US)</option>
+        <option value="en-IN">English (India)</option>
+        <option value="en-GB">English (UK)</option>
+        <option value="es-ES">Spanish</option>
+        <option value="fr-FR">French</option>
+        <option value="de-DE">German</option>
+        <option value="ar-SA">Arabic</option>
+        <option value="zh-CN">Chinese</option>
+        <option value="ja-JP">Japanese</option>
+        <option value="ko-KR">Korean</option>
+        <option value="ru-RU">Russian</option>
+        <option value="pt-BR">Portuguese</option>
+        <option value="it-IT">Italian</option>
+        <option value="gu-IN">Gujarati</option>
+        <option value="mr-IN">Marathi</option>
+        <option value="ta-IN">Tamil</option>
+        <option value="te-IN">Telugu</option>
+        <option value="bn-IN">Bengali</option>
+        <option value="ur-PK">Urdu</option>
+      </select>
+      <button class="mic" id="micIn">🎤 Start listening</button>
+      <div class="live" id="liveIn">—</div>
+    </div>
+
+    <div class="card">
+      <h2>🗣️ I am speaking Hindi</h2>
+      <p>Hindi → English (or another language) voice</p>
+      <select id="outLang">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="ar">Arabic</option>
+        <option value="zh-CN">Chinese</option>
+        <option value="ja">Japanese</option>
+        <option value="ko">Korean</option>
+        <option value="ru">Russian</option>
+        <option value="pt">Portuguese</option>
+      </select>
+      <button class="mic" id="micOut">🎤 Start speaking</button>
+      <div class="live" id="liveOut">—</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label><input type="checkbox" id="autoSpeak" checked> Speak translations aloud</label>
+    <label><input type="checkbox" id="liveMode" checked> Live mode (translate while they talk – use earphones)</label>
+    <label>Voice speed
+      <select id="rate"><option value="0.9">Slow</option><option value="1" selected>Normal</option><option value="1.15">Fast</option></select>
+    </label>
+    <span id="status">Ready</span>
+  </div>
+
+  <div id="log"></div>
+
+  <div class="typed">
+    <input id="typedText" placeholder="Or type here to test (language is auto-detected)…">
+    <button id="typedBtn">Translate</button>
+  </div>
+</div>
+
+<script>
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const $ = id => document.getElementById(id);
+const micIn = $('micIn'), micOut = $('micOut');
+if (!SR) $('warn').style.display = 'block';
+
+let mode = null;            // 'in' | 'out' | null
+let rec = null;
+let speaking = false;       // used only in non-live (pause) mode
+let interimTimer = null;
+let session = 0;            // increments on each recognition restart
+let segs = {};              // live segments keyed by session-index
+let transChain = Promise.resolve();  // keeps translations in order
+let ttsChain = Promise.resolve();    // keeps speech in order
+const langName = new Intl.DisplayNames(['en'], {type:'language'});
+const nameOf = c => { try { return langName.of(c); } catch(e){ return c; } };
+
+function setStatus(t){ $('status').textContent = t; }
+
+/* ---------- Translation (auto-detect source) ---------- */
+async function translate(text, tl, fallbackSrc){
+  try{
+    const u = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + tl +
+              '&dt=t&q=' + encodeURIComponent(text);
+    const r = await fetch(u);
+    const d = await r.json();
+    return { text: d[0].map(x => x[0]).join(''), detected: d[2] };
+  }catch(e){
+    const src = (fallbackSrc || 'en').split('-')[0];
+    const r = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) +
+                          '&langpair=' + src + '|' + tl);
+    const d = await r.json();
+    return { text: d.responseData.translatedText, detected: src };
+  }
+}
+
+/* ---------- Voice (text-to-speech) ---------- */
+let voices = [];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+loadVoices(); speechSynthesis.onvoiceschanged = loadVoices;
+
+function pickVoice(lang){
+  const base = lang.split('-')[0].toLowerCase();
+  const cands = voices.filter(v => v.lang.toLowerCase().startsWith(base));
+  if (!cands.length) return null;
+  const score = v => (/natural|neural|online|google/i.test(v.name) ? 2 : 0) + (v.localService ? 0 : 1);
+  return cands.sort((a,b) => score(b) - score(a))[0];
+}
+
+function speak(text, lang){
+  return new Promise(res => {
+    if (!$('autoSpeak').checked){ res(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    const v = pickVoice(lang); if (v) u.voice = v;
+    u.rate = parseFloat($('rate').value);
+    u.onend = u.onerror = () => res();
+    speechSynthesis.speak(u);
+  });
+}
+function enqueueSpeak(text, lang){
+  ttsChain = ttsChain.then(() => speak(text, lang));
+  return ttsChain;
+}
+
+/* ---------- Chat log ---------- */
+function makeMsg(kind, label){
+  const root = document.createElement('div'); root.className = 'msg ' + kind;
+  const tag = document.createElement('div'); tag.className = 'tag'; tag.textContent = label;
+  const orig = document.createElement('div'); orig.className = 'orig';
+  const tr = document.createElement('div'); tr.className = 'tr';
+  root.append(tag, orig, tr);
+  $('log').prepend(root);
+  return { root, tag, orig, tr };
+}
+function addMsg(kind, label, o, t){
+  const m = makeMsg(kind, label); m.orig.textContent = o; m.tr.textContent = t; return m;
+}
+
+/* ---------- LIVE mode: translate + speak in small chunks while they talk ---------- */
+function wordCount(s){ return s.trim().split(/\s+/).filter(Boolean).length; }
+
+function flush(s, why){            // why: 'final' | 'pause' | 'len'
+  let end = s.text.length;
+  if (why === 'len'){              // drop the last (possibly unfinished) word
+    const sp = s.text.lastIndexOf(' ');
+    if (sp <= s.spoken) return;
+    end = sp;
+  }
+  const chunk = s.text.slice(s.spoken, end);
+  if (!chunk.trim()) return;
+  if (why !== 'final' && wordCount(chunk) < 2 && chunk.trim().length < 12) return;
+  s.spoken = end;
+
+  transChain = transChain.then(async () => {
+    try{
+      setStatus('Translating…');
+      const r = await translate(chunk, 'hi', $('srcLang').value);
+      const dl = (r.detected || '').split('-')[0];
+      if (dl) s.msg.tag.textContent = '👂 Detected language: ' + nameOf(dl);
+      s.tr += (s.tr ? ' ' : '') + r.text;
+      s.msg.tr.textContent = s.tr;
+      $('liveIn').textContent = r.text;
+      if (dl !== 'hi') enqueueSpeak(r.text, 'hi-IN');
+      setStatus('Listening…');
+    }catch(e){ setStatus('Translation problem – check your internet'); }
+  });
+}
+
+function onLiveResult(e){
+  for (let i = e.resultIndex; i < e.results.length; i++){
+    const r = e.results[i];
+    const key = session + '-' + i;
+    const s = segs[key] || (segs[key] = { spoken:0, text:'', tr:'', timer:null,
+                                          msg: makeMsg('in', '👂 Detecting language…') });
+    s.text = r[0].transcript;
+    s.msg.orig.textContent = s.text;
+    clearTimeout(s.timer);
+    if (r.isFinal){ flush(s, 'final'); continue; }
+    $('liveIn').textContent = s.text;
+    const rest = s.text.slice(s.spoken);
+    if (wordCount(rest) >= 7) flush(s, 'len');          // keep latency low in long sentences
+    else s.timer = setTimeout(() => flush(s, 'pause'), 450); // short pause → translate now
+  }
+}
+
+/* ---------- Sentence mode (also used for Hindi → English) ---------- */
+async function handleFinal(text, m){
+  text = text.trim(); if (!text) return;
+  setStatus('Translating…');
+  try{
+    if (m === 'in'){
+      const r = await translate(text, 'hi', $('srcLang').value);
+      const dl = (r.detected || '').split('-')[0];
+      $('liveIn').textContent = r.text;
+      addMsg('in', '👂 Detected language: ' + (dl ? nameOf(dl) : '?'), text, r.text);
+      await pauseAndSpeak(r.text, 'hi-IN');
+    } else {
+      const tl = $('outLang').value;
+      const r = await translate(text, tl, 'hi');
+      $('liveOut').textContent = r.text;
+      addMsg('out', '🗣️ Hindi → ' + nameOf(tl.split('-')[0]), text, r.text);
+      await pauseAndSpeak(r.text, tl);
+    }
+  }catch(e){ setStatus('Translation problem – check your internet'); return; }
+  setStatus(mode ? 'Listening…' : 'Ready');
+}
+
+// Pause the mic while the translation plays so it doesn't hear itself
+async function pauseAndSpeak(text, lang){
+  speaking = true;
+  try{ rec && rec.stop(); }catch(e){}
+  setStatus('Speaking…');
+  await enqueueSpeak(text, lang);
+  speaking = false;
+  if (mode) startRec(mode);
+}
+
+/* ---------- Speech recognition ---------- */
+function startRec(m){
+  if (!SR) return;
+  mode = m;
+  session++;
+  acquireWake();
+  const live = m === 'in' ? $('liveIn') : $('liveOut');
+  const liveMode = m === 'in' && $('liveMode').checked;
+  rec = new SR();
+  rec.lang = m === 'in' ? $('srcLang').value : 'hi-IN';
+  rec.continuous = true;
+  rec.interimResults = true;
+
+  rec.onresult = e => {
+    if (liveMode){ onLiveResult(e); return; }
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal){ clearTimeout(interimTimer); handleFinal(t, m); return; }
+      interim += t;
+    }
+    live.textContent = interim;
+    clearTimeout(interimTimer);
+    interimTimer = setTimeout(async () => {
+      if (!interim.trim() || speaking) return;
+      try{
+        const tl = m === 'in' ? 'hi' : $('outLang').value;
+        const r = await translate(interim, tl, rec.lang);
+        if (mode === m && !speaking) live.textContent = interim + '  →  ' + r.text;
+      }catch(e){}
+    }, 500);
+  };
+  rec.onerror = e => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed'){
+      setStatus('Please allow microphone access');
+      stopAll();
+    }
+  };
+  rec.onend = () => {
+    if (mode === m && !speaking){ session++; try{ rec.start(); }catch(e){} }
+  };
+  try{ rec.start(); setStatus('Listening…'); }catch(e){}
+  micIn.classList.toggle('on', m === 'in');
+  micOut.classList.toggle('on', m === 'out');
+  micIn.textContent = m === 'in' ? '⏹ Stop' : '🎤 Start listening';
+  micOut.textContent = m === 'out' ? '⏹ Stop' : '🎤 Start speaking';
+}
+
+function stopAll(){
+  mode = null;
+  releaseWake();
+  try{ rec && rec.stop(); }catch(e){}
+  speechSynthesis.cancel();
+  ttsChain = Promise.resolve();
+  micIn.classList.remove('on'); micOut.classList.remove('on');
+  micIn.textContent = '🎤 Start listening';
+  micOut.textContent = '🎤 Start speaking';
+  setStatus('Ready');
+}
+
+micIn.onclick  = () => mode === 'in'  ? stopAll() : (stopAll(), startRec('in'));
+micOut.onclick = () => mode === 'out' ? stopAll() : (stopAll(), startRec('out'));
+$('srcLang').onchange = () => { if (mode === 'in'){ stopAll(); startRec('in'); } };
+$('liveMode').onchange = () => { if (mode === 'in'){ stopAll(); startRec('in'); } };
+
+/* ---------- Keep screen awake while translating (mobile) ---------- */
+let wakeLock = null;
+async function acquireWake(){
+  try{ if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+}
+function releaseWake(){ try{ wakeLock && wakeLock.release(); }catch(e){} wakeLock = null; }
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && mode){
+    acquireWake();
+    // restart the mic if the browser paused it while the page was hidden
+    if (!speaking){ try{ rec && rec.start(); }catch(e){} }
+  }
+});
+
+/* ---------- Typed test ---------- */
+async function typedGo(){
+  const t = $('typedText').value.trim(); if (!t) return;
+  $('typedText').value = '';
+  setStatus('Translating…');
+  try{
+    const r = await translate(t, 'hi', 'en');
+    const dl = (r.detected || '').split('-')[0];
+    addMsg('in', '⌨️ Detected language: ' + (dl ? nameOf(dl) : '?'), t, r.text);
+    await enqueueSpeak(r.text, 'hi-IN');
+  }catch(e){ setStatus('Check your internet'); return; }
+  setStatus('Ready');
+}
+$('typedBtn').onclick = typedGo;
+$('typedText').onkeydown = e => { if (e.key === 'Enter') typedGo(); };
+</script>
+</body>
+</html>
