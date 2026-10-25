@@ -8,17 +8,14 @@
     :root {
       --primary: #1e40af;
       --secondary: #16a34a;
-      --accent: #dbeafe;
       --bg: #f8fafc;
       --surface: #ffffff;
-      --surface-alt: #f0fdf4;
       --border: #dbe4ee;
       --text: #1e293b;
       --text-soft: #475569;
       --success: #10b981;
       --info: #1e40af;
       --warning: #f59e0b;
-      --error: #ef4444;
       --shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
     }
 
@@ -57,38 +54,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
       padding: 18px 24px;
       background: #fff;
       border-bottom: 3px solid var(--secondary);
-      flex-wrap: wrap;
-    }
-
-    .header-logo {
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-logo img {
-      max-height: 100%;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .header-text {
       text-align: center;
     }
 
-    .header-text h1 {
+    .header h1 {
       margin: 0;
       font-size: 26px;
       letter-spacing: 0.2px;
       color: var(--text);
     }
 
-    .header-text p {
+    .header p {
       margin: 6px 0 0;
       color: var(--text-soft);
       font-size: 13px;
@@ -98,91 +77,6 @@
       padding: 24px;
       background: var(--bg);
     }
-
-    .alert {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .alert.show {
-      display: flex;
-    }
-
-    .alert.error {
-      background: #fee2e2;
-      border: 1px solid #fecaca;
-      color: #991b1b;
-    }
-
-    .alert.success {
-      background: #dcfce7;
-      border: 1px solid #86efac;
-      color: #166534;
-    }
-
-    .alert.warning {
-      background: #fef3c7;
-      border: 1px solid #fcd34d;
-      color: #92400e;
-    }
-
-    .draft-banner {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: #fef3c7;
-      color: #92400e;
-      border: 1px solid #fcd34d;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 18px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .draft-banner.show {
-      display: flex;
-    }
-
-    .draft-banner-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .draft-banner button,
-    .action-btn,
-    .table-btn,
-    .icon-btn {
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: opacity 0.2s ease, transform 0.15s ease;
-    }
-
-    .draft-banner button:hover,
-    .action-btn:hover,
-    .table-btn:hover,
-    .icon-btn:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
-    }
-
-    .draft-banner button {
-      padding: 7px 12px;
-      color: #fff;
-    }
-
-    .draft-load-btn { background: var(--secondary); }
-    .draft-dismiss-btn { background: #94a3b8; }
 
     .panel {
       background: var(--surface);
@@ -197,7 +91,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
-      background: var(--accent);
+      background: #eff6ff;
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px;
@@ -220,55 +114,12 @@
       background: #fff;
       color: var(--text);
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .input-group input:focus,
-    .input-group select:focus,
-    .table-cell input:focus {
-      border-color: var(--info);
-      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
-    }
-
-    .input-group input.invalid,
-    .table-cell input.invalid {
-      border-color: var(--error);
-      background: #fff1f2;
-    }
-
-    .lot-inline {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .lot-inline input {
-      flex: 1;
-    }
-
-    .wastage-inline {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .wastage-inline input {
-      flex: 1;
-    }
-
-    .wastage-pct {
-      min-width: 62px;
-      text-align: right;
-      font-weight: 700;
-      color: #065f46;
-      font-size: 12px;
     }
 
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 14px;
-      margin-top: 14px;
     }
 
     .summary-card {
@@ -296,8 +147,8 @@
 
     .table-toolbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
       margin-bottom: 12px;
       flex-wrap: wrap;
@@ -316,13 +167,16 @@
     }
 
     .table-btn {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
       padding: 8px 12px;
       color: #fff;
       font-size: 12px;
     }
 
     .table-btn.primary { background: var(--secondary); }
-    .table-btn.secondary { background: var(--info); }
     .table-btn.warning { background: #f59e0b; }
 
     .table-wrap {
@@ -356,10 +210,6 @@
       background: #f9fafb;
     }
 
-    tbody tr:hover {
-      background: #dcfce7;
-    }
-
     .table-cell input {
       width: 100%;
       padding: 7px 5px;
@@ -382,48 +232,12 @@
       color: #166534;
     }
 
-    .actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .action-btn {
-      padding: 11px 18px;
-      color: #fff;
-      font-size: 14px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
-    }
-
-    .action-btn.success { background: var(--success); }
-    .action-btn.info { background: var(--info); }
-    .action-btn.secondary { background: #0f766e; }
-    .action-btn.warning { background: #b45309; }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      border: 0;
-    }
-
     @media (max-width: 700px) {
       body { padding: 12px; }
       .content { padding: 14px; }
       .header { padding: 16px 14px; }
-      .header-text h1 { font-size: 20px; }
-      .header-text p { font-size: 12px; }
-      .draft-banner { flex-direction: column; align-items: flex-start; }
-      .draft-banner-actions { width: 100%; }
-      .draft-banner-actions button { flex: 1; }
-      .actions { justify-content: stretch; }
-      .actions .action-btn { flex: 1; }
+      .header h1 { font-size: 20px; }
+      .header p { font-size: 12px; }
     }
   </style>
 </head>
@@ -431,27 +245,13 @@
   <div class="shell">
     <div class="container">
       <header class="header">
-        <div class="header-logo">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhIAAAByCAIAAACJNK+bAAAQAElEQVR4Aex9B6AkRbX2ORW6e2Zu2MTuwpKjBJUkCJIEDCgKSFRyEiVKBiUIKBmUKDmz5BwkZ0REcs45brxhZrq7wvm/vut7z/e7i6zeJfhuU91T[...]
-" alt="Ami Polymer" />
-        </div>
-        <div class="header-text">
+        <div>
           <h1>Ami Polymer</h1>
           <p>Extrusion Throughput • Layer Balance • Production Summary</p>
         </div>
       </header>
 
       <main class="content">
-        <div id="alertBox" class="alert" role="alert"></div>
-
-        <div id="draftBanner" class="draft-banner" aria-live="polite">
-          <span>📝 An unsaved draft was found. Load it?</span>
-          <div class="draft-banner-actions">
-            <button id="draftLoadBtn" class="draft-load-btn">Load Draft</button>
-            <button id="draftDismissBtn" class="draft-dismiss-btn">Ignore</button>
-          </div>
-        </div>
-
         <section class="panel">
           <div class="input-grid">
             <div class="input-group">
@@ -471,10 +271,7 @@
 
             <div class="input-group">
               <label for="wastageInput">Wastage (kg)</label>
-              <div class="wastage-inline">
-                <input id="wastageInput" type="number" value="0" min="0" max="100000" step="0.1" />
-                <span id="wastagePct" class="wastage-pct">0.00%</span>
-              </div>
+              <input id="wastageInput" type="number" value="0" min="0" max="100000" step="0.1" />
             </div>
 
             <div class="input-group">
@@ -490,10 +287,7 @@
 
             <div class="input-group">
               <label for="lotNo">Lot No. (auto)</label>
-              <div class="lot-inline">
-                <input id="lotNo" type="text" placeholder="Generate" />
-                <button id="genLotBtn" type="button" class="table-btn primary" style="padding:9px 10px;">Generate</button>
-              </div>
+              <input id="lotNo" type="text" value="AMI-A01-000000-000" />
             </div>
           </div>
         </section>
@@ -557,22 +351,12 @@
             </table>
           </div>
         </section>
-
-        <div class="actions">
-          <button id="saveBtn" class="action-btn success" type="button">💾 Save Data</button>
-          <button id="loadBtn" class="action-btn info" type="button">📂 Load Saved</button>
-          <button id="exportBtn" class="action-btn secondary" type="button">📄 Export JSON</button>
-          <button id="printBtn" class="action-btn warning" type="button">🖨️ Print</button>
-        </div>
       </main>
     </div>
   </div>
 
   <script>
     (() => {
-      const STORAGE_KEY = 'ami_polymer_formulation_v2';
-      const DRAFT_KEY = 'ami_polymer_formulation_draft';
-
       const defaultRows = [
         { ext: 'EXTRUDER 90', mat: 'ULDPE 4607', mic: 140, den: 0.91 },
         { ext: 'EXTRUDER 55', mat: 'LDPE EC 7000', mic: 50, den: 0.91 },
@@ -582,18 +366,12 @@
       ];
 
       const elements = {
-        alertBox: document.getElementById('alertBox'),
-        draftBanner: document.getElementById('draftBanner'),
-        draftLoadBtn: document.getElementById('draftLoadBtn'),
-        draftDismissBtn: document.getElementById('draftDismissBtn'),
         dieWidth: document.getElementById('dieWidth'),
         lineSpeed: document.getElementById('lineSpeed'),
         hoursInput: document.getElementById('hoursInput'),
         wastageInput: document.getElementById('wastageInput'),
-        wastagePct: document.getElementById('wastagePct'),
         filmType: document.getElementById('filmType'),
         lotNo: document.getElementById('lotNo'),
-        genLotBtn: document.getElementById('genLotBtn'),
         totalWeight: document.getElementById('totalWeight'),
         totalLength: document.getElementById('totalLength'),
         kgPerHour: document.getElementById('kgPerHour'),
@@ -601,10 +379,6 @@
         calcTableBody: document.getElementById('calcTableBody'),
         addRowBtn: document.getElementById('addRowBtn'),
         resetBtn: document.getElementById('resetBtn'),
-        saveBtn: document.getElementById('saveBtn'),
-        loadBtn: document.getElementById('loadBtn'),
-        exportBtn: document.getElementById('exportBtn'),
-        printBtn: document.getElementById('printBtn'),
         totalMic: document.getElementById('totalMic'),
         avgDen: document.getElementById('avgDen'),
         pctTotal: document.getElementById('pctTotal'),
@@ -621,46 +395,14 @@
         return Number(value || 0).toFixed(digits);
       }
 
-      function showAlert(type, message) {
-        elements.alertBox.className = `alert show ${type}`;
-        elements.alertBox.textContent = message;
-      }
-
-      function hideAlert() {
-        elements.alertBox.className = 'alert';
-        elements.alertBox.textContent = '';
-      }
-
-      function setFieldInvalid(field, invalid) {
-        if (field) {
-          field.classList.toggle('invalid', invalid);
-        }
-      }
-
       function generateLotNumber() {
         const date = new Date();
         const year = String(date.getFullYear()).slice(-2);
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const random = Math.floor(Math.random() * 900 + 100);
-        const film = (document.getElementById('filmType')?.value || 'A01').replace(/[^A-Z0-9]/g, '').slice(0, 3);
+        const film = (elements.filmType.value || 'A01').replace(/[^A-Z0-9]/g, '').slice(0, 3);
         return `AMI-${film}-${year}${month}${day}-${random}`;
-      }
-
-      function getRowsFromTable() {
-        return Array.from(elements.calcTableBody.querySelectorAll('tr')).map((row) => {
-          const extInput = row.querySelector('.ext');
-          const matInput = row.querySelector('.mat');
-          const micInput = row.querySelector('.mic');
-          const denInput = row.querySelector('.den');
-
-          return {
-            ext: extInput?.value?.trim() || 'EXTRUDER',
-            mat: matInput?.value?.trim() || 'MATERIAL',
-            mic: toNumber(micInput?.value, 0),
-            den: toNumber(denInput?.value, 0)
-          };
-        });
       }
 
       function createRow(data = {}) {
@@ -673,7 +415,7 @@
           <td class="pct read-only">0.00</td>
           <td class="thr read-only">0.000</td>
           <td class="rpm read-only">0.00</td>
-          <td><button class="table-btn secondary remove-row" type="button" style="padding:6px 9px;">Remove</button></td>
+          <td><button class="table-btn warning remove-row" type="button" style="padding:6px 9px;">Remove</button></td>
         `;
 
         tr.querySelector('.remove-row').addEventListener('click', () => {
@@ -681,8 +423,6 @@
           if (rows.length > 1) {
             tr.remove();
             updateCalculations();
-          } else {
-            showAlert('warning', 'At least one row is required.');
           }
         });
 
@@ -697,31 +437,13 @@
         updateCalculations();
       }
 
-      function getCurrentData() {
-        return {
-          dieWidth: toNumber(elements.dieWidth.value, 0),
-          lineSpeed: toNumber(elements.lineSpeed.value, 0),
-          hours: toNumber(elements.hoursInput.value, 0),
-          wastage: toNumber(elements.wastageInput.value, 0),
-          filmType: elements.filmType.value,
-          lotNo: elements.lotNo.value,
-          rows: getRowsFromTable()
-        };
-      }
-
-      function calculateSingleRow(row, dieWidth, lineSpeed, hours) {
-        const mic = Math.max(toNumber(row.mic, 0), 0);
-        const den = Math.max(toNumber(row.den, 0), 0.01);
+      function calculateSingleRow(rowData, dieWidth, lineSpeed, hours) {
+        const mic = Math.max(toNumber(rowData.mic, 0), 0);
+        const den = Math.max(toNumber(rowData.den, 0), 0.01);
         const layerKgPerHour = (dieWidth * lineSpeed * mic * den) / 10000;
         const rpm = (lineSpeed * (mic / 10)) / den;
-        const totalFlow = Math.max(layerKgPerHour, 0.0001);
-        return {
-          layerKgPerHour: totalFlow,
-          rpm,
-          hours,
-          weightKg: totalFlow * hours,
-          den
-        };
+        const weightKg = layerKgPerHour * hours;
+        return { layerKgPerHour, rpm, weightKg, den };
       }
 
       function updateCalculations() {
@@ -729,182 +451,64 @@
         const lineSpeed = toNumber(elements.lineSpeed.value, 0);
         const hours = toNumber(elements.hoursInput.value, 0);
         const wastage = toNumber(elements.wastageInput.value, 0);
-
         const rows = Array.from(elements.calcTableBody.querySelectorAll('tr'));
+
         let totalFlow = 0;
-        let totalWeight = 0;
-        let totalRpm = 0;
         let weightedDensity = 0;
+        let totalRpm = 0;
 
         rows.forEach((row) => {
-          const inputs = {
-            ext: row.querySelector('.ext'),
-            mat: row.querySelector('.mat'),
-            mic: row.querySelector('.mic'),
-            den: row.querySelector('.den'),
-            pct: row.querySelector('.pct'),
-            thr: row.querySelector('.thr'),
-            rpm: row.querySelector('.rpm')
-          };
-
           const rowData = {
-            ext: inputs.ext.value.trim() || 'EXTRUDER',
-            mat: inputs.mat.value.trim() || 'MATERIAL',
-            mic: toNumber(inputs.mic.value, 0),
-            den: toNumber(inputs.den.value, 0)
+            mic: toNumber(row.querySelector('.mic').value, 0),
+            den: toNumber(row.querySelector('.den').value, 0)
           };
 
           if (rowData.mic <= 0 || rowData.den <= 0) {
-            inputs.pct.textContent = '0.00';
-            inputs.thr.textContent = '0.000';
-            inputs.rpm.textContent = '0.00';
+            row.querySelector('.pct').textContent = '0.00';
+            row.querySelector('.thr').textContent = '0.000';
+            row.querySelector('.rpm').textContent = '0.00';
             return;
           }
-
-          const calculated = calculateSingleRow(rowData, dieWidth, lineSpeed, hours);
-          totalFlow += calculated.layerKgPerHour;
-          totalWeight += calculated.weightKg;
-          totalRpm += calculated.rpm;
-          weightedDensity += calculated.den * calculated.layerKgPerHour;
-
-          const pct = totalFlow > 0 ? (calculated.layerKgPerHour / totalFlow) * 100 : 0;
-          inputs.pct.textContent = formatNumber(pct, 2);
-          inputs.thr.textContent = formatNumber(calculated.layerKgPerHour, 3);
-          inputs.rpm.textContent = formatNumber(calculated.rpm, 1);
-        });
-
-        const finalTotalFlow = totalFlow || 0;
-        const finalTotalWeight = finalTotalFlow * hours || 0;
-        const avgDensity = finalTotalFlow > 0 ? weightedDensity / finalTotalFlow : 0;
-        const netLength = finalTotalWeight > 0 ? (finalTotalWeight - wastage) / Math.max(avgDensity, 0.01) : 0;
-        const wastagePercent = finalTotalWeight > 0 ? (wastage / finalTotalWeight) * 100 : 0;
-
-        rows.forEach((row) => {
-          const pctField = row.querySelector('.pct');
-          const thrField = row.querySelector('.thr');
-          const rpmField = row.querySelector('.rpm');
-          const mic = toNumber(row.querySelector('.mic').value, 0);
-          const den = toNumber(row.querySelector('.den').value, 0);
-
-          if (mic <= 0 || den <= 0) {
-            return;
-          }
-
-          const rowData = {
-            ext: row.querySelector('.ext').value.trim() || 'EXTRUDER',
-            mat: row.querySelector('.mat').value.trim() || 'MATERIAL',
-            mic,
-            den
-          };
 
           const calc = calculateSingleRow(rowData, dieWidth, lineSpeed, hours);
-          const pctValue = finalTotalFlow > 0 ? (calc.layerKgPerHour / finalTotalFlow) * 100 : 0;
-          pctField.textContent = formatNumber(pctValue, 2);
-          thrField.textContent = formatNumber(calc.layerKgPerHour, 3);
-          rpmField.textContent = formatNumber(calc.rpm, 1);
+          totalFlow += calc.layerKgPerHour;
+          weightedDensity += calc.den * calc.layerKgPerHour;
+          totalRpm += calc.rpm;
+
+          row.querySelector('.thr').textContent = formatNumber(calc.layerKgPerHour, 3);
+          row.querySelector('.rpm').textContent = formatNumber(calc.rpm, 1);
         });
 
-        elements.totalWeight.textContent = formatNumber(finalTotalWeight, 2);
+        rows.forEach((row) => {
+          const rowData = {
+            mic: toNumber(row.querySelector('.mic').value, 0),
+            den: toNumber(row.querySelector('.den').value, 0)
+          };
+
+          if (rowData.mic <= 0 || rowData.den <= 0) {
+            row.querySelector('.pct').textContent = '0.00';
+            return;
+          }
+
+          const calc = calculateSingleRow(rowData, dieWidth, lineSpeed, hours);
+          const pct = totalFlow > 0 ? (calc.layerKgPerHour / totalFlow) * 100 : 0;
+          row.querySelector('.pct').textContent = formatNumber(pct, 2);
+        });
+
+        const avgDensity = totalFlow > 0 ? weightedDensity / totalFlow : 0;
+        const totalWeight = totalFlow * hours;
+        const netLength = totalWeight > 0 ? (totalWeight - wastage) / Math.max(avgDensity, 0.01) : 0;
+        const wastagePercent = totalWeight > 0 ? (wastage / totalWeight) * 100 : 0;
+
+        elements.totalWeight.textContent = formatNumber(totalWeight, 2);
         elements.totalLength.textContent = formatNumber(netLength, 2);
-        elements.kgPerHour.textContent = formatNumber(finalTotalFlow, 2);
+        elements.kgPerHour.textContent = formatNumber(totalFlow, 2);
         elements.wastageSummary.textContent = `${formatNumber(wastagePercent, 2)}%`;
-        elements.wastagePct.textContent = `${formatNumber(wastagePercent, 2)}%`;
         elements.totalMic.textContent = formatNumber(rows.reduce((sum, row) => sum + toNumber(row.querySelector('.mic').value, 0), 0), 2);
         elements.avgDen.textContent = formatNumber(avgDensity, 2);
         elements.pctTotal.textContent = formatNumber(rows.reduce((sum, row) => sum + toNumber(row.querySelector('.pct').textContent, 0), 0), 2);
-        elements.sumThr.textContent = formatNumber(finalTotalFlow, 3);
+        elements.sumThr.textContent = formatNumber(totalFlow, 3);
         elements.totalRpm.textContent = formatNumber(totalRpm, 2);
-
-        if (dieWidth <= 0 || lineSpeed <= 0 || hours <= 0) {
-          setFieldInvalid(elements.dieWidth, dieWidth <= 0);
-          setFieldInvalid(elements.lineSpeed, lineSpeed <= 0);
-          setFieldInvalid(elements.hoursInput, hours <= 0);
-          showAlert('warning', 'Please enter valid production values for accurate calculation.');
-        } else {
-          setFieldInvalid(elements.dieWidth, false);
-          setFieldInvalid(elements.lineSpeed, false);
-          setFieldInvalid(elements.hoursInput, false);
-          hideAlert();
-        }
-
-        if (wastage < 0) {
-          setFieldInvalid(elements.wastageInput, true);
-          showAlert('error', 'Wastage cannot be negative.');
-        } else {
-          setFieldInvalid(elements.wastageInput, false);
-        }
-
-        const payload = getCurrentData();
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
-      }
-
-      function applyDraftBanner() {
-        const raw = localStorage.getItem(DRAFT_KEY);
-        if (!raw) {
-          elements.draftBanner.classList.remove('show');
-          return;
-        }
-
-        try {
-          const draft = JSON.parse(raw);
-          if (draft && draft.rows && draft.rows.length) {
-            elements.draftBanner.classList.add('show');
-          } else {
-            elements.draftBanner.classList.remove('show');
-          }
-        } catch (error) {
-          elements.draftBanner.classList.remove('show');
-        }
-      }
-
-      function populateForm(data) {
-        elements.dieWidth.value = data.dieWidth || 1400;
-        elements.lineSpeed.value = data.lineSpeed || 10;
-        elements.hoursInput.value = data.hours || 1;
-        elements.wastageInput.value = data.wastage || 0;
-        elements.filmType.value = data.filmType || 'A01';
-        elements.lotNo.value = data.lotNo || generateLotNumber();
-
-        if (Array.isArray(data.rows) && data.rows.length) {
-          renderRows(data.rows);
-        } else {
-          renderRows(defaultRows);
-        }
-      }
-
-      function saveData() {
-        const data = getCurrentData();
-        data.savedAt = new Date().toISOString();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        showAlert('success', 'Data saved successfully.');
-      }
-
-      function loadSavedData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-          showAlert('warning', 'No saved data found.');
-          return;
-        }
-
-        try {
-          const saved = JSON.parse(raw);
-          populateForm(saved);
-          showAlert('success', 'Saved data loaded.');
-        } catch (error) {
-          showAlert('error', 'Saved data could not be loaded.');
-        }
-      }
-
-      function exportAsJson() {
-        const data = getCurrentData();
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${(elements.lotNo.value || 'ami-formulation')}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showAlert('success', 'JSON exported successfully.');
       }
 
       function resetForm() {
@@ -915,18 +519,10 @@
         elements.filmType.value = 'A01';
         elements.lotNo.value = generateLotNumber();
         renderRows(defaultRows);
-        showAlert('success', 'Calculator reset to default values.');
       }
 
       function attachEvents() {
-        [
-          elements.dieWidth,
-          elements.lineSpeed,
-          elements.hoursInput,
-          elements.wastageInput,
-          elements.filmType,
-          elements.lotNo
-        ].forEach((field) => {
+        [elements.dieWidth, elements.lineSpeed, elements.hoursInput, elements.wastageInput, elements.filmType].forEach((field) => {
           field.addEventListener('input', updateCalculations);
           field.addEventListener('change', updateCalculations);
         });
@@ -934,43 +530,15 @@
         elements.calcTableBody.addEventListener('input', updateCalculations);
         elements.calcTableBody.addEventListener('change', updateCalculations);
 
-        elements.genLotBtn.addEventListener('click', () => {
-          elements.lotNo.value = generateLotNumber();
-          updateCalculations();
-        });
-
         elements.addRowBtn.addEventListener('click', () => {
           elements.calcTableBody.appendChild(createRow({ ext: 'EXTRUDER', mat: 'MATERIAL', mic: 20, den: 0.91 }));
           updateCalculations();
         });
 
         elements.resetBtn.addEventListener('click', resetForm);
-        elements.saveBtn.addEventListener('click', saveData);
-        elements.loadBtn.addEventListener('click', loadSavedData);
-        elements.exportBtn.addEventListener('click', exportAsJson);
-        elements.printBtn.addEventListener('click', () => window.print());
 
-        elements.draftLoadBtn.addEventListener('click', () => {
-          const raw = localStorage.getItem(DRAFT_KEY);
-          if (!raw) {
-            showAlert('warning', 'No draft found.');
-            return;
-          }
-
-          try {
-            const draft = JSON.parse(raw);
-            populateForm(draft);
-            elements.draftBanner.classList.remove('show');
-            showAlert('success', 'Draft loaded successfully.');
-          } catch (error) {
-            showAlert('error', 'Draft could not be loaded.');
-          }
-        });
-
-        elements.draftDismissBtn.addEventListener('click', () => {
-          localStorage.removeItem(DRAFT_KEY);
-          elements.draftBanner.classList.remove('show');
-          showAlert('success', 'Draft ignored.');
+        elements.filmType.addEventListener('change', () => {
+          elements.lotNo.value = generateLotNumber();
         });
       }
 
@@ -978,7 +546,6 @@
         renderRows(defaultRows);
         elements.lotNo.value = generateLotNumber();
         attachEvents();
-        applyDraftBanner();
       }
 
       init();
