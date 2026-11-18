@@ -2,368 +2,205 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live AI Translator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Live AI Translator Pro</title>
 <style>
-  :root{--bg:#f4f5f9;--card:#fff;--text:#1b1d2a;--muted:#6b7084;--line:#e3e5ee;--a:#4f46e5;--b:#0d9488;--rec:#e11d48}
-  @media (prefers-color-scheme:dark){:root{--bg:#0f1117;--card:#181b25;--text:#eceef6;--muted:#9096ad;--line:#2a2e3d}}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
-  .wrap{max-width:900px;margin:0 auto;padding:16px}
-  h1{font-size:1.4rem;margin:8px 0 2px}
-  .sub{color:var(--muted);font-size:.9rem;margin-bottom:14px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:640px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .card h2{margin:0 0 4px;font-size:1.05rem}
-  .card p{margin:0 0 10px;color:var(--muted);font-size:.85rem}
-  select{width:100%;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);margin-bottom:10px;font-size:.95rem}
-  .mic{width:100%;padding:14px;border:0;border-radius:12px;font-size:1.05rem;font-weight:600;color:#fff;cursor:pointer;transition:.15s}
-  #micIn{background:var(--a)} #micOut{background:var(--b)}
-  .mic.on{background:var(--rec);animation:pulse 1.2s infinite}
-  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(225,29,72,.22)}}
-  .live{min-height:44px;margin-top:10px;padding:10px;border-radius:10px;background:var(--bg);font-size:.95rem;color:var(--muted)}
-  .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0}
-  .row label{font-size:.9rem;display:flex;gap:6px;align-items:center}
-  .row select{width:auto;margin:0}
-  #status{font-size:.85rem;color:var(--muted);margin-left:auto}
-  #log{display:flex;flex-direction:column;gap:10px}
-  .msg{padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);max-width:92%}
-  .msg.in{align-self:flex-start;border-left:4px solid var(--a)}
-  .msg.out{align-self:flex-end;border-right:4px solid var(--b)}
-  .tag{font-size:.72rem;color:var(--muted);margin-bottom:3px}
-  .orig{font-size:.85rem;color:var(--muted)}
-  .tr{font-size:1.1rem;font-weight:600;margin-top:2px}
-  .typed{display:flex;gap:8px;margin-top:14px}
-  .typed input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
-  .typed button{padding:10px 14px;border-radius:10px;border:0;background:var(--a);color:#fff;cursor:pointer}
-  .warn{background:#fff3cd;color:#664d03;padding:10px;border-radius:10px;margin-bottom:12px;display:none;font-size:.9rem}
+:root{color-scheme:light dark;--bg:#f3f5fa;--card:#fff;--text:#182033;--muted:#667085;--line:#e3e7ef;--blue:#4f46e5;--teal:#0f9488;--red:#e11d48;--soft:#eef2ff}
+@media(prefers-color-scheme:dark){:root{--bg:#0d111b;--card:#171d2a;--text:#eef2ff;--muted:#a2abc0;--line:#2a3447;--soft:#242943}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:auto;padding:12px 14px 90px}.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h1{font-size:1.3rem;margin:6px 0;flex:1}h2{font-size:1.02rem;margin:0 0 5px}.hint{font-size:.83rem;color:var(--muted);margin:0 0 10px}
+.pill{font-size:.78rem;background:var(--soft);padding:6px 10px;border-radius:30px;color:var(--blue)}
+nav{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;background:var(--bg);padding:8px 0}
+nav button{flex:none;background:var(--card);color:var(--muted);border:1px solid var(--line)}nav button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;min-width:0;margin-bottom:12px}
+select,input,textarea{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-width:0}textarea{min-height:84px}
+button{font:inherit;cursor:pointer;border:0;border-radius:11px;padding:10px 14px;font-weight:650}button:disabled{opacity:.5}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.mic{width:100%;color:#fff;background:var(--blue);margin-top:8px}.mic.teal{background:var(--teal)}.mic.on{background:var(--red)}
+.live,.out{min-height:48px;padding:11px;margin-top:10px;border-radius:10px;background:var(--bg);color:var(--muted);overflow-wrap:anywhere;white-space:pre-wrap}.out{color:var(--text);font-weight:650}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}.row>*{flex:1}.row>button{flex:none}.row label{display:flex;gap:6px;align-items:center;flex:none;font-size:.88rem}.row input[type=checkbox]{width:auto}
+.secondary{background:var(--soft);color:var(--blue)}.danger{background:#ffe4e6;color:#be123c}.go{background:var(--blue);color:#fff}
+.log{display:flex;flex-direction:column;gap:10px;margin-top:10px}.msg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;overflow-wrap:anywhere}
+.msg.in{border-left:4px solid var(--blue)}.msg.out{border-right:4px solid var(--teal)}.tag{font-size:.74rem;color:var(--muted);margin-bottom:5px}.orig{font-size:.9rem;color:var(--muted)}.tr{font-size:1.05rem;font-weight:650;margin-top:4px}
+.msg-actions{display:flex;gap:7px;margin-top:9px}.msg-actions button{font-size:.75rem;padding:6px 9px}
+.ok{color:var(--teal);font-weight:700}.bad{color:var(--red);font-weight:700;text-decoration:underline}
+.notice{font-size:.82rem;color:var(--muted);padding:11px;background:var(--soft);border-radius:11px;margin:10px 0}.hidden{display:none!important}
+dialog{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:17px;width:min(440px,94vw)}dialog label{display:block;font-size:.82rem;color:var(--muted);margin:10px 0 4px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}nav{position:fixed;top:auto;bottom:0;left:0;right:0;padding:8px;border-top:1px solid var(--line);z-index:9}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🎙️ Live AI Translator</h1>
-  <div class="sub">When the other person speaks English (or another language), you hear it in Hindi in real time. When you speak Hindi, it is translated to English instantly.</div>
-  <div class="warn" id="warn">Your browser does not support speech recognition. Please use Google Chrome or Microsoft Edge.</div>
+ <div class="top"><h1>🎙️ Live AI Translator Pro</h1><span class="pill" id="status">Ready</span><button class="secondary" id="cfgBtn" aria-label="Settings">⚙ Settings</button></div>
+ <div id="unsupported" class="notice hidden">Speech recognition is not supported here. Open this page in the latest Chrome or Edge and allow the microphone.</div>
+ <nav id="nav">
+  <button data-p="p1" class="on">🌐 Translate</button><button data-p="p2">✍️ Hinglish</button><button data-p="p3">👩‍🏫 Teacher</button>
+  <button data-p="p4">🏭 Factory</button><button data-p="p5">💼 Interview</button><button data-p="p6">🕘 History</button>
+ </nav>
 
+ <section class="panel" id="p1">
   <div class="grid">
-    <div class="card">
-      <h2>👂 Other person is speaking</h2>
-      <p>Language is auto-detected → spoken in Hindi, live</p>
-      <select id="srcLang" title="Language the other person speaks (needed for the microphone)">
-        <option value="en-US">English (US)</option>
-        <option value="en-IN">English (India)</option>
-        <option value="en-GB">English (UK)</option>
-        <option value="es-ES">Spanish</option>
-        <option value="fr-FR">French</option>
-        <option value="de-DE">German</option>
-        <option value="ar-SA">Arabic</option>
-        <option value="zh-CN">Chinese</option>
-        <option value="ja-JP">Japanese</option>
-        <option value="ko-KR">Korean</option>
-        <option value="ru-RU">Russian</option>
-        <option value="pt-BR">Portuguese</option>
-        <option value="it-IT">Italian</option>
-        <option value="gu-IN">Gujarati</option>
-        <option value="mr-IN">Marathi</option>
-        <option value="ta-IN">Tamil</option>
-        <option value="te-IN">Telugu</option>
-        <option value="bn-IN">Bengali</option>
-        <option value="ur-PK">Urdu</option>
-      </select>
-      <button class="mic" id="micIn">🎤 Start listening</button>
-      <div class="live" id="liveIn">—</div>
-    </div>
-
-    <div class="card">
-      <h2>🗣️ I am speaking Hindi</h2>
-      <p>Hindi → English (or another language) voice</p>
-      <select id="outLang">
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
-        <option value="de">German</option>
-        <option value="ar">Arabic</option>
-        <option value="zh-CN">Chinese</option>
-        <option value="ja">Japanese</option>
-        <option value="ko">Korean</option>
-        <option value="ru">Russian</option>
-        <option value="pt">Portuguese</option>
-      </select>
-      <button class="mic" id="micOut">🎤 Start speaking</button>
-      <div class="live" id="liveOut">—</div>
-    </div>
+   <div class="card"><h2>👂 Listen to the other person</h2><p class="hint">Their speech → your language</p>
+    <select id="srcLang" aria-label="Speaker language"><option value="en-IN">English (India)</option><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="hi-IN">Hindi</option><option value="es-ES">Spanish</option><option value="fr-FR">French</option><option value="de-DE">German</option><option value="ar-SA">Arabic</option><option value="zh-CN">Chinese</option><option value="ja-JP">Japanese</option><option value="ko-KR">Korean</option><option value="ru-RU">Russian</option><option value="pt-BR">Portuguese</option><option value="it-IT">Italian</option><option value="gu-IN">Gujarati</option><option value="mr-IN">Marathi</option><option value="ta-IN">Tamil</option><option value="te-IN">Telugu</option><option value="bn-IN">Bengali</option><option value="ur-PK">Urdu</option></select>
+    <button class="mic" id="micIn" data-t="🎤 Start listening">🎤 Start listening</button><div class="live" id="liveIn">Waiting for speech…</div></div>
+   <div class="card"><h2>🗣️ I am speaking Hindi</h2><p class="hint">Your Hindi → selected language</p>
+    <select id="outLang" aria-label="Translate my speech into"><option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="ar">Arabic</option><option value="zh-CN">Chinese</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="ru">Russian</option><option value="pt">Portuguese</option><option value="gu">Gujarati</option><option value="mr">Marathi</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="bn">Bengali</option><option value="ur">Urdu</option></select>
+    <button class="mic teal" id="micOut" data-t="🎤 Start speaking Hindi">🎤 Start speaking Hindi</button><div class="live" id="liveOut">Waiting for speech…</div></div>
   </div>
+  <div class="row"><label><input type="checkbox" id="autoSpeak" checked> Speak translation aloud</label>
+   <label>Incoming translation to <select id="targetIn"><option value="hi">Hindi</option><option value="en">English</option><option value="gu">Gujarati</option><option value="mr">Marathi</option><option value="bn">Bengali</option></select></label>
+   <button class="secondary" id="stopAll">⏹ Stop all</button></div>
+  <div class="row"><input id="typedText" placeholder="Type a sentence to translate…"><button class="go" id="typedBtn">Translate</button></div>
+ </section>
 
-  <div class="row">
-    <label><input type="checkbox" id="autoSpeak" checked> Speak translations aloud</label>
-    <label><input type="checkbox" id="liveMode" checked> Live mode (translate while they talk – use earphones)</label>
-    <label>Voice speed
-      <select id="rate"><option value="0.9">Slow</option><option value="1" selected>Normal</option><option value="1.15">Fast</option></select>
-    </label>
-    <span id="status">Ready</span>
-  </div>
+ <section class="panel hidden" id="p2"><div class="card"><h2>Hinglish to human English</h2><p class="hint">Write Roman Hindi / Hinglish, or speak it.</p>
+  <textarea id="hgIn" placeholder="Kal meeting ke liye mujhe report bhejna hai"></textarea>
+  <div class="row"><select id="hgStyle"><option>Natural, like a native speaker</option><option>Simple, easy words</option><option>Professional, formal</option><option>Email, polite and clear</option><option>WhatsApp message, short and friendly</option></select>
+   <button class="secondary" id="hgMic" data-t="🎤 Speak">🎤 Speak</button><button class="go" id="hgGo">Convert</button></div>
+  <div class="out" id="hgOut"></div>
+  <div class="row"><button class="secondary" id="hgSay">🔊 Listen</button><button class="secondary" id="hgCopy">Copy</button></div></div></section>
 
-  <div id="log"></div>
+ <section class="panel hidden" id="p3"><div class="card"><h2>English speaking teacher</h2><p class="hint">Speak or type English. You get corrections, a tip and a reply.</p>
+  <div class="row"><input id="tIn" placeholder="Type or speak an English sentence…"><button class="secondary" id="tMic" data-t="🎤 Speak">🎤 Speak</button><button class="go" id="tGo">Check</button></div>
+  <div class="log" id="tLog"></div></div>
+  <div class="card"><h2>Pronunciation check</h2><p class="hint">Write a sentence, listen to it, then say it. Red words were not heard clearly.</p>
+  <input id="pT" value="The film thickness is within tolerance.">
+  <div class="row"><button class="secondary" id="pSay">🔊 Listen</button><button class="mic teal" id="pMic" data-t="🎤 Say it" style="flex:1;margin:0">🎤 Say it</button></div>
+  <div class="out" id="pOut"></div></div></section>
 
-  <div class="typed">
-    <input id="typedText" placeholder="Or type here to test (language is auto-detected)…">
-    <button id="typedBtn">Translate</button>
-  </div>
+ <section class="panel hidden" id="p4"><div class="card"><h2>Factory English</h2><p class="hint">Cast film, quality, safety and machine sentences.</p>
+  <div class="row" id="fTopics"></div>
+  <div class="row"><input id="fText" placeholder="Optional: write a Hindi/Hinglish factory sentence"><button class="go" id="fAI">✨ AI sentences</button></div>
+  <div class="log" id="fList"></div></div></section>
+
+ <section class="panel hidden" id="p5"><div class="card"><h2>Interview practice</h2><p class="hint">Get a question, answer by voice, then get feedback.</p>
+  <div class="row"><select id="iRole"><option>Machine Operator</option><option>Quality Executive</option><option>Production Supervisor</option><option>Maintenance Technician</option><option>General fresher</option></select>
+   <button class="go" id="iQ">New question</button><button class="secondary" id="iIntro">Write my introduction</button></div>
+  <div class="out" id="iQuest">Press “New question”.</div>
+  <textarea id="iA" placeholder="Speak or type your answer. For the introduction, type your details here (experience, skills, plant)."></textarea>
+  <div class="row"><button class="secondary" id="iMic" data-t="🎤 Speak answer">🎤 Speak answer</button><button class="go" id="iFb">Get feedback</button></div>
+  <div class="out" id="iOut"></div></div></section>
+
+ <section class="panel hidden" id="p6"><div class="card"><h2>History</h2><div class="row"><input id="hq" placeholder="Search…"><select id="hf"><option value="all">All</option><option value="fav">⭐ Favourites</option><option value="translate">Translator</option><option value="hinglish">Hinglish</option><option value="teacher">Teacher</option></select></div>
+  <div class="hint" id="hc"></div><div class="row"><button class="secondary" id="exp">⬇ Export</button><button class="danger" id="clr">Clear history</button></div><div class="log" id="log"></div></div></section>
+
+ <p class="notice">History stays in this browser only. Free translation uses a public Google endpoint; the AI tabs use your Supabase function. Avoid confidential data.</p>
 </div>
 
+<dialog id="dlg"><h2>Settings</h2>
+ <label>Supabase project URL</label><input id="cUrl" placeholder="https://xxxx.supabase.co">
+ <label>Supabase anon key</label><input id="cKey"><label>App passcode (if you set one)</label><input id="cPass" type="password">
+ <label>Voice</label><select id="voiceSel"></select>
+ <label>Voice type (when Voice is Auto)</label><select id="cGender"><option value="any">Any</option><option value="female">Female</option><option value="male">Male</option></select>
+ <label>Speed</label><select id="cRate"><option value=".8">Slow</option><option value="1">Normal</option><option value="1.15">Fast</option></select>
+ <div class="row"><button class="secondary" id="cTest">🔊 Test voice</button><button class="go" id="cSave">Save</button></div></dialog>
+
 <script>
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const $ = id => document.getElementById(id);
-const micIn = $('micIn'), micOut = $('micOut');
-if (!SR) $('warn').style.display = 'block';
+'use strict';
+const $=id=>document.getElementById(id),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const status=s=>$('status').textContent=s;
+const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){status('Storage full')}}};
+let cfg=Object.assign({url:'',key:'',pass:'',gender:'any',voice:'',rate:1},ls.get('ltCfg',{}));
+let H=ls.get('liveTranslatorProHistoryV1',[]);
+if(!SR)$('unsupported').classList.remove('hidden');
 
-let mode = null;            // 'in' | 'out' | null
-let rec = null;
-let speaking = false;       // used only in non-live (pause) mode
-let interimTimer = null;
-let session = 0;            // increments on each recognition restart
-let segs = {};              // live segments keyed by session-index
-let transChain = Promise.resolve();  // keeps translations in order
-let ttsChain = Promise.resolve();    // keeps speech in order
-const langName = new Intl.DisplayNames(['en'], {type:'language'});
-const nameOf = c => { try { return langName.of(c); } catch(e){ return c; } };
+/* tabs */
+$('nav').onclick=e=>{const p=e.target.dataset.p;if(!p)return;stopRec();document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('hidden',x.id!==p));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b===e.target));if(p==='p6')render()};
 
-function setStatus(t){ $('status').textContent = t; }
+/* voice */
+let voices=[],busy=false;
+const F=/female|woman|zira|samantha|susan|karen|heera|lekha|hazel|aria|jenny|swara|neerja/i,M=/\bmale\b|\bman\b|david|mark|ravi|daniel|hemant|guy|prabhat|madhur/i;
+function loadVoices(){if(!('speechSynthesis'in window))return;voices=speechSynthesis.getVoices();const s=$('voiceSel');s.replaceChildren(new Option('Auto (best available)',''));voices.forEach(v=>s.add(new Option(v.name+' ('+v.lang+')',v.name)));s.value=cfg.voice}
+if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function pick(lang){const b=lang.split('-')[0].toLowerCase();let c=voices.filter(v=>v.lang.toLowerCase().startsWith(b));if(!c.length)return null;
+ const n=cfg.voice&&c.find(v=>v.name===cfg.voice);if(n)return n;
+ if(cfg.gender==='female'){const f=c.filter(v=>F.test(v.name));if(f.length)c=f}else if(cfg.gender==='male'){const m=c.filter(v=>M.test(v.name)&&!F.test(v.name));if(m.length)c=m}
+ return c.find(v=>/natural|neural|online|google/i.test(v.name))||c[0]}
+function speak(t,lang,force){return new Promise(r=>{if(!('speechSynthesis'in window)||(!force&&!$('autoSpeak').checked))return r();speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(t);u.lang=lang;const v=pick(lang);if(v)u.voice=v;u.rate=+cfg.rate;busy=true;u.onend=u.onerror=()=>{busy=false;r()};speechSynthesis.speak(u)})}
+const LS={en:'en-US',hi:'hi-IN',gu:'gu-IN',mr:'mr-IN',bn:'bn-IN',ta:'ta-IN',te:'te-IN',ur:'ur-PK','zh-CN':'zh-CN',ja:'ja-JP',ko:'ko-KR',pt:'pt-BR',es:'es-ES',fr:'fr-FR',de:'de-DE',ar:'ar-SA',ru:'ru-RU',it:'it-IT'};
+const cp=t=>navigator.clipboard?navigator.clipboard.writeText(t).then(()=>status('Copied')).catch(()=>status('Copy blocked')):status('Copy needs HTTPS or localhost');
 
-/* ---------- Translation (auto-detect source) ---------- */
-async function translate(text, tl, fallbackSrc){
-  try{
-    const u = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + tl +
-              '&dt=t&q=' + encodeURIComponent(text);
-    const r = await fetch(u);
-    const d = await r.json();
-    return { text: d[0].map(x => x[0]).join(''), detected: d[2] };
-  }catch(e){
-    const src = (fallbackSrc || 'en').split('-')[0];
-    const r = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) +
-                          '&langpair=' + src + '|' + tl);
-    const d = await r.json();
-    return { text: d.responseData.translatedText, detected: src };
-  }
-}
+/* speech recognition: busy flag stops the mic hearing our own voice */
+let rec=null,mode=null;
+function stopRec(){mode=null;if(rec){rec.onend=null;try{rec.stop()}catch(e){}rec=null}document.querySelectorAll('.mic.on,button.on[data-t]').forEach(b=>{b.classList.remove('on');b.textContent=b.dataset.t});status('Ready')}
+function listen(lang,o){if(!SR){status('Use Chrome or Edge');return}const b=o.btn;if(mode===b.id){stopRec();return}stopRec();speechSynthesis.cancel();
+ const r=new SR();rec=r;mode=b.id;r.lang=lang;r.continuous=!!o.cont;r.interimResults=true;b.classList.add('on');b.textContent='⏹ Stop';status('Listening…');
+ r.onresult=e=>{if(busy)return;let i='';for(let k=e.resultIndex;k<e.results.length;k++){const x=e.results[k],t=x[0].transcript.trim();if(x.isFinal){if(t)o.onFinal(t)}else i+=t+' '}if(i&&o.onInterim)o.onInterim(i.trim())};
+ r.onerror=e=>{if(/not-allowed|service/.test(e.error)){status('Allow microphone permission');stopRec()}};
+ r.onend=()=>{if(rec!==r)return;if(o.cont)setTimeout(()=>{if(rec===r)try{r.start()}catch(e){}},300);else stopRec()};
+ try{r.start()}catch(e){stopRec()}}
+$('stopAll').onclick=()=>{stopRec();speechSynthesis.cancel()};
 
-/* ---------- Voice (text-to-speech) ---------- */
-let voices = [];
-function loadVoices(){ voices = speechSynthesis.getVoices(); }
-loadVoices(); speechSynthesis.onvoiceschanged = loadVoices;
+/* history */
+function add(o){H.unshift(Object.assign({id:Date.now()+'-'+Math.random().toString(16).slice(2),time:new Date().toISOString(),fav:false},o));H=H.slice(0,500);ls.set('liveTranslatorProHistoryV1',H)}
+function render(){const q=$('hq').value.toLowerCase(),f=$('hf').value;
+ const L=H.filter(i=>(f==='all'||(f==='fav'?i.fav:(i.type||'translate')===f))&&((i.source||'')+' '+(i.target||'')).toLowerCase().includes(q));
+ $('hc').textContent=H.length+' saved · showing '+L.length;const log=$('log');log.replaceChildren();
+ L.forEach(i=>{const d=el('article','msg '+(i.direction==='in'?'in':'out'));d.append(el('div','tag',(i.type||'translate')+' · '+new Date(i.time).toLocaleString()),el('div','orig',i.source),el('div','tr',i.target));
+  const a=el('div','msg-actions'),r=el('button','secondary','🔊 Repeat'),c=el('button','secondary','Copy'),s=el('button','secondary',i.fav?'⭐':'☆');
+  r.onclick=()=>speak(i.target,i.targetLang||'en-US',true);c.onclick=()=>cp(i.target);s.onclick=()=>{i.fav=!i.fav;ls.set('liveTranslatorProHistoryV1',H);render()};a.append(r,c,s);d.append(a);log.append(d)})}
+['hq','hf'].forEach(i=>$(i).oninput=render);
+$('clr').onclick=()=>{if(confirm('Delete all saved history from this device?')){H=[];ls.set('liveTranslatorProHistoryV1',H);render()}};
+$('exp').onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(H,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download='translator-history-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(u)};
 
-function pickVoice(lang){
-  const base = lang.split('-')[0].toLowerCase();
-  const cands = voices.filter(v => v.lang.toLowerCase().startsWith(base));
-  if (!cands.length) return null;
-  const score = v => (/natural|neural|online|google/i.test(v.name) ? 2 : 0) + (v.localService ? 0 : 1);
-  return cands.sort((a,b) => score(b) - score(a))[0];
-}
+/* translator */
+async function gt(text,tl){const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl='+encodeURIComponent(tl)+'&dt=t&q='+encodeURIComponent(text));if(!r.ok)throw 0;const d=await r.json();return d[0].map(x=>x[0]||'').join('')}
+async function tr(t,dir){try{status('Translating…');const tg=dir==='in'?$('targetIn').value:$('outLang').value,o=await gt(t,tg),tl=LS[tg]||tg;
+ add({type:'translate',direction:dir,source:t,target:o,sourceLang:dir==='in'?$('srcLang').value:'hi-IN',targetLang:tl});(dir==='in'?$('liveIn'):$('liveOut')).textContent=o;status('Done');await speak(o,tl)}catch(e){status('Translation failed — check internet')}}
+$('micIn').onclick=()=>listen($('srcLang').value,{cont:1,btn:$('micIn'),onInterim:t=>$('liveIn').textContent=t,onFinal:t=>{$('liveIn').textContent=t;tr(t,'in')}});
+$('micOut').onclick=()=>listen('hi-IN',{cont:1,btn:$('micOut'),onInterim:t=>$('liveOut').textContent=t,onFinal:t=>{$('liveOut').textContent=t;tr(t,'out')}});
+$('srcLang').onchange=()=>{if(mode==='micIn'){stopRec();$('micIn').click()}};
+$('typedBtn').onclick=()=>{const t=$('typedText').value.trim();if(t){$('typedText').value='';tr(t,'out')}};$('typedText').onkeydown=e=>{if(e.key==='Enter')$('typedBtn').click()};
 
-function speak(text, lang){
-  return new Promise(res => {
-    if (!$('autoSpeak').checked){ res(); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
-    const v = pickVoice(lang); if (v) u.voice = v;
-    u.rate = parseFloat($('rate').value);
-    u.onend = u.onerror = () => res();
-    speechSynthesis.speak(u);
-  });
-}
-function enqueueSpeak(text, lang){
-  ttsChain = ttsChain.then(() => speak(text, lang));
-  return ttsChain;
-}
+/* AI through Supabase Edge Function */
+async function ai(task,input){if(!cfg.url||!cfg.key){$('dlg').showModal();throw new Error('Add your Supabase URL and key in Settings')}
+ const r=await fetch(cfg.url.replace(/\/$/,'')+'/functions/v1/ai',{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.key,Authorization:'Bearer '+cfg.key,'x-app-passcode':cfg.pass},body:JSON.stringify({task,input})});
+ const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'AI request failed');return d.data}
+async function run(b,fn){const t=b.textContent;b.disabled=true;b.textContent='…';status('Thinking…');try{await fn();status('Done')}catch(e){status(e.message||'Error')}b.disabled=false;b.textContent=t}
 
-/* ---------- Chat log ---------- */
-function makeMsg(kind, label){
-  const root = document.createElement('div'); root.className = 'msg ' + kind;
-  const tag = document.createElement('div'); tag.className = 'tag'; tag.textContent = label;
-  const orig = document.createElement('div'); orig.className = 'orig';
-  const tr = document.createElement('div'); tr.className = 'tr';
-  root.append(tag, orig, tr);
-  $('log').prepend(root);
-  return { root, tag, orig, tr };
-}
-function addMsg(kind, label, o, t){
-  const m = makeMsg(kind, label); m.orig.textContent = o; m.tr.textContent = t; return m;
-}
+/* Hinglish */
+$('hgMic').onclick=()=>listen('hi-IN',{btn:$('hgMic'),onFinal:t=>$('hgIn').value=($('hgIn').value+' '+t).trim()});
+$('hgGo').onclick=()=>run($('hgGo'),async()=>{const t=$('hgIn').value.trim();if(!t)return;const d=await ai('hinglish',{text:t,style:$('hgStyle').value});$('hgOut').textContent=d.english;add({type:'hinglish',source:t,target:d.english,targetLang:'en-US'})});
+$('hgSay').onclick=()=>speak($('hgOut').textContent,'en-US',true);$('hgCopy').onclick=()=>cp($('hgOut').textContent);
 
-/* ---------- LIVE mode: translate + speak in small chunks while they talk ---------- */
-function wordCount(s){ return s.trim().split(/\s+/).filter(Boolean).length; }
+/* Teacher */
+async function teach(text){text=text.trim();if(!text)return;const d=await ai('teacher',{text}),box=el('div','msg out');
+ box.append(el('div','orig','You: '+text),el('div','tr','✅ '+d.corrected));(d.mistakes||[]).forEach(m=>box.append(el('div','orig','✗ '+m.wrong+' → '+m.right+' — '+m.why)));
+ if(d.tip)box.append(el('div','orig','💡 '+d.tip));box.append(el('div','tr','🧑‍🏫 '+d.reply));$('tLog').prepend(box);
+ add({type:'teacher',source:text,target:d.corrected,targetLang:'en-US'});await speak(d.reply,'en-US',true)}
+$('tGo').onclick=()=>run($('tGo'),async()=>{const t=$('tIn').value;$('tIn').value='';await teach(t)});$('tIn').onkeydown=e=>{if(e.key==='Enter')$('tGo').click()};
+$('tMic').onclick=()=>listen('en-IN',{btn:$('tMic'),onFinal:t=>{stopRec();teach(t).catch(e=>status(e.message))}});
+const nw=w=>w.toLowerCase().replace(/[^a-z0-9']/g,'');
+$('pSay').onclick=()=>speak($('pT').value,'en-US',true);
+$('pMic').onclick=()=>listen('en-IN',{btn:$('pMic'),onFinal:t=>{stopRec();const heard=t.split(/\s+/).map(nw),out=$('pOut');out.replaceChildren();let ok=0;const ws=$('pT').value.split(/\s+/).filter(Boolean);
+ ws.forEach(w=>{const i=heard.indexOf(nw(w)),good=i>-1;if(good){ok++;heard.splice(i,1)}const s=el('span',good?'ok':'bad',w+' ');out.append(s)});out.append(el('div','hint','Score: '+Math.round(ok/ws.length*100)+'%  ·  Heard: '+t))}});
 
-function flush(s, why){            // why: 'final' | 'pause' | 'len'
-  let end = s.text.length;
-  if (why === 'len'){              // drop the last (possibly unfinished) word
-    const sp = s.text.lastIndexOf(' ');
-    if (sp <= s.spoken) return;
-    end = sp;
-  }
-  const chunk = s.text.slice(s.spoken, end);
-  if (!chunk.trim()) return;
-  if (why !== 'final' && wordCount(chunk) < 2 && chunk.trim().length < 12) return;
-  s.spoken = end;
+/* Factory */
+const FP={'Cast Film':[['Film thickness is out of tolerance.','फिल्म की मोटाई टॉलरेंस से बाहर है।'],['Please check the chill roll temperature.','कृपया चिल रोल का तापमान जाँचें।'],['We need to change the roll before the next order.','अगले ऑर्डर से पहले रोल बदलना होगा।']],
+'Quality':[['Please take a sample and check the width and gauge.','कृपया सैंपल लेकर चौड़ाई और गेज जाँचें।'],['This roll has gels and needs to be rejected.','इस रोल में जेल हैं, इसे रिजेक्ट करना होगा।'],['Hold this batch until QC gives approval.','QC की मंज़ूरी तक यह बैच रोककर रखें।']],
+'Safety':[['Wear your helmet and safety shoes before entering the floor.','फ्लोर में जाने से पहले हेलमेट और सेफ्टी शूज़ पहनें।'],['Do not touch the hot die; it is dangerous.','गर्म डाई को न छुएँ, यह खतरनाक है।'],['Switch off the machine before cleaning.','सफाई से पहले मशीन बंद करें।']],
+'Machine':[['The extruder is making an unusual noise.','एक्सट्रूडर से अजीब आवाज़ आ रही है।'],['The screw speed is fluctuating; please inform maintenance.','स्क्रू की स्पीड ऊपर-नीचे हो रही है, मेंटेनेंस को बताएँ।'],['Let us start the line and stabilise the output.','लाइन चालू करके आउटपुट स्थिर करें।']]};
+let topic='Cast Film';
+function items(list){const box=$('fList');box.replaceChildren();list.forEach(([en,hi])=>{const d=el('div','msg');d.append(el('div','tr',en),el('div','orig',hi));const a=el('div','msg-actions'),b1=el('button','secondary','🔊 Repeat'),b2=el('button','secondary','Copy');b1.onclick=()=>speak(en,'en-US',true);b2.onclick=()=>cp(en);a.append(b1,b2);d.append(a);box.append(d)})}
+Object.keys(FP).forEach(k=>{const b=el('button','secondary',k);b.onclick=()=>{topic=k;items(FP[k])};$('fTopics').append(b)});items(FP[topic]);
+$('fAI').onclick=()=>run($('fAI'),async()=>{const t=$('fText').value.trim(),d=await ai('factory',t?{text:t}:{topic});items(d.items.map(x=>[x.en,x.hi]))});
 
-  transChain = transChain.then(async () => {
-    try{
-      setStatus('Translating…');
-      const r = await translate(chunk, 'hi', $('srcLang').value);
-      const dl = (r.detected || '').split('-')[0];
-      if (dl) s.msg.tag.textContent = '👂 Detected language: ' + nameOf(dl);
-      s.tr += (s.tr ? ' ' : '') + r.text;
-      s.msg.tr.textContent = s.tr;
-      $('liveIn').textContent = r.text;
-      if (dl !== 'hi') enqueueSpeak(r.text, 'hi-IN');
-      setStatus('Listening…');
-    }catch(e){ setStatus('Translation problem – check your internet'); }
-  });
-}
+/* Interview */
+let q='';
+$('iQ').onclick=()=>run($('iQ'),async()=>{const d=await ai('interview',{mode:'question',role:$('iRole').value});q=d.question;$('iQuest').textContent=q;$('iOut').textContent='';$('iA').value='';await speak(q,'en-US',true)});
+$('iMic').onclick=()=>listen('en-IN',{btn:$('iMic'),cont:1,onFinal:t=>$('iA').value=($('iA').value+' '+t).trim()});
+$('iFb').onclick=()=>run($('iFb'),async()=>{if(!q||!$('iA').value.trim()){status('Get a question and answer it first');return}stopRec();const d=await ai('interview',{mode:'feedback',role:$('iRole').value,question:q,answer:$('iA').value});
+ $('iOut').textContent='Score: '+d.score+'/10\n'+d.feedback+'\n\nBetter answer:\n'+d.better;add({type:'teacher',source:q+' — '+$('iA').value,target:d.better,targetLang:'en-US'})});
+$('iIntro').onclick=()=>run($('iIntro'),async()=>{const t=$('iA').value.trim();if(!t){status('Type your details in the box first');return}const d=await ai('interview',{mode:'intro',role:$('iRole').value,details:t});$('iOut').textContent=d.answer;await speak(d.answer,'en-US',true)});
 
-function onLiveResult(e){
-  for (let i = e.resultIndex; i < e.results.length; i++){
-    const r = e.results[i];
-    const key = session + '-' + i;
-    const s = segs[key] || (segs[key] = { spoken:0, text:'', tr:'', timer:null,
-                                          msg: makeMsg('in', '👂 Detecting language…') });
-    s.text = r[0].transcript;
-    s.msg.orig.textContent = s.text;
-    clearTimeout(s.timer);
-    if (r.isFinal){ flush(s, 'final'); continue; }
-    $('liveIn').textContent = s.text;
-    const rest = s.text.slice(s.spoken);
-    if (wordCount(rest) >= 7) flush(s, 'len');          // keep latency low in long sentences
-    else s.timer = setTimeout(() => flush(s, 'pause'), 450); // short pause → translate now
-  }
-}
-
-/* ---------- Sentence mode (also used for Hindi → English) ---------- */
-async function handleFinal(text, m){
-  text = text.trim(); if (!text) return;
-  setStatus('Translating…');
-  try{
-    if (m === 'in'){
-      const r = await translate(text, 'hi', $('srcLang').value);
-      const dl = (r.detected || '').split('-')[0];
-      $('liveIn').textContent = r.text;
-      addMsg('in', '👂 Detected language: ' + (dl ? nameOf(dl) : '?'), text, r.text);
-      await pauseAndSpeak(r.text, 'hi-IN');
-    } else {
-      const tl = $('outLang').value;
-      const r = await translate(text, tl, 'hi');
-      $('liveOut').textContent = r.text;
-      addMsg('out', '🗣️ Hindi → ' + nameOf(tl.split('-')[0]), text, r.text);
-      await pauseAndSpeak(r.text, tl);
-    }
-  }catch(e){ setStatus('Translation problem – check your internet'); return; }
-  setStatus(mode ? 'Listening…' : 'Ready');
-}
-
-// Pause the mic while the translation plays so it doesn't hear itself
-async function pauseAndSpeak(text, lang){
-  speaking = true;
-  try{ rec && rec.stop(); }catch(e){}
-  setStatus('Speaking…');
-  await enqueueSpeak(text, lang);
-  speaking = false;
-  if (mode) startRec(mode);
-}
-
-/* ---------- Speech recognition ---------- */
-function startRec(m){
-  if (!SR) return;
-  mode = m;
-  session++;
-  acquireWake();
-  const live = m === 'in' ? $('liveIn') : $('liveOut');
-  const liveMode = m === 'in' && $('liveMode').checked;
-  rec = new SR();
-  rec.lang = m === 'in' ? $('srcLang').value : 'hi-IN';
-  rec.continuous = true;
-  rec.interimResults = true;
-
-  rec.onresult = e => {
-    if (liveMode){ onLiveResult(e); return; }
-    let interim = '';
-    for (let i = e.resultIndex; i < e.results.length; i++){
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal){ clearTimeout(interimTimer); handleFinal(t, m); return; }
-      interim += t;
-    }
-    live.textContent = interim;
-    clearTimeout(interimTimer);
-    interimTimer = setTimeout(async () => {
-      if (!interim.trim() || speaking) return;
-      try{
-        const tl = m === 'in' ? 'hi' : $('outLang').value;
-        const r = await translate(interim, tl, rec.lang);
-        if (mode === m && !speaking) live.textContent = interim + '  →  ' + r.text;
-      }catch(e){}
-    }, 500);
-  };
-  rec.onerror = e => {
-    if (e.error === 'not-allowed' || e.error === 'service-not-allowed'){
-      setStatus('Please allow microphone access');
-      stopAll();
-    }
-  };
-  rec.onend = () => {
-    if (mode === m && !speaking){ session++; try{ rec.start(); }catch(e){} }
-  };
-  try{ rec.start(); setStatus('Listening…'); }catch(e){}
-  micIn.classList.toggle('on', m === 'in');
-  micOut.classList.toggle('on', m === 'out');
-  micIn.textContent = m === 'in' ? '⏹ Stop' : '🎤 Start listening';
-  micOut.textContent = m === 'out' ? '⏹ Stop' : '🎤 Start speaking';
-}
-
-function stopAll(){
-  mode = null;
-  releaseWake();
-  try{ rec && rec.stop(); }catch(e){}
-  speechSynthesis.cancel();
-  ttsChain = Promise.resolve();
-  micIn.classList.remove('on'); micOut.classList.remove('on');
-  micIn.textContent = '🎤 Start listening';
-  micOut.textContent = '🎤 Start speaking';
-  setStatus('Ready');
-}
-
-micIn.onclick  = () => mode === 'in'  ? stopAll() : (stopAll(), startRec('in'));
-micOut.onclick = () => mode === 'out' ? stopAll() : (stopAll(), startRec('out'));
-$('srcLang').onchange = () => { if (mode === 'in'){ stopAll(); startRec('in'); } };
-$('liveMode').onchange = () => { if (mode === 'in'){ stopAll(); startRec('in'); } };
-
-/* ---------- Keep screen awake while translating (mobile) ---------- */
-let wakeLock = null;
-async function acquireWake(){
-  try{ if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
-}
-function releaseWake(){ try{ wakeLock && wakeLock.release(); }catch(e){} wakeLock = null; }
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && mode){
-    acquireWake();
-    // restart the mic if the browser paused it while the page was hidden
-    if (!speaking){ try{ rec && rec.start(); }catch(e){} }
-  }
-});
-
-/* ---------- Typed test ---------- */
-async function typedGo(){
-  const t = $('typedText').value.trim(); if (!t) return;
-  $('typedText').value = '';
-  setStatus('Translating…');
-  try{
-    const r = await translate(t, 'hi', 'en');
-    const dl = (r.detected || '').split('-')[0];
-    addMsg('in', '⌨️ Detected language: ' + (dl ? nameOf(dl) : '?'), t, r.text);
-    await enqueueSpeak(r.text, 'hi-IN');
-  }catch(e){ setStatus('Check your internet'); return; }
-  setStatus('Ready');
-}
-$('typedBtn').onclick = typedGo;
-$('typedText').onkeydown = e => { if (e.key === 'Enter') typedGo(); };
+/* Settings */
+$('cfgBtn').onclick=()=>{$('cUrl').value=cfg.url;$('cKey').value=cfg.key;$('cPass').value=cfg.pass;$('cGender').value=cfg.gender;$('cRate').value=cfg.rate;$('voiceSel').value=cfg.voice;$('dlg').showModal()};
+$('cSave').onclick=()=>{cfg={url:$('cUrl').value.trim(),key:$('cKey').value.trim(),pass:$('cPass').value,gender:$('cGender').value,voice:$('voiceSel').value,rate:$('cRate').value};ls.set('ltCfg',cfg);$('dlg').close()};
+$('cTest').onclick=()=>{cfg.voice=$('voiceSel').value;cfg.gender=$('cGender').value;cfg.rate=$('cRate').value;speak('Hello, this is a voice test.','en-US',true)};
 </script>
 </body>
 </html>
